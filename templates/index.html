@@ -1,0 +1,145 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">     
+            <div class="card-body">
+                <form action="/buscar" method="post">
+                    <div class="form-row">
+                        <div class="col-sm-2">
+                            <label for="university" class="form-control"><strong>Universidad</strong></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="university" id="university" class="form-control">
+                                {% for universidad in universidades %}
+                                <option value="{{universidad}}" {% if selected.universidad == universidad %}  selected {% endif %}>{{universidad}}</option>
+                                {% endfor %}
+                            </select>
+                        </div> 
+                        <div class="col-sm-1">
+                                <label for="nivel1" class="form-control"><strong>Nivel 1</strong></label>
+                        </div>
+                        <div class="col">
+                            <select name="nivel1" id="nivel1" class="form-control">
+                                    {% for nivel1 in niveles1 %}
+                                    <option value="{{nivel1}}" {% if selected.nivel1 == nivel1 %}  selected {% endif %}>{{nivel1}}</option>
+                                    {% endfor %}
+                            </select>
+                        </div>                             
+                            <div class="col-sm-1">
+                                <label for="credits" class="form-control"><small>Créditos</small></label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="text" name="credits" id="credits" class="form-control" value="{{selected.creditos}}">
+                            </div>                      
+                    </div>
+                    <div class="form-row">
+                            <div class="col-sm-2">
+                                <label for="area" class="form-control"><strong>Área</strong></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <select name="area" id="area" class="form-control">
+                                    {% for area in areas %}
+                                    <option value="{{area}}" {% if selected.area == area %}  selected {% endif %}>{{area}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="col-sm-1">
+                                <label for="nivel2" class="form-control"><strong>Nivel 2</strong></label>
+                            </div>
+                            <div class="col">
+                                <select name="nivel2" id="nivel2" class="form-control">
+                                        {% for nivel2 in niveles2 %}
+                                        <option value="{{nivel2}}" {% if selected.nivel2 == nivel2 %}  selected {% endif %}>{{nivel2}}</option>
+                                        {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-1">
+                                <label for="type" class="form-control"><small>Tipo</small></label>  
+                            </div>  
+                            <div class="col-sm-1">                    
+                                <input type="text" name="type" id="type" class="form-control" value="{{selected.tipo}}">
+                            </div>
+                    </div>
+                    <div class="form-row">                        
+                            <div class="col-sm-1">
+                                    <label for="titulo" class="form-control"><strong>Título</strong></label>
+                            </div>
+                            <div class="col">
+                                <select name="titulo" id="titulo" class="form-control">
+                                        {% for titulo in titulos %}
+                                        <option value="{{titulo}}" {% if selected.titulo == titulo %}  selected {% endif %}>{{titulo}}</option>
+                                        {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                    <label for="asignatura" class="form-control"><strong>Asignatura</strong></label>
+                                </div>
+                                <div class="col">
+                                    <select name="asignatura" id="asignatura" class="form-control">
+                                            {% for asignatura in asignaturas %}
+                                            <option value="{{asignatura}}" {% if selected.asignatura == asignatura %}  selected {% endif %}>{{asignatura}}</option>
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                            <div class="col-sm-1"><input type="submit" value="Buscar" class="btn btn-primary" /></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-striped table-bordered bg-white table-sm">
+            <thead>
+                <tr>
+                    <th>Competencias</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for skill in skills %}
+                <tr>
+                    <td><a href="/skill/{{skill['_id']}}">{{skill['name']}}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+            <table class="table table-striped table-bordered bg-white table-sm">
+                <thead>
+                    <tr>
+                        <th>Resultados de aprendizaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for result in results %}
+                        <tr>
+                            <td><a href="/result/{{result['_id']}}">{{result['name']}}</a></td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    <div class="col-md-4">
+        
+            <table class="table table-striped table-bordered bg-white table-sm">
+                    <thead>
+                        <tr>
+                            <th>Instrumentos de evaluación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for instrument in instruments %}
+                            <tr>
+                                <td><a href="/instrument/{{instrument['_id']}}">{{instrument['name']}}</a></td>
+                            </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+    </div>
+</div>
+{% endblock %}

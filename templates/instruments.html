@@ -1,0 +1,165 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">     
+            <div class="card-body">
+                    <div class="form-row">
+                        <div class="col-sm-2">
+                            <strong>Universidad</strong>
+                        </div>
+                        <div class="col-sm-3">
+                            {{ course.universidad }}
+                        </div> 
+                        <div class="col-sm-2">
+                            <strong>Nivel 1</strong>
+                        </div>
+                        <div class="col">
+                            {{ course.nivel1 }}
+                        </div>                             
+                        <div class="col-sm-1">
+                            <strong>Créditos</strong>
+                        </div>
+                        <div class="col-sm-1">
+                            {{ course.creditos }}
+                        </div>                      
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-2">
+                            <strong>Área</strong>
+                        </div>
+                        <div class="col-sm-3">
+                            {{ course.area }}
+                        </div>
+                        
+                        <div class="col-sm-2">
+                            <strong>Nivel 2</strong>
+                        </div>
+                        <div class="col">
+                            {{ course.nivel2 }}
+                        </div>
+                        <div class="col-sm-1">
+                            <strong>Tipo</strong> 
+                        </div>  
+                        <div class="col-sm-1">                    
+                            {{ course.tipo }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-2">
+                            <strong>Título</strong>
+                        </div>
+                        <div class="col-sm-3">
+                            {{ course.titulo }}
+                        </div>
+                        <div class="col-sm-2">
+                            <strong>Asignatura</strong>
+                        </div>
+                        <div class="col">
+                            {{ course.asignatura }}
+                        </div>
+                        <div class="col-sm-1"><a href="/buscar/{{ course._id }}" title="Ir la página anterior"  class="btn btn-primary">Volver</a></div>                            
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        
+            <table class="table table-striped table-bordered bg-white table-sm">
+                    <thead>
+                        <tr>
+                            <th>Instrumentos de evaluación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for instrument in instruments %}
+                            <tr>
+                                <td><a href="/instrument/{{instrument['_id']}}">{{instrument['name']}}</a></td>
+                            </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+    </div>
+    <div class="col-md-8">
+            <form action="/instrument/save/" method="POST">
+                {% if save==1 %}
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>¡Estupendo!</strong> Cambios guardados con éxito
+                </div>
+                {% endif %}
+                <div class="card border-secondary mb-3">
+                    <div class="card-header">
+                            <strong>{{document['name'].upper()}}</strong>
+                    </div>
+                    <div class="card-body">                          
+                        <div class="form-group">                     
+                            <div class="form-row">
+                                <div class="col-sm-3">
+                                    <label for="correccion" class="form-control"><strong>Corrección</strong></label>
+                                </div>                            
+                                <div class="col-sm-3">
+                                    <button type="button" class="btn btn-secondary" title="" 
+                                    data-container="body" data-toggle="popover" 
+                                    data-placement="right" 
+                                    data-content="
+                                    Corrección. Especifica claramente el producto (diseño de investigación, 
+                                    TFM, ensayo individual sobre enfoques económicos) o actuación (exposición oral, 
+                                    manipular material de laboratorio, debatir en grupo argumentadamente) que tiene 
+                                    que realizar o mostrar el estudiante y que será objeto de evaluación. El medio de 
+                                    evaluación (producto o actuación del estudiante) corresponde a la esencia de lo que 
+                                    es un medio de evaluación. Es decir, evidencias o pruebas, 
+                                    tangibles u observables, que sirven para recabar información sobre el objeto a evaluar.
+                                    " data-original-title="Corrección (info)">+ info</button>
+                                </div>
+                            </div>                    
+                            <div class="form-row">
+                                <div class="col-sm-11">                        
+                                    <select name="correccion" id="correccion" class="form-control">
+                                            <option value="0"{% if document['correccion']=='0' %} selected="selected" {% endif %}> 0. No informa de producto o actuación objeto de evaluación. Si es 0 NO se valora más.</option>
+                                            <option value="1"{% if document['correccion']=='1' %} selected="selected" {% endif %}>1. Se intuye pero no se explica</option>
+                                            <option value="2"{% if document['correccion']=='2' %} selected="selected" {% endif %}>2. Correcto</option>      
+                                    </select>
+                                </div>  
+                            </div>                                             
+                        </div>  
+                        <div class="form-group">
+                            <div class="form-row">            
+                                <div class="col-sm-3">
+                                    <label for="autenticidad" class="form-control"><strong>Autenticidad</strong></label>
+                                </div>                             
+                                <div class="col-sm-3">
+                                    <button type="button" class="btn btn-secondary" title="" 
+                                    data-container="body" data-toggle="popover" 
+                                    data-placement="right" 
+                                    data-content="
+                                    Está relacionado con el contexto real y profesional.
+                                    " data-original-title="Autenticidad (info)">+ info</button>
+                                </div>
+                            </div>                    
+                            <div class="form-row"> 
+                                <div class="col-sm-6">                        
+                                    <select name="autenticidad" id="autenticidad" class="form-control">
+                                        <option value="1"{% if document['autenticidad']=='1' %} selected="selected" {% endif %}>1 Ninguna</option>
+                                        <option value="2"{% if document['autenticidad']=='2' %} selected="selected" {% endif %}>2</option>
+                                        <option value="3"{% if document['autenticidad']=='3' %} selected="selected" {% endif %}>3</option>
+                                        <option value="4"{% if document['autenticidad']=='4' %} selected="selected" {% endif %}>4</option>
+                                        <option value="5"{% if document['autenticidad']=='5' %} selected="selected" {% endif %}>5 Real y útil</option>
+                                    </select>
+                                </div>
+                            
+                                <div class="col-sm-3"> 
+                                    <input type="hidden" name="id" value="{{document['_id']}}" />                      
+                                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+{% endblock %}
