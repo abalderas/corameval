@@ -33,7 +33,10 @@ def login(error):
 
 @app.route('/logout')
 def logout():
-    session.pop('username')
+    if 'username' in session:
+        session.pop('username')
+    if 'universidad' in session:
+        session.pop('universidad')
 
     return login(0)
 
@@ -45,6 +48,8 @@ def access():
     if login_user:
         if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password'].encode('utf-8')) == login_user['password'].encode('utf-8'):
             session['username'] = request.form['username']
+            if 'universidad' in login_user:
+                session['universidad'] = login_user['universidad']
             return Index()
         return login(1)
     return login(2)
@@ -55,31 +60,37 @@ def Index():
     if 'username' not in session:
         return login(0)
 
-    documents_unis = mongo.db.asignaturas.distinct("universidad")
-    selected_uni = documents_unis[0]
-    documents_area = mongo.db.asignaturas.distinct("area", {"universidad": selected_uni})
-    selected_area = documents_area[0]
-    documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": selected_uni, "area": selected_area}) 
-    selected_titu = documents_titu[0]
-    documents_nivel1 = mongo.db.asignaturas.distinct("nivel1", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu})
-    selected_nivel1 = documents_nivel1[0]
-    documents_nivel2 = mongo.db.asignaturas.distinct("nivel2", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1})
-    selected_nivel2 = documents_nivel2[0]
-    documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2})
-    selected_cour = documents_cour[0]
-    document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"creditos":1, "tipo":1}) 
-    data_selected = {
-        'universidad': selected_uni,
-        'area': selected_area,
-        'titulo': selected_titu,
-        'nivel1': selected_nivel1,
-        'nivel2': selected_nivel2,
-        'asignatura': selected_cour,
-        'tipo': document_detl['tipo'],
-        'creditos': document_detl['creditos']
-        }
-    return render_template('index.html', universidades = documents_unis, areas = documents_area, titulos = documents_titu, niveles1 = documents_nivel1, niveles2 = documents_nivel2, asignaturas = documents_cour, selected = data_selected)
+    if 'universidad' in session:
+        documents_unis = mongo.db.asignaturas.distinct("universidad", {"universidad": session['universidad']})
+    else:
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+    
+    if documents_unis:
+        selected_uni = documents_unis[0]
+        documents_area = mongo.db.asignaturas.distinct("area", {"universidad": selected_uni})
+        selected_area = documents_area[0]
+        documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": selected_uni, "area": selected_area}) 
+        selected_titu = documents_titu[0]
+        documents_nivel1 = mongo.db.asignaturas.distinct("nivel1", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu})
+        selected_nivel1 = documents_nivel1[0]
+        documents_nivel2 = mongo.db.asignaturas.distinct("nivel2", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1})
+        selected_nivel2 = documents_nivel2[0]
+        documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2})
+        selected_cour = documents_cour[0]
+        document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"creditos":1, "tipo":1}) 
+        data_selected = {
+            'universidad': selected_uni,
+            'area': selected_area,
+            'titulo': selected_titu,
+            'nivel1': selected_nivel1,
+            'nivel2': selected_nivel2,
+            'asignatura': selected_cour,
+            'tipo': document_detl['tipo'],
+            'creditos': document_detl['creditos']
+            }
+        return render_template('index.html', universidades = documents_unis, areas = documents_area, titulos = documents_titu, niveles1 = documents_nivel1, niveles2 = documents_nivel2, asignaturas = documents_cour, selected = data_selected)
 
+    return render_template('error.html', msj = 'Sin datos de esta universidad')
     # -------------------------------------------------------------------------
     # Conjunto de funciones que cargan mediante AJAX los desplegables asociados
     # -------------------------------------------------------------------------
@@ -176,17 +187,11 @@ def buscar(id):
             }
         documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": document_detl['universidad'], "area": document_detl['area']})
         documents_unis = mongo.db.asignaturas.distinct("universidad")
-        #documents_area = mongo.db.asignaturas.distinct("area")
-        # documents_unis = mongo.db.asignaturas.distinct("universidad")
-        # selected_uni = request.form['university']
         documents_area = mongo.db.asignaturas.distinct("area", {"universidad": document_detl['universidad']})
-        # selected_area = request.form['area']
         documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": document_detl['universidad'], "area": document_detl['area']}) 
-        #selected_titu = request.form['titulo']
         documents_nivel1 = mongo.db.asignaturas.distinct("nivel1", {"universidad": document_detl['universidad'], "area": document_detl['area'], "titulo": document_detl['titulo']})
         documents_nivel2 = mongo.db.asignaturas.distinct("nivel2", {"universidad": document_detl['universidad'], "area": document_detl['area'], "titulo": document_detl['titulo'], "nivel1": document_detl['nivel1']})
         documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": document_detl['universidad'], "area": document_detl['area'], "titulo": document_detl['titulo'], "nivel1": document_detl['nivel1'], "nivel2": document_detl['nivel2']}) 
-        # selected_cour = request.form['asignatura']
         
     else:
         documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": request.form['university'], "area": request.form['area']})
