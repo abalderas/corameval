@@ -496,5 +496,10 @@ def tipo_asignatura(tipo):
     }
     return switcher.get(tipo, "Invalid option")
 
+import os
+	
 if __name__ == '__main__':
-    app.run(port = 3000, debug = True)
+	# Bind to PORT if defined, otherwise default to 5000.
+    port = int(os.environ.get('PORT', 3000))
+    app.run(host='0.0.0.0', port=port)
+    #app.run(port = 3000, debug = True)
