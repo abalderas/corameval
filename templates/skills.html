@@ -76,7 +76,8 @@
             <tbody>
                 {% for skill in skills %}
                 <tr>
-                    <td><a href="/skill/{{skill['_id']}}">{{skill['name']}}</a></td>
+                    <td><a href="/skill/{{skill['_id']}}">{{skill['name']}}</a>
+                        <span class="{% if skill['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>({{skill['revisiones']|length}})</strong></span></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -284,8 +285,23 @@
                                         <option value="1"{% if document['colaborativo']=='1' %} selected="selected" {% endif %}>Sí</option>
                                 </select>
                             </div>
-                            <div class="col-sm-3">
-                                
+                            <div class="col-sm-6"> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-primary mb-3">
+                    <div class="card-body">                         
+                        <div class="form-row">
+                            <div class="col-sm-6">
+                                <label for="observaciones" class="form-control"><strong>Observaciones</strong></label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-6">
+                                <textarea class="form-control" name="observaciones" id="observaciones" rows="3">{{document['observaciones']}}</textarea>
+                            </div>
+                            <div class="col-sm-3"> 
                             </div>
                             <div class="col-sm-3">  
                                 <input type="hidden" name="id" value="{{document['_id']}}" />    
@@ -294,6 +310,8 @@
                         </div> 
                     </div>
                 </div>
+
+
         </form>
     </div>
 </div>

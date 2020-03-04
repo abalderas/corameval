@@ -2,12 +2,13 @@ from flask import Flask, render_template, url_for, request, jsonify, json, sessi
 from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId
 from flask_bcrypt import bcrypt
+from datetime import datetime
 
 app = Flask(__name__)
 
 # MongoDB local connection
-#app.config['MONGO_URI'] = 'mongodb://skillsapp:UCa2019psi@localhost:27017/skillsdb'
-#mongo = PyMongo(app)
+# app.config['MONGO_URI'] = 'mongodb://skillsapp:UCa2019psi@localhost:27017/skillsdb'
+# mongo = PyMongo(app)
 
 
 # MondoDB Atlas Remote Connection
@@ -170,11 +171,10 @@ def listing_details():
 @app.route('/buscar', defaults={'id': 0}, methods=['POST'])
 @app.route('/buscar/<id>')
 def buscar(id):
-
     if id != 0:
         document_detl = mongo.db.asignaturas.find_one({"_id": ObjectId(id)}, {"universidad": 1, "area": 1, "titulo": 1,
          "nivel1":1, "nivel2": 1, "asignatura": 1, "_id": 1, "creditos":1, "tipo":1})
-        print(id)
+        
         data_selected = {
             'universidad': document_detl['universidad'],
             'area': document_detl['area'],
@@ -239,7 +239,7 @@ def skill(id, save):
     # obtenemos id del curso
     document_skill = mongo.db.competencias.find_one({"_id": ObjectId(id)}, {"course_id":1, "name":1, "tipo": 1, 
         "correccion":1, "cognitivo":1, "factual": 1, "conceptual":1, "procedimental": 1, "metacognitivo":1,
-        "estructura":1, "afectivo":1, "tecnologico":1, "colaborativo":1}) 
+        "estructura":1, "afectivo":1, "tecnologico":1, "colaborativo":1, "observaciones": 1}) 
     data_course = institution(document_skill['course_id'])
     
     documents_all_skills = mongo.db.competencias.find({"course_id": document_skill['course_id']}).sort("name",1)
@@ -253,7 +253,7 @@ def result(id, save):
     document_result = mongo.db.resultados.find_one({"_id": ObjectId(id)}, {"course_id":1, "name":1,  
         "correccion":1, "verificabilidad":1, "autenticidad":1, "cognitivo":1, "factual": 1, 
         "conceptual":1, "procedimental": 1, "metacognitivo":1, "estructura":1, "afectivo":1, 
-        "tecnologico":1, "colaborativo":1}) 
+        "tecnologico":1, "colaborativo":1, "observaciones": 1}) 
     data_course = institution(document_result['course_id'])
 
     documents_all_results = mongo.db.resultados.find({"course_id": document_result['course_id']}).sort("name",1)
@@ -264,7 +264,7 @@ def result(id, save):
 @app.route('/instrument/<id>/<save>')
 def instrument(id, save):
     # obtenemos id del curso
-    documents_instrument = mongo.db.instrumentos.find_one({"_id": ObjectId(id)}, {"course_id":1, "name":1, "correccion": 1, "autenticidad": 1}) 
+    documents_instrument = mongo.db.instrumentos.find_one({"_id": ObjectId(id)}, {"course_id":1, "name":1, "correccion": 1, "autenticidad": 1, "observaciones": 1}) 
     data_course = institution(documents_instrument['course_id'])
 
     documents_all_instruments = mongo.db.instrumentos.find({"course_id": documents_instrument['course_id']}).sort("name",1)
@@ -275,9 +275,16 @@ def instrument(id, save):
 @app.route('/instrument/save/<id>')
 def instrument_save(id):
     myquery = { "_id": ObjectId(request.form['id']) }
-    newvalues = { "$set": { "correccion": request.form['correccion'], "autenticidad": request.form['autenticidad'] } }
+    newvalues = { "$set": { "correccion": request.form['correccion'], 
+                            "autenticidad": request.form['autenticidad'],
+                            "observaciones": request.form['observaciones'] } }
 
     mongo.db.instrumentos.update_one(myquery, newvalues)
+
+    newrevision = { "$push": 
+        { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
+    }
+    mongo.db.instrumentos.update_one(myquery, newrevision)
     save = 1
     return instrument(request.form['id'], save)
 
@@ -285,7 +292,7 @@ def instrument_save(id):
 @app.route('/skill/save/<id>')
 def skill_save(id):
     myquery = { "_id": ObjectId(request.form['id']) }
-    newvalues = { "$set": {     "tipo": request.form['tipo'],
+    newvalues = { "$set":   {   "tipo": request.form['tipo'],
                                 "correccion": request.form['correccion'], 
                                 "cognitivo": request.form['cognitivo'],
                                 "factual": request.form['factual'],
@@ -295,9 +302,17 @@ def skill_save(id):
                                 "estructura": request.form['estructura'],
                                 "afectivo": request.form['afectivo'],
                                 "tecnologico": request.form['tecnologico'],
-                                "colaborativo": request.form['colaborativo'] } }
-
+                                "colaborativo": request.form['colaborativo'],
+                                "observaciones": request.form['observaciones']
+                            }
+                 }   
     mongo.db.competencias.update_one(myquery, newvalues)
+
+    newrevision = { "$push": 
+        { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
+    }
+    mongo.db.competencias.update_one(myquery, newrevision)
+
     save = 1
     return skill(request.form['id'], save)
 
@@ -305,7 +320,7 @@ def skill_save(id):
 @app.route('/result/save/<id>')
 def result_save(id):
     myquery = { "_id": ObjectId(request.form['id']) }
-    newvalues = { "$set": {     "correccion": request.form['correccion'], 
+    newvalues = { "$set":   {   "correccion": request.form['correccion'], 
                                 "verificabilidad": request.form['verificabilidad'],
                                 "autenticidad": request.form['autenticidad'],
                                 "cognitivo": request.form['cognitivo'],
@@ -316,9 +331,18 @@ def result_save(id):
                                 "estructura": request.form['estructura'],
                                 "afectivo": request.form['afectivo'],
                                 "tecnologico": request.form['tecnologico'],
-                                "colaborativo": request.form['colaborativo'] } }
+                                "colaborativo": request.form['colaborativo'],
+                                "observaciones": request.form['observaciones'] 
+                            }}
+
+                 #"$push":   {   "revisiones": {"$each": [session['username']] }}}
 
     mongo.db.resultados.update_one(myquery, newvalues)
+
+    newrevision = { "$push": 
+        { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
+    }
+    mongo.db.resultados.update_one(myquery, newrevision)
     save = 1
     return result(request.form['id'], save)
 
@@ -506,5 +530,5 @@ import os
 if __name__ == '__main__':
 	# Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 3000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug = True)
     #app.run(port = 3000, debug = True)

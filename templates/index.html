@@ -102,7 +102,8 @@
             <tbody>
                 {% for skill in skills %}
                 <tr>
-                    <td><a href="/skill/{{skill['_id']}}">{{skill['name']}}</a></td>
+                    <td><a href="/skill/{{skill['_id']}}">{{skill['name']}}</a>
+                        <span class="{% if skill['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>({{skill['revisiones']|length}})</strong></span></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -118,7 +119,8 @@
                 <tbody>
                         {% for result in results %}
                         <tr>
-                            <td><a href="/result/{{result['_id']}}">{{result['name']}}</a></td>
+                            <td><a href="/result/{{result['_id']}}">{{result['name']}}</a>
+                                <span class="{% if result['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>({{result['revisiones']|length}})</strong></span></td>
                         </tr>
                         {% endfor %}
                 </tbody>
@@ -135,7 +137,8 @@
                     <tbody>
                             {% for instrument in instruments %}
                             <tr>
-                                <td><a href="/instrument/{{instrument['_id']}}">{{instrument['name']}}</a></td>
+                                <td><a href="/instrument/{{instrument['_id']}}">{{instrument['name']}}</a>
+                                    <span class="{% if instrument['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>({{instrument['revisiones']|length}})</strong></span></td>
                             </tr>
                             {% endfor %}
                     </tbody>
