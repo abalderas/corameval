@@ -298,10 +298,18 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="col-sm-6">
+                            <div class="col-sm">
                                 <textarea class="form-control" name="observaciones" id="observaciones" rows="3">{{document['observaciones']}}</textarea>
                             </div>
-                            <div class="col-sm-3"> 
+                        </div>
+                        <div class="form-row mt-3">                            
+                            <div class="col-sm-8"> 
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" value="" checked="">
+                                      Aplicar los cambios a todas las asignaturas del Máster
+                                    </label>
+                                </div>
                             </div>
                             <div class="col-sm-3">  
                                 <input type="hidden" name="id" value="{{document['_id']}}" />    
