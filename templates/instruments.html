@@ -95,7 +95,7 @@
                 {% endif %}
                 <div class="card border-secondary mb-3">
                     <div class="card-header">
-                            <strong>{{document['name'].upper()}}</strong>
+                            <strong>{{document['name']}}</strong>
                     </div>
                     <div class="card-body">                          
                         <div class="form-group">                     
@@ -175,6 +175,32 @@
                                 <input type="submit" value="Guardar" class="btn btn-primary" />
                             </div>
                         </div> 
+                    </div>
+                </div>
+
+                
+                <div class="card border primary mb-3">
+                    <div class="card-header"><strong>Histórico de cambios</strong></div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Versión</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Usuario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for revision in document['revisiones'] %}  
+                                <tr class="table-light">
+                                    <td>{{loop.index}}</td>
+                                    <td>{{revision['fecha'].strftime('%d-%m-%Y a las %H:%M:%S')}}</td>
+                                    <td>{{revision['usuario']}}</td>
+                                        
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </form>

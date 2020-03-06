@@ -239,7 +239,7 @@ def skill(id, save):
     # obtenemos id del curso
     document_skill = mongo.db.competencias.find_one({"_id": ObjectId(id)}, {"course_id":1, "name":1, "tipo": 1, 
         "correccion":1, "cognitivo":1, "factual": 1, "conceptual":1, "procedimental": 1, "metacognitivo":1,
-        "estructura":1, "afectivo":1, "tecnologico":1, "colaborativo":1, "observaciones": 1}) 
+        "estructura":1, "afectivo":1, "tecnologico":1, "colaborativo":1, "observaciones": 1, "revisiones": 1}) 
     data_course = institution(document_skill['course_id'])
     
     documents_all_skills = mongo.db.competencias.find({"course_id": document_skill['course_id']}).sort("name",1)
@@ -253,7 +253,7 @@ def result(id, save):
     document_result = mongo.db.resultados.find_one({"_id": ObjectId(id)}, {"course_id":1, "name":1,  
         "correccion":1, "verificabilidad":1, "autenticidad":1, "cognitivo":1, "factual": 1, 
         "conceptual":1, "procedimental": 1, "metacognitivo":1, "estructura":1, "afectivo":1, 
-        "tecnologico":1, "colaborativo":1, "observaciones": 1}) 
+        "tecnologico":1, "colaborativo":1, "observaciones": 1, "revisiones": 1}) 
     data_course = institution(document_result['course_id'])
 
     documents_all_results = mongo.db.resultados.find({"course_id": document_result['course_id']}).sort("name",1)
@@ -264,7 +264,7 @@ def result(id, save):
 @app.route('/instrument/<id>/<save>')
 def instrument(id, save):
     # obtenemos id del curso
-    documents_instrument = mongo.db.instrumentos.find_one({"_id": ObjectId(id)}, {"course_id":1, "name":1, "correccion": 1, "autenticidad": 1, "observaciones": 1}) 
+    documents_instrument = mongo.db.instrumentos.find_one({"_id": ObjectId(id)}, {"course_id":1, "name":1, "correccion": 1, "autenticidad": 1, "observaciones": 1, "revisiones": 1}) 
     data_course = institution(documents_instrument['course_id'])
 
     documents_all_instruments = mongo.db.instrumentos.find({"course_id": documents_instrument['course_id']}).sort("name",1)
