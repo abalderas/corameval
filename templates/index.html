@@ -10,7 +10,7 @@
                         <div class="col-sm-2">
                             <label for="university" class="form-control"><strong>Universidad</strong></label>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <select name="university" id="university" class="form-control">
                                 {% for universidad in universidades %}
                                 <option value="{{universidad}}" {% if selected.universidad == universidad %}  selected {% endif %}>{{universidad}}</option>
@@ -26,19 +26,13 @@
                                     <option value="{{nivel1}}" {% if selected.nivel1 == nivel1 %}  selected {% endif %}>{{nivel1}}</option>
                                     {% endfor %}
                             </select>
-                        </div>                             
-                            <div class="col-sm-1">
-                                <label for="credits" class="form-control"><small>Créditos</small></label>
-                            </div>
-                            <div class="col-sm-1">
-                                <input type="text" name="credits" id="credits" class="form-control" value="{{selected.creditos}}">
-                            </div>                      
+                        </div>                     
                     </div>
                     <div class="form-row">
                             <div class="col-sm-2">
                                 <label for="area" class="form-control"><strong>Área</strong></label>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <select name="area" id="area" class="form-control">
                                     {% for area in areas %}
                                     <option value="{{area}}" {% if selected.area == area %}  selected {% endif %}>{{area}}</option>
@@ -56,18 +50,12 @@
                                         {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-1">
-                                <label for="type" class="form-control"><small>Tipo</small></label>  
-                            </div>  
-                            <div class="col-sm-1">                    
-                                <input type="text" name="type" id="type" class="form-control" value="{{selected.tipo}}">
-                            </div>
                     </div>
                     <div class="form-row">                        
                             <div class="col-sm-1">
                                     <label for="titulo" class="form-control"><strong>Título</strong></label>
                             </div>
-                            <div class="col">
+                            <div class="col-sm-5">
                                 <select name="titulo" id="titulo" class="form-control">
                                         {% for titulo in titulos %}
                                         <option value="{{titulo}}" {% if selected.titulo == titulo %}  selected {% endif %}>{{titulo}}</option>
@@ -84,7 +72,27 @@
                                             {% endfor %}
                                     </select>
                                 </div>
-                            <div class="col-sm-1"><input type="submit" value="Buscar" class="btn btn-primary" /></div>
+                    </div>
+                    <div class="form-row">                                                     
+                        <div class="col-sm-1">
+                            <label for="credits" class="form-control"><small>Créditos</small></label>
+                        </div>
+                        <div class="col-sm-1">
+                            <input type="text" name="credits" id="credits" class="form-control" placeholder="0.0" disabled="" value="{{selected.creditos}}">
+                        </div> 
+                        <div class="col-sm-1">
+                            <label for="type" class="form-control"><small>Tipo</small></label>  
+                        </div>  
+                        <div class="col-sm-3">                    
+                            <input type="text" name="type" id="type" class="form-control"  placeholder="..." disabled="" value="{{selected.tipo}}">
+                        </div> 
+                        <div class="col-sm-2">
+                            <label for="modalidad" class="form-control"><small>Modalidad</small></label>  
+                        </div>  
+                        <div class="col-sm-3">                    
+                            <input class="form-control" id="modalidad" type="text" placeholder="..." disabled=""  value="{{selected.modalidad}}">
+                        </div>
+                        <div class="col-sm-1"><input type="submit" value="Buscar" class="btn btn-primary" /></div>
                     </div>
                 </form>
             </div>
@@ -131,7 +139,7 @@
             <table class="table table-striped table-bordered bg-white table-sm">
                     <thead>
                         <tr>
-                            <th>Instrumentos de evaluación</th>
+                            <th>Medios de evaluación</th>
                         </tr>
                     </thead>
                     <tbody>
