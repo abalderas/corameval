@@ -78,7 +78,7 @@ def Index():
         selected_nivel2 = documents_nivel2[0]
         documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2})
         selected_cour = documents_cour[0]
-        document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"creditos":1, "tipo":1}) 
+        document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"modalidad":1, "creditos":1, "tipo":1}) 
         data_selected = {
             'universidad': selected_uni,
             'area': selected_area,
@@ -86,6 +86,7 @@ def Index():
             'nivel1': selected_nivel1,
             'nivel2': selected_nivel2,
             'asignatura': selected_cour,
+            'modalidad': document_detl['modalidad'],
             'tipo': document_detl['tipo'],
             'creditos': document_detl['creditos']
             }
@@ -158,9 +159,9 @@ def listing_details():
     nivel2 = request.form['nivel2']
     course = request.form['course']
 
-    document_detl = mongo.db.asignaturas.find_one({"universidad": universidad, "area": area, "titulo": degree, "nivel1": nivel1, "nivel2": nivel2, "asignatura": course}, {"creditos":1, "tipo":1}) 
+    document_detl = mongo.db.asignaturas.find_one({"universidad": universidad, "area": area, "titulo": degree, "nivel1": nivel1, "nivel2": nivel2, "asignatura": course}, {"modalidad":1, "creditos":1, "tipo":1}) 
 
-    data = {'tipo': document_detl['tipo'], 'creditos': document_detl['creditos']}
+    data = {'tipo': document_detl['tipo'], 'creditos': document_detl['creditos'], 'modalidad': document_detl['modalidad']}
 
     return jsonify(data)
 
@@ -173,7 +174,7 @@ def listing_details():
 def buscar(id):
     if id != 0:
         document_detl = mongo.db.asignaturas.find_one({"_id": ObjectId(id)}, {"universidad": 1, "area": 1, "titulo": 1,
-         "nivel1":1, "nivel2": 1, "asignatura": 1, "_id": 1, "creditos":1, "tipo":1})
+         "nivel1":1, "nivel2": 1, "asignatura": 1, "_id": 1, "modalidad":1, "creditos":1, "tipo":1})
         
         data_selected = {
             'universidad': document_detl['universidad'],
@@ -182,6 +183,7 @@ def buscar(id):
             'nivel1': document_detl['nivel1'],
             'nivel2': document_detl['nivel2'],
             'asignatura': document_detl['asignatura'],
+            'modalidad': document_detl['modalidad'],
             'tipo': document_detl['tipo'],
             'creditos': document_detl['creditos']
             }
@@ -209,7 +211,7 @@ def buscar(id):
         selected_nivel2 = request.form['nivel2']
         documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2})
         selected_cour = request.form['asignatura']
-        document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"creditos":1, "tipo":1}) 
+        document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"modalidad": 1, "creditos":1, "tipo":1}) 
         data_selected = {
             'universidad': selected_uni,
             'area': selected_area,
@@ -217,6 +219,7 @@ def buscar(id):
             'nivel1': selected_nivel1,
             'nivel2': selected_nivel2,
             'asignatura': selected_cour,
+            'modalidad': document_detl['modalidad'],
             'tipo': document_detl['tipo'],
             'creditos': document_detl['creditos']
             }
@@ -358,6 +361,7 @@ def institution(id):
         'asignatura': document_institution['asignatura'],
         'tipo': document_institution['tipo'],
         'creditos': document_institution['creditos'],
+        'modalidad': document_institution['modalidad'],
         "_id": document_institution['_id']
         }
     print()

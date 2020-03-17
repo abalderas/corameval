@@ -9,55 +9,55 @@
                         <div class="col-sm-2">
                             <strong>Universidad</strong>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-5">
                             {{ course.universidad }}
                         </div> 
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <strong>Nivel 1</strong>
                         </div>
                         <div class="col">
                             {{ course.nivel1 }}
-                        </div>                             
-                        <div class="col-sm-1">
-                            <strong>Créditos</strong>
-                        </div>
-                        <div class="col-sm-1">
-                            {{ course.creditos }}
-                        </div>                      
+                        </div>                     
                     </div>
                     <div class="form-row">
                         <div class="col-sm-2">
                             <strong>Área</strong>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-5">
                             {{ course.area }}
                         </div>
                         
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <strong>Nivel 2</strong>
                         </div>
                         <div class="col">
                             {{ course.nivel2 }}
-                        </div>
-                        <div class="col-sm-1">
-                            <strong>Tipo</strong> 
-                        </div>  
-                        <div class="col-sm-1">                    
-                            {{ course.tipo }}
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-sm-2">
                             <strong>Título</strong>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-5">
                             {{ course.titulo }}
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <strong>Asignatura</strong>
                         </div>
                         <div class="col">
                             {{ course.asignatura }}
+                        </div>
+                    </div>
+                    <hr /> 
+                    <div class="form-row">                                                    
+                        <div class="col-sm-2">
+                            <strong>Créditos:</strong> {{ course.creditos }}
+                        </div> 
+                        <div class="col-sm-3">
+                            <strong>Tipo:</strong> {{ course.tipo }}
+                        </div>
+                        <div class="col-sm-5">
+                            <strong>Modalidad:</strong> {{ course.modalidad }}
                         </div>
                         <div class="col-sm-1"><a href="/buscar/{{ course._id }}" title="Ir la página anterior"  class="btn btn-primary">Volver</a></div>                            
                     </div>

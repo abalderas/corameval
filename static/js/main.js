@@ -11,6 +11,7 @@ $(document).ready(function() {
         $('#nivel1').empty();
         $('#nivel2').empty();
         $('#asignatura').empty();
+        $('#modalidad').val('');
         $('#credits').val('');
         $('#type').val('');
 
@@ -22,6 +23,7 @@ $(document).ready(function() {
         $('#nivel1').empty();
         $('#nivel2').empty();
         $('#asignatura').empty();
+        $('#modalidad').val('');
         $('#credits').val('');
         $('#type').val('');
     
@@ -32,6 +34,7 @@ $(document).ready(function() {
         listing_niveles1();
         $('#nivel2').empty();
         $('#asignatura').empty();
+        $('#modalidad').val('');
         $('#credits').val('');
         $('#type').val('');
     
@@ -41,6 +44,7 @@ $(document).ready(function() {
 
         listing_niveles2();
         $('#asignatura').empty();
+        $('#modalidad').val('');
         $('#credits').val('');
         $('#type').val('');
     
@@ -49,6 +53,7 @@ $(document).ready(function() {
    $('#nivel2').on('change click', function(event) {
 
         listing_courses();
+        $('#modalidad').val('');
         $('#credits').val('');
         $('#type').val('');
     
@@ -80,6 +85,7 @@ function listing_details()
 
         $('#credits').val(data.creditos)
         $('#type').val(data.tipo)
+        $('#modalidad').val(data.modalidad);
     });
 }
 
