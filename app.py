@@ -86,9 +86,9 @@ def Index():
             'nivel1': selected_nivel1,
             'nivel2': selected_nivel2,
             'asignatura': selected_cour,
-            'modalidad': document_detl['modalidad'],
-            'tipo': document_detl['tipo'],
-            'creditos': document_detl['creditos']
+            'modalidad': document_detl.get('modalidad','...'),
+            'tipo': document_detl.get('tipo','...'),
+            'creditos': document_detl.get('creditos','...')
             }
         return render_template('index.html', universidades = documents_unis, areas = documents_area, titulos = documents_titu, niveles1 = documents_nivel1, niveles2 = documents_nivel2, asignaturas = documents_cour, selected = data_selected)
 
@@ -130,7 +130,7 @@ def listing_niveles2():
     universidad = request.form['universidad']
     area = request.form['area']
     degree = request.form['degree']
-    nivel1 = request.form['nivel1']
+    nivel1 = request.form.get('nivel1','')
 
     documents_cour = mongo.db.asignaturas.distinct("nivel2", {"universidad": universidad, "area": area, "titulo": degree, "nivel1": nivel1}) 
 
@@ -142,8 +142,8 @@ def listing_courses():
     universidad = request.form['universidad']
     area = request.form['area']
     degree = request.form['degree']
-    nivel1 = request.form['nivel1']
-    nivel2 = request.form['nivel2']
+    nivel1 = request.form.get('nivel1','')
+    nivel2 = request.form.get('nivel2','')
 
     documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": universidad, "area": area, "titulo": degree, "nivel1": nivel1, "nivel2": nivel2}) 
 
@@ -155,13 +155,13 @@ def listing_details():
     universidad = request.form['universidad']
     area = request.form['area']
     degree = request.form['degree']
-    nivel1 = request.form['nivel1']
-    nivel2 = request.form['nivel2']
+    nivel1 = request.form.get('nivel1','')
+    nivel2 = request.form.get('nivel2','')
     course = request.form['course']
 
     document_detl = mongo.db.asignaturas.find_one({"universidad": universidad, "area": area, "titulo": degree, "nivel1": nivel1, "nivel2": nivel2, "asignatura": course}, {"modalidad":1, "creditos":1, "tipo":1}) 
 
-    data = {'tipo': document_detl['tipo'], 'creditos': document_detl['creditos'], 'modalidad': document_detl['modalidad']}
+    data = {'tipo': document_detl.get('tipo',''), 'creditos': document_detl.get('creditos',''), 'modalidad': document_detl.get('modalidad',' ')}
 
     return jsonify(data)
 
@@ -177,24 +177,30 @@ def buscar(id):
          "nivel1":1, "nivel2": 1, "asignatura": 1, "_id": 1, "modalidad":1, "creditos":1, "tipo":1})
         
         data_selected = {
-            'universidad': document_detl['universidad'],
-            'area': document_detl['area'],
-            'titulo': document_detl['titulo'],
-            'nivel1': document_detl['nivel1'],
-            'nivel2': document_detl['nivel2'],
-            'asignatura': document_detl['asignatura'],
-            'modalidad': document_detl['modalidad'],
-            'tipo': document_detl['tipo'],
-            'creditos': document_detl['creditos']
+            'universidad': document_detl.get('universidad',''),
+            'area': document_detl.get('area',''),
+            'titulo': document_detl.get('titulo',''),
+            'nivel1': document_detl.get('nivel1',''),
+            'nivel2': document_detl.get('nivel2',''),
+            'asignatura': document_detl.get('asignatura',''),
+            'modalidad': document_detl.get('modalidad',' '),
+            'tipo': document_detl.get('tipo',''),
+            'creditos': document_detl.get('creditos','')
             }
-        documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": document_detl['universidad'], "area": document_detl['area']})
+        documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": document_detl.get('universidad',''), "area": document_detl.get('area','')})
         documents_unis = mongo.db.asignaturas.distinct("universidad")
-        documents_area = mongo.db.asignaturas.distinct("area", {"universidad": document_detl['universidad']})
-        documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": document_detl['universidad'], "area": document_detl['area']}) 
-        documents_nivel1 = mongo.db.asignaturas.distinct("nivel1", {"universidad": document_detl['universidad'], "area": document_detl['area'], "titulo": document_detl['titulo']})
-        documents_nivel2 = mongo.db.asignaturas.distinct("nivel2", {"universidad": document_detl['universidad'], "area": document_detl['area'], "titulo": document_detl['titulo'], "nivel1": document_detl['nivel1']})
-        documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": document_detl['universidad'], "area": document_detl['area'], "titulo": document_detl['titulo'], "nivel1": document_detl['nivel1'], "nivel2": document_detl['nivel2']}) 
-        
+        documents_area = mongo.db.asignaturas.distinct("area", {"universidad": document_detl.get('universidad','')})
+        documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": document_detl.get('universidad',''), "area": document_detl.get('area','')}) 
+        documents_nivel1 = mongo.db.asignaturas.distinct("nivel1", {"universidad": document_detl.get('universidad',''), "area": document_detl.get('area',''), "titulo": document_detl.get('titulo','')})
+        documents_nivel2 = mongo.db.asignaturas.distinct("nivel2", {"universidad": document_detl.get('universidad',''), "area": document_detl.get('area',''), "titulo": document_detl.get('titulo',''), "nivel1": document_detl.get('nivel1','')})
+        documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": document_detl.get('universidad',''), "area": document_detl.get('area',''), "titulo": document_detl.get('titulo',''), "nivel1": document_detl.get('nivel1',''), "nivel2": document_detl.get('nivel2','')}) 
+    
+        course_id = document_detl['_id']
+        documents_skills = mongo.db.competencias.find({"course_id": course_id}).sort("name",1)
+        documents_results = mongo.db.resultados.find({"course_id": course_id}).sort("name",1)
+        documents_instruments = mongo.db.instrumentos.find({"course_id": course_id}).sort("name",1)
+
+
     else:
         documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": request.form['university'], "area": request.form['area']})
         documents_unis = mongo.db.asignaturas.distinct("universidad")
@@ -204,32 +210,36 @@ def buscar(id):
         documents_area = mongo.db.asignaturas.distinct("area", {"universidad": selected_uni})
         selected_area = request.form['area']
         documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": selected_uni, "area": selected_area}) 
-        selected_titu = request.form['titulo']
+        selected_titu = request.form.get('titulo','')
         documents_nivel1 = mongo.db.asignaturas.distinct("nivel1", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu})
-        selected_nivel1 = request.form['nivel1']
+        selected_nivel1 = request.form.get('nivel1','')
         documents_nivel2 = mongo.db.asignaturas.distinct("nivel2", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1})
-        selected_nivel2 = request.form['nivel2']
+        selected_nivel2 = request.form.get('nivel2','')
         documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2})
-        selected_cour = request.form['asignatura']
+        selected_cour = request.form.get('asignatura','')
         document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"modalidad": 1, "creditos":1, "tipo":1}) 
-        data_selected = {
-            'universidad': selected_uni,
-            'area': selected_area,
-            'titulo': selected_titu,
-            'nivel1': selected_nivel1,
-            'nivel2': selected_nivel2,
-            'asignatura': selected_cour,
-            'modalidad': document_detl['modalidad'],
-            'tipo': document_detl['tipo'],
-            'creditos': document_detl['creditos']
-            }
-        
-
-    # skills
-    course_id = document_detl['_id']
-    documents_skills = mongo.db.competencias.find({"course_id": course_id}).sort("name",1)
-    documents_results = mongo.db.resultados.find({"course_id": course_id}).sort("name",1)
-    documents_instruments = mongo.db.instrumentos.find({"course_id": course_id}).sort("name",1)
+        if document_detl:
+            data_selected = {
+                'universidad': selected_uni,
+                'area': selected_area,
+                'titulo': selected_titu,
+                'nivel1': selected_nivel1,
+                'nivel2': selected_nivel2,
+                'asignatura': selected_cour,
+                'modalidad': document_detl.get('modalidad',' '),
+                'tipo': document_detl.get('tipo',''),
+                'creditos': document_detl.get('creditos','')
+                }
+            # skills
+            course_id = document_detl['_id']
+            documents_skills = mongo.db.competencias.find({"course_id": course_id}).sort("name",1)
+            documents_results = mongo.db.resultados.find({"course_id": course_id}).sort("name",1)
+            documents_instruments = mongo.db.instrumentos.find({"course_id": course_id}).sort("name",1)
+        else:
+            data_selected = {}
+            documents_skills = {}
+            documents_results = {}
+            documents_instruments = {}
 
     return render_template('index.html', universidades = documents_unis, areas = documents_area, titulos = documents_titu, 
         niveles1 = documents_nivel1, niveles2 = documents_nivel2, asignaturas = documents_cour, selected = data_selected, 
@@ -353,16 +363,16 @@ def institution(id):
     document_institution = mongo.db.asignaturas.find_one({"_id": id})
     
     data_course = {
-        'universidad': document_institution['universidad'],
-        'area': document_institution['area'],
-        'titulo': document_institution['titulo'],
-        'nivel1': document_institution['nivel1'],
-        'nivel2': document_institution['nivel2'],
-        'asignatura': document_institution['asignatura'],
-        'tipo': document_institution['tipo'],
-        'creditos': document_institution['creditos'],
-        'modalidad': document_institution['modalidad'],
-        "_id": document_institution['_id']
+        'universidad': document_institution.get('universidad',''),
+        'area': document_institution.get('area',''),
+        'titulo': document_institution.get('titulo',''),
+        'nivel1': document_institution.get('nivel1',''),
+        'nivel2': document_institution.get('nivel2',''),
+        'asignatura': document_institution.get('asignatura',''),
+        'tipo': document_institution.get('tipo',''),
+        'creditos': document_institution.get('creditos',''),
+        'modalidad': document_institution.get('modalidad',''),
+        "_id": document_institution.get('_id','')
         }
     print()
     return data_course
