@@ -298,6 +298,19 @@ def instrument_save(id):
         { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
     }
     mongo.db.instrumentos.update_one(myquery, newrevision)
+
+
+    if request.form.get('aplicar'):
+        
+        # obtenemos universidad a través de id de curso
+        document_instrument = mongo.db.instrumentos.find_one({"_id": ObjectId(request.form['id'])}, {"course_id":1}) 
+        universidad = institution(document_instrument['course_id'])['universidad']
+        cursos = cursos_universidad(universidad)
+        # en vez de print, actualizar los cursos con los datos de arriba
+        for curso in cursos:
+            print(curso)
+        #FIN PRUEBA
+
     save = 1
     return instrument(request.form['id'], save)
 
@@ -374,8 +387,11 @@ def institution(id):
         'modalidad': document_institution.get('modalidad',''),
         "_id": document_institution.get('_id','')
         }
-    print()
     return data_course
+
+def cursos_universidad(universidad):    
+    documents_cursos = mongo.db.asignaturas.find({}, {"_id":1})    
+    return documents_cursos
 
 @app.route('/asignaturas', methods=['POST'])
 def asignaturas():
