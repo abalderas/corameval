@@ -287,65 +287,46 @@ def instrument(id, save):
 @app.route('/instrument/save/', defaults={'id': 0}, methods=['POST'])
 @app.route('/instrument/save/<id>')
 def instrument_save(id):
-    myquery = { "_id": ObjectId(request.form['id']) }
     newvalues = { "$set": { "correccion": request.form['correccion'], 
-                            "autenticidad": request.form['autenticidad'],
-                            "observaciones": request.form['observaciones'] } }
-
-    mongo.db.instrumentos.update_one(myquery, newvalues)
-
+                        "autenticidad": request.form['autenticidad'],
+                        "observaciones": request.form['observaciones'] } }
     newrevision = { "$push": 
-        { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
-    }
-    mongo.db.instrumentos.update_one(myquery, newrevision)
+            { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
+        }
 
-
+    # Actualizacion todos instrumentos mismo nombre universidad
     if request.form.get('aplicar'):
         
         # obtenemos universidad a través de id de curso
-        document_instrument = mongo.db.instrumentos.find_one({"_id": ObjectId(request.form['id'])}, {"course_id":1}) 
+        document_instrument = mongo.db.instrumentos.find_one({"_id": ObjectId(request.form['id'])}, {"course_id":1, "name":1}) 
         universidad = institution(document_instrument['course_id'])['universidad']
-        cursos = cursos_universidad(universidad)
-        # en vez de print, actualizar los cursos con los datos de arriba
-        for curso in cursos:
-            print(curso)
-        #FIN PRUEBA
+        asignaturas = asignaturas_universidad(universidad)
+        lista_asignaturas = []
+        for asignatura in asignaturas:
+            lista_asignaturas.append(asignatura.get('_id', ''))
+        
+        mongo.db.instrumentos.update_many({
+            "name": document_instrument.get('name', ''),
+            "course_id": {"$in": lista_asignaturas} 
+        }, newrevision)
+        
+        mongo.db.instrumentos.update_many({
+            "name": document_instrument.get('name', ''),
+            "course_id": {"$in": lista_asignaturas} 
+        }, newvalues)
+
+    # Actualicacion solo instrumento bajo edicion
+    else:        
+        myquery = { "_id": ObjectId(request.form['id']) }       
+        mongo.db.instrumentos.update_one(myquery, newvalues)
+        mongo.db.instrumentos.update_one(myquery, newrevision)
 
     save = 1
     return instrument(request.form['id'], save)
 
-@app.route('/skill/save/', defaults={'id': 0}, methods=['POST'])
-@app.route('/skill/save/<id>')
-def skill_save(id):
-    myquery = { "_id": ObjectId(request.form['id']) }
-    newvalues = { "$set":   {   "tipo": request.form['tipo'],
-                                "correccion": request.form['correccion'], 
-                                "cognitivo": request.form['cognitivo'],
-                                "factual": request.form['factual'],
-                                "conceptual": request.form['conceptual'],
-                                "procedimental": request.form['procedimental'],
-                                "metacognitivo": request.form['metacognitivo'],
-                                "estructura": request.form['estructura'],
-                                "afectivo": request.form['afectivo'],
-                                "tecnologico": request.form['tecnologico'],
-                                "colaborativo": request.form['colaborativo'],
-                                "observaciones": request.form['observaciones']
-                            }
-                 }   
-    mongo.db.competencias.update_one(myquery, newvalues)
-
-    newrevision = { "$push": 
-        { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
-    }
-    mongo.db.competencias.update_one(myquery, newrevision)
-
-    save = 1
-    return skill(request.form['id'], save)
-
 @app.route('/result/save/', defaults={'id': 0}, methods=['POST'])
 @app.route('/result/save/<id>')
 def result_save(id):
-    myquery = { "_id": ObjectId(request.form['id']) }
     newvalues = { "$set":   {   "correccion": request.form['correccion'], 
                                 "verificabilidad": request.form['verificabilidad'],
                                 "autenticidad": request.form['autenticidad'],
@@ -360,17 +341,102 @@ def result_save(id):
                                 "colaborativo": request.form['colaborativo'],
                                 "observaciones": request.form['observaciones'] 
                             }}
-
-                 #"$push":   {   "revisiones": {"$each": [session['username']] }}}
-
-    mongo.db.resultados.update_one(myquery, newvalues)
-
     newrevision = { "$push": 
         { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
     }
-    mongo.db.resultados.update_one(myquery, newrevision)
+
+    # Actualizacion todos resultados mismo nombre universidad
+    if request.form.get('aplicar'):
+        
+        # obtenemos universidad a través de id de curso
+        document_resultado = mongo.db.resultados.find_one({"_id": ObjectId(request.form['id'])}, {"course_id":1, "name":1}) 
+        universidad = institution(document_resultado['course_id'])['universidad']
+        asignaturas = asignaturas_universidad(universidad)
+        lista_asignaturas = []
+        for asignatura in asignaturas:
+            lista_asignaturas.append(asignatura.get('_id', ''))
+        
+        mongo.db.resultados.update_many({
+            "name": document_resultado.get('name', ''),
+            "course_id": {"$in": lista_asignaturas} 
+        }, newrevision)
+        
+        mongo.db.resultados.update_many({
+            "name": document_resultado.get('name', ''),
+            "course_id": {"$in": lista_asignaturas} 
+        }, newvalues)
+
+    # Actualicacion solo resultado bajo edicion
+    else:
+        myquery = { "_id": ObjectId(request.form['id']) }
+        mongo.db.resultados.update_one(myquery, newvalues)
+        mongo.db.resultados.update_one(myquery, newrevision)
+
     save = 1
     return result(request.form['id'], save)
+
+@app.route('/skill/save/', defaults={'id': 0}, methods=['POST'])
+@app.route('/skill/save/<id>')
+def skill_save(id):
+    
+    newvalues = { "$set":   {   "tipo": request.form['tipo'],
+                                "correccion": request.form['correccion'], 
+                                "cognitivo": request.form['cognitivo'],
+                                "factual": request.form['factual'],
+                                "conceptual": request.form['conceptual'],
+                                "procedimental": request.form['procedimental'],
+                                "metacognitivo": request.form['metacognitivo'],
+                                "estructura": request.form['estructura'],
+                                "afectivo": request.form['afectivo'],
+                                "tecnologico": request.form['tecnologico'],
+                                "colaborativo": request.form['colaborativo'],
+                                "observaciones": request.form['observaciones']
+                            }
+                 }  
+    newrevision = { "$push": 
+        { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
+    }
+
+    # Actualizacion todas competencias mismo nombre universidad
+    if request.form.get('aplicar'):
+        
+        document_competencia = mongo.db.competencias.find_one({"_id": ObjectId(request.form['id'])}, {"course_id":1, "name":1}) 
+            
+        # si no es básica, para toda la universidad
+        if request.form['tipo'] != '0':
+             # obtenemos universidad a través de id de curso
+            universidad = institution(document_competencia['course_id'])['universidad']
+            asignaturas = asignaturas_universidad(universidad)
+            lista_asignaturas = []
+            for asignatura in asignaturas:
+                lista_asignaturas.append(asignatura.get('_id', ''))
+            
+            mongo.db.competencias.update_many({
+                "name": document_competencia.get('name', ''),
+                "course_id": {"$in": lista_asignaturas} 
+            }, newvalues)
+            
+            mongo.db.competencias.update_many({
+                "name": document_competencia.get('name', ''),
+                "course_id": {"$in": lista_asignaturas} 
+            }, newrevision)
+        # si es básica, para toda la base de datos
+        else:            
+            mongo.db.competencias.update_many({
+                "name": document_competencia.get('name', '') 
+            }, newvalues)
+            
+            mongo.db.competencias.update_many({
+                "name": document_competencia.get('name', '')
+            }, newrevision)
+    # Actualicacion solo competencia bajo edicion
+    else:   
+        myquery = { "_id": ObjectId(request.form['id']) }
+        mongo.db.competencias.update_one(myquery, newvalues)
+        mongo.db.competencias.update_one(myquery, newrevision)
+
+    save = 1
+    return skill(request.form['id'], save)
 
 def institution(id):
     document_institution = mongo.db.asignaturas.find_one({"_id": id})
@@ -389,9 +455,9 @@ def institution(id):
         }
     return data_course
 
-def cursos_universidad(universidad):    
-    documents_cursos = mongo.db.asignaturas.find({}, {"_id":1})    
-    return documents_cursos
+def asignaturas_universidad(universidad):    
+    documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad}, {"_id":1})    
+    return documents_asignaturas
 
 @app.route('/asignaturas', methods=['POST'])
 def asignaturas():
