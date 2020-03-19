@@ -55,6 +55,11 @@ def access():
         return login(1)
     return login(2)
 
+# Función privada creacion clave usuarios
+@app.route('/password/<clave>')
+def password(clave):
+    encriptada = bcrypt.hashpw(clave.encode('utf8'), bcrypt.gensalt())
+    return encriptada
 
 @app.route('/')
 def Index():
