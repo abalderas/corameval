@@ -12,7 +12,22 @@
     <link rel='shortcut icon' type='image/x-icon' href="{{ url_for('static', filename='favicon.ico') }}" />
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="alert alert-light border-0 mb-0 rounded-0 px-0" role="alert">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+        <div class="d-flex align-items-center justify-content-between">
+        <a class="" href="/">
+            <img src="{{ url_for('static', filename='images/uca.png') }}" />
+        </a>
+        <a class="" href="/">
+            <img src="{{ url_for('static', filename='images/floass.png') }}"></a>
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
         <a class="navbar-brand" href="/">CORAMeval</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
