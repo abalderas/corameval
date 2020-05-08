@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: latin-1 -*-
 from flask import Flask, render_template, url_for, request, jsonify, json, session
 from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId
@@ -10,6 +12,9 @@ app = Flask(__name__)
 # app.config['MONGO_URI'] = 'mongodb://skillsapp:UCa2019psi@localhost:27017/skillsdb'
 # mongo = PyMongo(app)
 
+# MongoDB koala.uca.es
+# app.config['MONGO_URI'] = 'mongodb://coramevaluser:Floass2019Psi@localhost:27017/coramevaldb'
+# mongo = PyMongo(app)
 
 # MondoDB Atlas Remote Connection
 mongo = pymongo.MongoClient("mongodb+srv://CORAMevalDBUser:donx7Xb6uGFKMbUL@cluster0-cz4qg.mongodb.net/test?retryWrites=true&w=majority")
@@ -484,7 +489,7 @@ def asignaturas():
 def cargar_competencias():
     import csv
     counter = 0
-    with open('data/upv_competencias.csv', newline='') as File:
+    with open('data/CANCELAR_competencias.csv', newline='') as File:
         reader = csv.reader(File, delimiter=':')
         
         for row in reader:
@@ -493,11 +498,12 @@ def cargar_competencias():
                 'universidad': row[0],
                 'area': row[1],
                 'titulo': row[2],
-                'nivel1': row[3],
-                'nivel2': row[4],
-                'asignatura': row[5],
-                'tipo': row[7],
-                'creditos': row[6]
+                'modalidad': row[3],
+                'nivel1': row[4],
+                'nivel2': row[5],
+                'asignatura': row[6],
+                'tipo': row[8],
+                'creditos': row[7]
                 }
             existe_institucion = mongo.db.asignaturas.find_one(data_course)
             if (not(existe_institucion)):
@@ -508,22 +514,24 @@ def cargar_competencias():
             
             data_competencia = {
                 'course_id': id_institucion,
-                'name': row[8],
-                'tipo': tipo_competencia(row[9]),
-                'observaciones': row[10]
+                'name': row[9],
+                'tipo': tipo_competencia(row[10]),
+                'observaciones': row[11]
             }
-            print(str(counter))
             existe_competencia = mongo.db.competencias.find_one(data_competencia)
             if(not(existe_competencia)):
                 mongo.db.competencias.insert_one(data_competencia)
 
+    print(str(counter))
     return 'COMPETENCIAS CARGADAS!'
 
 @app.route('/cargar_resultados')
 def cargar_resultados():
     import csv
-    counter = 1
-    with open('data/upv_resultados.csv', newline='') as File:
+    counter = 0
+    # ficher errores
+    ferrores = open("errores_results.log","w")
+    with open('data/CANCELAR_resultados.csv', newline='') as File:
         reader = csv.reader(File, delimiter=':')
         
         for row in reader:
@@ -533,44 +541,50 @@ def cargar_resultados():
                 'universidad': row[0],
                 'area': row[1],
                 'titulo': row[2],
-                'nivel1': row[3],
-                'nivel2': row[4],
-                'asignatura': row[5],
-                'creditos': row[6],
-                'tipo': row[7]                
+                'modalidad': row[3],
+                'nivel1': row[4],
+                'nivel2': row[5],
+                'asignatura': row[6],
+                'creditos': row[7],
+                'tipo': row[8]                
                 }
             existe_asignatura = mongo.db.asignaturas.find_one(data_course)
             if (not(existe_asignatura)):
                 #nuevo = mongo.db.asignaturas.insert_one(data_course)
                 #id_asignatura = nuevo.inserted_id
-                print(str(counter) + " no existe asignatura")
-                print(data_course)
+                id_asignatura = 0
+                print("Linea: " + str(counter) + " no existe asignatura")
+                # ferrores.write("Linea:"+str(counter))
+                ferrores.write(str(data_course))
+                ferrores.write("-------------")
             else:
                 id_asignatura = existe_asignatura['_id']
             
             data_resultado = {
                 'course_id': id_asignatura,
-                'name': row[8],
-                'observaciones': row[9]
+                'name': row[9],
+                'observaciones': row[10]
             }
             
             # REVISAR UPV RESULTADOS ...
-            print(counter)
+            # print(counter)
             if (data_resultado['name'] != "NO APARECE" and data_resultado['name'] != ""):
                 #print(str(counter) + " no existe resultado")
                 existe_resultado = mongo.db.resultados.find_one(data_resultado)
                 if(not(existe_resultado)):
                     mongo.db.resultados.insert_one(data_resultado)
 
+    print(counter)
     return 'RESULTADOS CARGADOS!'
 
 @app.route('/cargar_instrumentos')
 def cargar_instrumentos():
     import csv
-    counter = 1
-    with open('data/upv_instrumentos.csv', newline='') as File:
+    counter = 0
+    with open('data/ucor_medios.csv', newline='') as File:
         reader = csv.reader(File, delimiter=':')
         
+        ferrores = open("errores_medios.log","w")
         for row in reader:
             counter = counter + 1
             
@@ -578,29 +592,33 @@ def cargar_instrumentos():
                 'universidad': row[0],
                 'area': row[1],
                 'titulo': row[2],
-                'nivel1': row[3],
-                'nivel2': row[4],
-                'asignatura': row[5],
-                'creditos': row[6],
-                'tipo': row[7]                
+                'modalidad': row[3],
+                'nivel1': row[4],
+                'nivel2': row[5],
+                'asignatura': row[6],
+                'creditos': row[7],
+                'tipo': row[8]                
                 }
             existe_asignatura = mongo.db.asignaturas.find_one(data_course)
             
             if (not(existe_asignatura)):
-                nuevo = mongo.db.asignaturas.insert_one(data_course)
-                id_asignatura = nuevo.inserted_id
-                print(str(counter) + " asignatura nueva")
+                # nuevo = mongo.db.asignaturas.insert_one(data_course)
+                # id_asignatura = nuevo.inserted_id
+                id_asignatura = 0
+                print("Linea: " + str(counter) + " no existe asignatura")
+                ferrores.write(str(data_course))
+                print("------------------")
             else:
                 id_asignatura = existe_asignatura['_id']
             
             data_instrumento = {
                 'course_id': id_asignatura,
-                'name': row[8],
-                'observaciones': row[11]
+                'name': row[9],
+                'observaciones': row[10]
             }
             
             #print(counter)
-            if (data_instrumento['name'] != "NO APARECE" and data_instrumento['name'] != ""):
+            if (data_instrumento['name'] != "No existe" and data_instrumento['name'] != ""):
                 #print(str(counter) + " no existe resultado")
                 existe_instrumento = mongo.db.instrumentos.find_one(data_instrumento)
                 if(not(existe_instrumento)):
