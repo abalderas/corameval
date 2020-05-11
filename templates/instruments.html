@@ -13,7 +13,7 @@
                         {{ course.universidad }}
                     </div> 
                     <div class="col-sm-1">
-                        <strong>Nivel 1</strong>
+                        <strong>Módulo</strong>
                     </div>
                     <div class="col">
                         {{ course.nivel1 }}
@@ -28,7 +28,7 @@
                     </div>
                     
                     <div class="col-sm-1">
-                        <strong>Nivel 2</strong>
+                        <strong>Materia</strong>
                     </div>
                     <div class="col">
                         {{ course.nivel2 }}
@@ -78,7 +78,7 @@
                             {% for instrument in instruments %}
                             <tr>
                                 <td><a href="/instrument/{{instrument['_id']}}">{{instrument['name']}}</a>
-                                    <span class="{% if instrument['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>({{instrument['revisiones']|length}})</strong></span></td>
+                                    <span class="{% if instrument['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>(Revisiones: {{instrument['revisiones']|length}})</strong></span></td>
                                 </td>
                             </tr>
                             {% endfor %}

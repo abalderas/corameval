@@ -12,13 +12,14 @@
                         </div>
                         <div class="col-sm-4">
                             <select name="university" id="university" class="form-control">
+                                <option value="">(seleccione universidad)</option>
                                 {% for universidad in universidades %}
                                 <option value="{{universidad}}" {% if selected.universidad == universidad %}  selected {% endif %}>{{universidad}}</option>
                                 {% endfor %}
                             </select>
                         </div> 
                         <div class="col-sm-1">
-                                <label for="nivel1" class="form-control"><strong>Nivel 1</strong></label>
+                                <label for="nivel1" class="form-control"><strong>Módulo</strong></label>
                         </div>
                         <div class="col">
                             <select name="nivel1" id="nivel1" class="form-control">
@@ -41,7 +42,7 @@
                             </div>
                             
                             <div class="col-sm-1">
-                                <label for="nivel2" class="form-control"><strong>Nivel 2</strong></label>
+                                <label for="nivel2" class="form-control"><strong>Materia</strong></label>
                             </div>
                             <div class="col">
                                 <select name="nivel2" id="nivel2" class="form-control">
@@ -111,7 +112,7 @@
                 {% for skill in skills %}
                 <tr>
                     <td><a href="/skill/{{skill['_id']}}">{{skill['name']}}</a>
-                        <span class="{% if skill['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>({{skill['revisiones']|length}})</strong></span></td>
+                        <span class="{% if skill['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>(Revisiones: {{skill['revisiones']|length}})</strong></span></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -128,7 +129,7 @@
                         {% for result in results %}
                         <tr>
                             <td><a href="/result/{{result['_id']}}">{{result['name']}}</a>
-                                <span class="{% if result['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>({{result['revisiones']|length}})</strong></span></td>
+                                <span class="{% if result['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>(Revisiones: {{result['revisiones']|length}})</strong></span></td>
                         </tr>
                         {% endfor %}
                 </tbody>
@@ -146,7 +147,7 @@
                             {% for instrument in instruments %}
                             <tr>
                                 <td><a href="/instrument/{{instrument['_id']}}">{{instrument['name']}}</a>
-                                    <span class="{% if instrument['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>({{instrument['revisiones']|length}})</strong></span></td>
+                                    <span class="{% if instrument['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>(Revisiones: {{instrument['revisiones']|length}})</strong></span></td>
                             </tr>
                             {% endfor %}
                     </tbody>

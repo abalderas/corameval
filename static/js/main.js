@@ -105,6 +105,7 @@ function listing_courses()
     .done(function(data) {
 
         $('#asignatura').empty();
+        $('#asignatura').append('<option value="">(selecciona asignatura)</option>');
         for (var i=0; i<data.length; i++)
             $('#asignatura').append('<option value="' + data[i] + '">' + data[i] + '</option>');
     });
@@ -125,6 +126,7 @@ function listing_niveles2()
     .done(function(data) {
 
         $('#nivel2').empty();
+        $('#nivel2').append('<option value="">(selecciona materia)</option>');
         for (var i=0; i<data.length; i++)
             $('#nivel2').append('<option value="' + data[i] + '">' + data[i] + '</option>');
     });
@@ -144,6 +146,7 @@ function listing_niveles1()
     .done(function(data) {
 
         $('#nivel1').empty();
+        $('#nivel1').append('<option value="">(selecciona módulo)</option>');
         for (var i=0; i<data.length; i++)
             $('#nivel1').append('<option value="' + data[i] + '">' + data[i] + '</option>');
     });
@@ -162,6 +165,7 @@ function listing_degrees()
     .done(function(data) {
 
         $('#titulo').empty();
+        $('#titulo').append('<option value="">(selecciona curso)</option>');
         for (var i=0; i<data.length; i++)
             $('#titulo').append('<option value="' + data[i] + '">' + data[i] + '</option>');
     });
@@ -180,6 +184,7 @@ function listing_areas()
     .done(function(data) {
 
         $('#area').empty();
+        $('#area').append('<option value="">(selecciona área)</option>');
         for (var i=0; i<data.length; i++)
             $('#area').append('<option value="' + data[i] + '">' + data[i] + '</option>');
 
