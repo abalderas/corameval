@@ -274,9 +274,13 @@ def instrument(id, save):
 @app.route('/instrument/save/', defaults={'id': 0}, methods=['POST'])
 @app.route('/instrument/save/<id>')
 def instrument_save(id):
-    newvalues = { "$set": { "correccion": request.form['correccion'], 
-                        "autenticidad": request.form['autenticidad'],
-                        "observaciones": request.form['observaciones'] } }
+    if request.form['correccion'] != "0": 
+        newvalues = { "$set": { "correccion": request.form['correccion'], 
+                            "autenticidad": request.form['autenticidad'],
+                            "observaciones": request.form['observaciones'] } }
+    else:        
+        newvalues = { "$set": { "correccion": request.form['correccion']} }
+
     newrevision = { "$push": 
             { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
         }
@@ -314,20 +318,26 @@ def instrument_save(id):
 @app.route('/result/save/', defaults={'id': 0}, methods=['POST'])
 @app.route('/result/save/<id>')
 def result_save(id):
-    newvalues = { "$set":   {   "correccion": request.form['correccion'], 
-                                "verificabilidad": request.form['verificabilidad'],
-                                "autenticidad": request.form['autenticidad'],
-                                "cognitivo": request.form['cognitivo'],
-                                "factual": request.form['factual'],
-                                "conceptual": request.form['conceptual'],
-                                "procedimental": request.form['procedimental'],
-                                "metacognitivo": request.form['metacognitivo'],
-                                "estructura": request.form['estructura'],
-                                "afectivo": request.form['afectivo'],
-                                "tecnologico": request.form['tecnologico'],
-                                "colaborativo": request.form['colaborativo'],
-                                "observaciones": request.form['observaciones'] 
+    
+    if request.form['correccion'] != "0": 
+        newvalues = { "$set":   {   "correccion": request.form['correccion'], 
+                                    "verificabilidad": request.form['verificabilidad'],
+                                    "autenticidad": request.form['autenticidad'],
+                                    "cognitivo": request.form['cognitivo'],
+                                    "factual": request.form['factual'],
+                                    "conceptual": request.form['conceptual'],
+                                    "procedimental": request.form['procedimental'],
+                                    "metacognitivo": request.form['metacognitivo'],
+                                    "estructura": request.form['estructura'],
+                                    "afectivo": request.form['afectivo'],
+                                    "tecnologico": request.form['tecnologico'],
+                                    "colaborativo": request.form['colaborativo'],
+                                    "observaciones": request.form['observaciones'] 
                             }}
+    else:
+        newvalues = { "$set":   {   "correccion": request.form['correccion'] 
+                            }}
+
     newrevision = { "$push": 
         { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
     }
@@ -366,7 +376,8 @@ def result_save(id):
 @app.route('/skill/save/<id>')
 def skill_save(id):
     
-    newvalues = { "$set":   {   "tipo": request.form['tipo'],
+    if request.form['correccion'] != "0": 
+        newvalues = { "$set":   {   "tipo": request.form['tipo'],
                                 "correccion": request.form['correccion'], 
                                 "cognitivo": request.form['cognitivo'],
                                 "factual": request.form['factual'],
@@ -380,6 +391,10 @@ def skill_save(id):
                                 "observaciones": request.form['observaciones']
                             }
                  }  
+    else:
+        newvalues = { "$set":   {   "tipo": request.form['tipo'],
+                                "correccion": request.form['correccion'] }}
+                                
     newrevision = { "$push": 
         { "revisiones": {"usuario": session['username'], "fecha": datetime.now()} }
     }

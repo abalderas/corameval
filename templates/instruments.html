@@ -121,7 +121,8 @@
                             <div class="form-row">
                                 <div class="col-sm-11">                        
                                     <select name="correccion" id="correccion" class="form-control">
-                                            <option value="0"{% if document['correccion']=='0' %} selected="selected" {% endif %}> 0. No informa de producto o actuación objeto de evaluación. Si es 0 NO se valora más.</option>
+                                            <option value="-1">(selecciona una opción)</option>
+                                            <option value="0"{% if document['correccion']=='0' %} selected="selected" {% endif %}>0. No informa de producto o actuación objeto de evaluación. Si es 0 NO se valora más.</option>
                                             <option value="1"{% if document['correccion']=='1' %} selected="selected" {% endif %}>1. Se intuye pero no se explica</option>
                                             <option value="2"{% if document['correccion']=='2' %} selected="selected" {% endif %}>2. Correcto</option>      
                                     </select>
@@ -144,7 +145,7 @@
                             </div>                    
                             <div class="form-row"> 
                                 <div class="col-sm-6">                        
-                                    <select name="autenticidad" id="autenticidad" class="form-control">
+                                    <select name="autenticidad" id="autenticidad" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                         <option value="1"{% if document['autenticidad']=='1' %} selected="selected" {% endif %}>1 Ninguna</option>
                                         <option value="2"{% if document['autenticidad']=='2' %} selected="selected" {% endif %}>2</option>
                                         <option value="3"{% if document['autenticidad']=='3' %} selected="selected" {% endif %}>3</option>
@@ -166,7 +167,7 @@
                         </div>
                         <div class="form-row">
                             <div class="col-sm">
-                                <textarea class="form-control" name="observaciones" id="observaciones" rows="3">{{document['observaciones']}}</textarea>
+                                <textarea class="form-control" name="observaciones" id="observaciones" rows="3" {% if document['correccion']=='0' %} disabled {% endif %}>{{document['observaciones']}}</textarea>
                             </div>
                         </div>
                         <div class="form-row mt-3">
@@ -177,7 +178,7 @@
                             <div class="col-sm-6"> 
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" name="aplicar" id="aplicar" checked>
+                                      <input class="form-check-input" type="checkbox" name="aplicar" id="aplicar" {% if document['correccion']=='0' %} disabled {% endif %}>
                                       Aplicar los cambios a nivel de universidad
                                     </label>
                                 </div>

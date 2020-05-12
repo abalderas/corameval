@@ -115,6 +115,7 @@
                         <div class="form-row">  
                             <div class="col-sm-11">                        
                                 <select name="correccion" id="correccion" class="form-control">
+                                    <option value="-1">(selecciona una opción)</option>
                                     <option value="0"{% if document['correccion']=='0' %} selected="selected" {% endif %}>Nivel 0, no se valora más</option>
                                     <option value="1"{% if document['correccion']=='1' %} selected="selected" {% endif %}>Nivel 1, se especifica la acción concreta a hacer o demostrar, pero no está claramente redactado</option>
                                     <option value="2"{% if document['correccion']=='2' %} selected="selected" {% endif %}>Nivel 2, la redacción es concreta, comprensible, clara.</option>
@@ -137,7 +138,7 @@
                         </div>
                         <div class="form-row">                             
                             <div class="col-sm-11">                        
-                                <select name="verificabilidad" id="verificabilidad" class="form-control">
+                                <select name="verificabilidad" id="verificabilidad" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                     <option value="1"{% if document['verificabilidad']=='1' %} selected="selected" {% endif %}>1 Ninguna</option>
                                     <option value="2"{% if document['verificabilidad']=='2' %} selected="selected" {% endif %}>2</option>
                                     <option value="3"{% if document['verificabilidad']=='3' %} selected="selected" {% endif %}>3</option>
@@ -162,7 +163,7 @@
                         </div>
                         <div class="form-row"> 
                             <div class="col-sm-11">                        
-                                <select name="autenticidad" id="autenticidad" class="form-control">
+                                <select name="autenticidad" id="autenticidad" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                     <option value="1"{% if document['autenticidad']=='1' %} selected="selected" {% endif %}>1 Ninguna</option>
                                     <option value="2"{% if document['autenticidad']=='2' %} selected="selected" {% endif %}>2</option>
                                     <option value="3"{% if document['autenticidad']=='3' %} selected="selected" {% endif %}>3</option>
@@ -187,7 +188,7 @@
                                 data-content="Proceso cognitivo que se infiere del resultado de aprendizaje (Taxonomía de Anderson et al)." data-original-title="Proceso cognitivo (info)">+ info</button>
                             </div>
                             <div class="col-sm-3">                        
-                                <select name="cognitivo" id="cognitivo" class="form-control">
+                                <select name="cognitivo" id="cognitivo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                     <option value="1"{% if document['cognitivo']=='1' %} selected="selected" {% endif %}>1 Recordar</option>
                                     <option value="2"{% if document['cognitivo']=='2' %} selected="selected" {% endif %}>2 Comprender</option>
                                     <option value="3"{% if document['cognitivo']=='3' %} selected="selected" {% endif %}>3 Aplicar</option>
@@ -223,7 +224,7 @@
                                 <label for="factual" class="form-control"><strong>Factual</strong></label>
                             </div>
                             <div class="col-sm-3">                        
-                                <select name="factual" id="factual" class="form-control">
+                                <select name="factual" id="factual" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                     <option value="0"{% if document['factual']=='0' %} selected="selected" {% endif %}>No</option>
                                     <option value="1"{% if document['factual']=='1' %} selected="selected" {% endif %}>Prioridad 1</option>
                                     <option value="2"{% if document['factual']=='2' %} selected="selected" {% endif %}>Prioridad 2</option>
@@ -233,7 +234,7 @@
                                 <label for="conceptual" class="form-control"><strong>Conceptual</strong></label>
                             </div>
                             <div class="col-sm-3">                        
-                                <select name="conceptual" id="conceptual" class="form-control">
+                                <select name="conceptual" id="conceptual" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                         <option value="0"{% if document['conceptual']=='0' %} selected="selected" {% endif %}>No</option>
                                         <option value="1"{% if document['conceptual']=='1' %} selected="selected" {% endif %}>Prioridad 1</option>
                                         <option value="2"{% if document['conceptual']=='2' %} selected="selected" {% endif %}>Prioridad 2</option>
@@ -245,7 +246,7 @@
                                 <label for="procedimental" class="form-control"><strong>Procedimental</strong></label>
                             </div>
                             <div class="col-sm-3">                        
-                                <select name="procedimental" id="procedimental" class="form-control">
+                                <select name="procedimental" id="procedimental" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                         <option value="0"{% if document['procedimental']=='0' %} selected="selected" {% endif %}>No</option>
                                         <option value="1"{% if document['procedimental']=='1' %} selected="selected" {% endif %}>Prioridad 1</option>
                                         <option value="2"{% if document['procedimental']=='2' %} selected="selected" {% endif %}>Prioridad 2</option>
@@ -255,7 +256,7 @@
                                 <label for="metacognitivo" class="form-control"><strong>Metacognitivo</strong></label>
                             </div>
                             <div class="col-sm-3">                        
-                                <select name="metacognitivo" id="metacognitivo" class="form-control">
+                                <select name="metacognitivo" id="metacognitivo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                         <option value="0"{% if document['metacognitivo']=='0' %} selected="selected" {% endif %}>No</option>
                                         <option value="1"{% if document['metacognitivo']=='1' %} selected="selected" {% endif %}>Prioridad 1</option>
                                         <option value="2"{% if document['metacognitivo']=='2' %} selected="selected" {% endif %}>Prioridad 2</option>
@@ -278,7 +279,7 @@
                                         data-original-title="Estructura del conocimiento (info)">+ info</button>
                                     </div>
                                 <div class="col">                        
-                                    <select name="estructura" id="estructura" class="form-control">
+                                    <select name="estructura" id="estructura" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                         <option value="1"{% if document['estructura']=='1' %} selected="selected" {% endif %}>1 Preestructural</option>
                                         <option value="2"{% if document['estructura']=='2' %} selected="selected" {% endif %}>2 Uniestructural</option>
                                         <option value="3"{% if document['estructura']=='3' %} selected="selected" {% endif %}>3 Multiestructural</option>
@@ -314,7 +315,7 @@
                                         <label for="afectivo" class="form-control"><strong>Afectivo/Actitudinal</strong></label>
                                     </div>
                                     <div class="col-sm-3">                        
-                                        <select name="afectivo" id="afectivo" class="form-control">
+                                        <select name="afectivo" id="afectivo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                             <option value="0"{% if document['afectivo']=='0' %} selected="selected" {% endif %}>No</option>
                                             <option value="1"{% if document['afectivo']=='1' %} selected="selected" {% endif %}>Sí</option>
                                         </select>
@@ -323,7 +324,7 @@
                                         <label for="tecnologico" class="form-control"><strong>Tecnológico</strong></label>
                                     </div>
                                     <div class="col-sm-3">                        
-                                        <select name="tecnologico" id="tecnologico" class="form-control">
+                                        <select name="tecnologico" id="tecnologico" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                                 <option value="0"{% if document['tecnologico']=='0' %} selected="selected" {% endif %}>No</option>
                                                 <option value="1"{% if document['tecnologico']=='1' %} selected="selected" {% endif %}>Sí</option>
                                         </select>
@@ -334,7 +335,7 @@
                                         <label for="colaborativo" class="form-control"><strong>Colaborativo</strong></label>
                                     </div>
                                     <div class="col-sm-3">                        
-                                        <select name="colaborativo" id="colaborativo" class="form-control">
+                                        <select name="colaborativo" id="colaborativo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
                                                 <option value="0"{% if document['colaborativo']=='0' %} selected="selected" {% endif %}>No</option>
                                                 <option value="1"{% if document['colaborativo']=='1' %} selected="selected" {% endif %}>Sí</option>
                                         </select>
@@ -351,7 +352,7 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="col-sm">
-                                        <textarea class="form-control" name="observaciones" id="observaciones" rows="3">{{document['observaciones']}}</textarea>
+                                        <textarea class="form-control" name="observaciones" id="observaciones" rows="3" {% if document['correccion']=='0' %} disabled {% endif %}>{{document['observaciones']}}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-row  mt-3">  
@@ -362,7 +363,7 @@
                                     <div class="col-sm-6"> 
                                         <div class="form-check">
                                             <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" name="aplicar" id="aplicar" checked>
+                                                <input class="form-check-input" type="checkbox" name="aplicar" id="aplicar" {% if document['correccion']=='0' %} disabled {% endif %}>
                                                 Aplicar los cambios a nivel de universidad
                                             </label>
                                         </div>
