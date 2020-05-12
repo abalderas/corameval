@@ -115,9 +115,9 @@
                         <div class="form-row">  
                             <div class="col-sm-11">                        
                                 <select name="correccion" id="correccion" class="form-control">
-                                    <option value="0"{% if document['correccion']=='0' %} selected="selected" {% endif %}>Nivel 0, no se valora más. No está definida en términos de competencia (punto de vista del profesor)</option>
-                                    <option value="1"{% if document['correccion']=='1' %} selected="selected" {% endif %}>Nivel 1, incluye un proceso cognitivo pero no está bien redactada</option>
-                                    <option value="2"{% if document['correccion']=='2' %} selected="selected" {% endif %}>Nivel 2, explicita verbo en infinitivo que informa de la acción del proceso cognitivo: recordar, conocer, aplicar, analizar, evaluar o crear</option>
+                                    <option value="0"{% if document['correccion']=='0' %} selected="selected" {% endif %}>Nivel 0, no se valora más</option>
+                                    <option value="1"{% if document['correccion']=='1' %} selected="selected" {% endif %}>Nivel 1, se especifica la acción concreta a hacer o demostrar, pero no está claramente redactado</option>
+                                    <option value="2"{% if document['correccion']=='2' %} selected="selected" {% endif %}>Nivel 2, la redacción es concreta, comprensible, clara.</option>
                                 </select>
                             </div>
                         </div>

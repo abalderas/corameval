@@ -84,7 +84,7 @@
         </table>
     </div>
     <div class="col-md-8">
-        <form action="/skill/save/" method="POST">
+        <form action="/skill/save/" method="POST" name="form-fields">
             {% if save==1 %}
             <div class="alert alert-dismissible alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -99,9 +99,10 @@
                     <div class="form-row">
                         <div class="col-sm-3">
                             <label for="tipo" class="form-control"><strong>Carácter</strong></label>
+                            <input type="hidden" name="tipo" id="tipo" value="{{document['tipo']}}" />
                         </div>
                         <div class="col-sm">
-                            <select name="tipo" id="tipo" class="form-control" disabled="" >
+                            <select name="tipo-text" id="tipo-text" class="form-control" disabled="" >
                                 <option value="0"{% if document['tipo']=='0' %} selected="selected" {% endif %}>Básicas</option>
                                 <option value="1"{% if document['tipo']=='1' %} selected="selected" {% endif %}>Específicas</option>
                                 <option value="2"{% if document['tipo']=='2' %} selected="selected" {% endif %}>Generales</option>
@@ -355,4 +356,5 @@
         </form>
     </div>
 </div>
+
 {% endblock %}

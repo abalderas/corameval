@@ -1,8 +1,23 @@
 $(document).ready(function() {
 
+    var modified;
+
     $(function () {
         $('[data-toggle="popover"]').popover()
-      });
+
+        $(document).on('click', function(){
+            $('[data-toggle="popover"]').popover('hide');
+        });
+      
+        $('[data-toggle="popover"]').click(function(){
+            $('[data-toggle="popover"]').not(this).popover('hide');
+            return false;
+        });
+    });
+
+    $("input, select").change(function () {   
+		modified = true;  
+	});
 
     $('#university').on('change', function(event) {
  
@@ -64,7 +79,6 @@ $(document).ready(function() {
         listing_details();
     
    });
-
 });
 
 function listing_details()
