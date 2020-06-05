@@ -115,7 +115,8 @@
                                 <label for="correccion" class="form-control"><strong>Corrección</strong></label>
                         </div>
                         <div class="col-sm-3">
-                            <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="right" data-content="En la redacción se explicita verbo en infinitivo que informa de la acción del proceso cognitivo que se requiere al estudiante (recordar, conocer, aplicar, analizar, evaluar o crear)." data-original-title="Corrección (info)">+ info</button>
+                            <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" 
+                            data-placement="bottom" data-img="{{ url_for('static', filename='/images/popups/COMP_Correccion.png') }}" data-original-title="Corrección (info)">+ info</button>
                         </div>
                     </div> 
                     <div class="form-row">  
@@ -138,7 +139,8 @@
                                     <label for="cognitivo" class="form-control"><strong>Proceso cognitivo</strong></label>
                             </div>
                             <div class="col-sm-3">
-                                <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="right" data-content="Proceso cognitivo que se infiere de la competencia (Taxonomía de Anderson et al)." data-original-title="Proceso cognitivo (info)">+ info</button>
+                                <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="bottom" 
+                                data-img="{{ url_for('static', filename='/images/popups/COMP_ProcesoCognitivo.png') }}"  data-original-title="Proceso cognitivo (info)">+ info</button>
                             </div>
                             <div class="col-sm-3">                        
                                 <select name="cognitivo" id="cognitivo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
@@ -161,15 +163,8 @@
                                 <label for="" class="form-control"><strong>Tipo de conocimiento</strong></label>
                         </div>                                                       
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="right" 
-                            data-content="
-                            Tipos de conocimiento que se infiere de la competencia:
-                            -Se mantienen dos prioridades.     -Cuando está explícito un conocimiento factual o conceptual y otro procedimental se seleccionan ambos, siendo más prioritario el procedimental.
-                            -Cuando sólo se explicita un conocimiento procedimental, aunque lleve implícito otros, sólo se indica el procedimental.
-                            -Principalmente aplicar es procedimental y relaciona.
-                            -Sólo liderazgo: metacognitivo (prioridad 1) y procedimental (prioridad 2)
-                            -Comunicar los resultados de un informe (procedimental) o comunicar a públicos diferentes adaptando el discurso (metacognitivo)
-                            " data-original-title="Proceso cognitivo (info)">+ info</button>
+                            <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="bottom" 
+                            data-img="{{ url_for('static', filename='/images/popups/COMP_TipoConocimiento.png') }}"  data-original-title="Proceso cognitivo (info)">+ info</button>
                         </div>
                     </div>
                     <div class="form-row">
@@ -226,9 +221,8 @@
                         </div>                        
                         <div class="col-sm-3">
                                 <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" 
-                                data-placement="right"
-                                data-content="Estructura del conocimiento que se infiere de la competencia 
-                                (preestructural, uniestructural, multiestructural, relacional y abstracto ampliado). (Taxonomía SOLO)." 
+                                data-placement="bottom"
+                                data-img="{{ url_for('static', filename='/images/popups/COMP_EstructuraConocimiento.png') }}" 
                                 data-original-title="Estructura del conocimiento (info)">+ info</button>
                             </div>
                         <div class="col">                        
@@ -251,9 +245,8 @@
                             </div>                        
                             <div class="col-sm-3">
                                     <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" 
-                                    data-placement="right"
-                                    data-content="Se contempla el carácter afectivo/actitudinal de la competencia, 
-                                    el carácter tecnológico y el carácter colaborativo (popup con texto que sigue a continuación)." 
+                                    data-placement="bottom"
+                                    data-img="{{ url_for('static', filename='/images/popups/COMP_Transversalidad.png') }}" 
                                     data-original-title="Tramsversalidad (info)">+ info</button>
                             </div>
                         </div>
@@ -307,17 +300,14 @@
                         <div class="form-row mt-3">  
                             <div class="col-sm-2">
                                 <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="right" 
-                                data-content="Depende del tipo de competencia:
-                                    (1) Básicas: todas las asignaturas de la base de datos. 
-                                    (2) Específicas: todas las asignaturas a nivel de universidad.
-                                    (3) Generales: todas las asignaturas a nivel de universidad.
-                                    (4) Transversales: todas las asignaturas a nivel de universidad.">+ info</button>
+                                data-content="Si marca esta casilla, los cambios se aplicarán a todas las apariciones de esta competencia a nivel de título 
+                                (excepto si es transversal, en cuyo caso se aplicará a todas las apariciones a nivel de universidad)">+ info</button>
                             </div>
                             <div class="col-sm-6"> 
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input class="form-check-input" type="checkbox" name="aplicar" id="aplicar" {% if document['correccion']=='0' %} disabled {% endif %}>
-                                        Aplicar los cambios a otros niveles
+                                        Aplicar los cambios a nivel de título (de toda la BD si se trata de una competencia genérica)
                                     </label>
                                 </div>
                             </div>

@@ -290,8 +290,11 @@ def instrument_save(id):
         
         # obtenemos universidad a través de id de curso
         document_instrument = mongo.db.instrumentos.find_one({"_id": ObjectId(request.form['id'])}, {"course_id":1, "name":1}) 
-        universidad = institution(document_instrument['course_id'])['universidad']
-        asignaturas = asignaturas_universidad(universidad)
+        universidad = institution(document_instrument['course_id'])['universidad']        
+        area = institution(document_instrument['course_id'])['area']            
+        titulo = institution(document_instrument['course_id'])['titulo']
+
+        asignaturas = asignaturas_universidad(universidad, area, titulo)
         lista_asignaturas = []
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
@@ -348,7 +351,9 @@ def result_save(id):
         # obtenemos universidad a través de id de curso
         document_resultado = mongo.db.resultados.find_one({"_id": ObjectId(request.form['id'])}, {"course_id":1, "name":1}) 
         universidad = institution(document_resultado['course_id'])['universidad']
-        asignaturas = asignaturas_universidad(universidad)
+        area = institution(document_resultado['course_id'])['area']            
+        titulo = institution(document_resultado['course_id'])['titulo']
+        asignaturas = asignaturas_universidad(universidad, area, titulo)
         lista_asignaturas = []
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
@@ -408,7 +413,9 @@ def skill_save(id):
         if request.form['tipo'] != '0':
              # obtenemos universidad a través de id de curso
             universidad = institution(document_competencia['course_id'])['universidad']
-            asignaturas = asignaturas_universidad(universidad)
+            area = institution(document_competencia['course_id'])['area']            
+            titulo = institution(document_competencia['course_id'])['titulo']
+            asignaturas = asignaturas_universidad(universidad, area, titulo)
             lista_asignaturas = []
             for asignatura in asignaturas:
                 lista_asignaturas.append(asignatura.get('_id', ''))
@@ -457,8 +464,8 @@ def institution(id):
         }
     return data_course
 
-def asignaturas_universidad(universidad):    
-    documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad}, {"_id":1})    
+def asignaturas_universidad(universidad, area, titulo):    
+    documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad, "area": area, "titulo": titulo}, {"_id":1})    
     return documents_asignaturas
 
 @app.route('/asignaturas', methods=['POST'])

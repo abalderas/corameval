@@ -106,16 +106,8 @@
                                 <div class="col-sm-3">
                                     <button type="button" class="btn btn-secondary" title="" 
                                     data-container="body" data-toggle="popover" 
-                                    data-placement="right" 
-                                    data-content="
-                                    Corrección. Especifica claramente el producto (diseño de investigación, 
-                                    TFM, ensayo individual sobre enfoques económicos) o actuación (exposición oral, 
-                                    manipular material de laboratorio, debatir en grupo argumentadamente) que tiene 
-                                    que realizar o mostrar el estudiante y que será objeto de evaluación. El medio de 
-                                    evaluación (producto o actuación del estudiante) corresponde a la esencia de lo que 
-                                    es un medio de evaluación. Es decir, evidencias o pruebas, 
-                                    tangibles u observables, que sirven para recabar información sobre el objeto a evaluar.
-                                    " data-original-title="Corrección (info)">+ info</button>
+                                    data-placement="bottom" 
+                                    data-img="{{ url_for('static', filename='/images/popups/MEVAL_Correccion.png') }}"  data-original-title="Corrección (info)">+ info</button>
                                 </div>
                             </div>                    
                             <div class="form-row">
@@ -137,10 +129,8 @@
                                 <div class="col-sm-3">
                                     <button type="button" class="btn btn-secondary" title="" 
                                     data-container="body" data-toggle="popover" 
-                                    data-placement="right" 
-                                    data-content="
-                                    Está relacionado con el contexto real y profesional.
-                                    " data-original-title="Autenticidad (info)">+ info</button>
+                                    data-placement="bottom" 
+                                    data-img="{{ url_for('static', filename='/images/popups/MEVAL_autenticidad.png') }}"  data-original-title="Autenticidad (info)">+ info</button>
                                 </div>
                             </div>                    
                             <div class="form-row"> 
@@ -173,13 +163,13 @@
                         <div class="form-row mt-3">
                             <div class="col-sm-2">
                                 <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="right" 
-                                data-content="Si marca esta casilla, los cambios se aplicarán a todos los medios de evaluación a nivel de universidad">+ info</button>
+                                data-content="Si marca esta casilla, los cambios se aplicarán a todas las apariciones de este medios de evaluación a nivel de título">+ info</button>
                             </div>
                             <div class="col-sm-6"> 
                                 <div class="form-check">
                                     <label class="form-check-label">
                                       <input class="form-check-input" type="checkbox" name="aplicar" id="aplicar" {% if document['correccion']=='0' %} disabled {% endif %}>
-                                      Aplicar los cambios a nivel de universidad
+                                      Aplicar los cambios a nivel de título
                                     </label>
                                 </div>
                             </div>

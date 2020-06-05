@@ -103,13 +103,8 @@
                             </div>
                             <div class="col-sm-3">
                                 <button type="button" class="btn btn-secondary" title="" data-container="body" 
-                                data-toggle="popover" data-placement="right" 
-                                data-content="
-                                Corrección. En los resultados de aprendizaje destaca el carácter evaluable, 
-                                se sintetizan en la utilización de declaraciones que contienen un verbo de acción, 
-                                un contenido u objeto sobre el que el estudiante tiene que actuar y un contexto o 
-                                condiciones en las que se producirá la ejecución y nivel de rendimiento.
-                                " data-original-title="Corrección (info)">+ info</button>
+                                data-toggle="popover" data-placement="bottom" 
+                                data-img="{{ url_for('static', filename='/images/popups/RESAP_Correccion.png') }}"  data-original-title="Corrección (info)">+ info</button>
                             </div>
                         </div> 
                         <div class="form-row">  
@@ -130,10 +125,8 @@
                             </div>
                             <div class="col-sm-3">
                                 <button type="button" class="btn btn-secondary" title="" data-container="body" 
-                                data-toggle="popover" data-placement="right" 
-                                data-content="
-                                Verificabilidad. El resultado de aprendizaje es observable, medible, evaluable.
-                                " data-original-title="Verificabilidad (info)">+ info</button>
+                                data-toggle="popover" data-placement="bottom" 
+                                data-img="{{ url_for('static', filename='/images/popups/RESAP_Verificabilidad.png') }}"  data-original-title="Verificabilidad (info)">+ info</button>
                             </div>
                         </div>
                         <div class="form-row">                             
@@ -155,10 +148,8 @@
                             </div>
                             <div class="col-sm-3">
                                 <button type="button" class="btn btn-secondary" title="" data-container="body" 
-                                data-toggle="popover" data-placement="right" 
-                                data-content="
-                                Autenticidad. Conduce a una actividad real y útil. Orientado a la acción, al contexto profesional.
-                                " data-original-title="Autenticidad (info)">+ info</button>
+                                data-toggle="popover" data-placement="bottom" 
+                                data-img="{{ url_for('static', filename='/images/popups/RESAP_Autenticidad.png') }}"  data-original-title="Autenticidad (info)">+ info</button>
                             </div>
                         </div>
                         <div class="form-row"> 
@@ -184,8 +175,8 @@
                             </div>
                             <div class="col-sm-3">
                                 <button type="button" class="btn btn-secondary" title="" data-container="body" 
-                                data-toggle="popover" data-placement="right" 
-                                data-content="Proceso cognitivo que se infiere del resultado de aprendizaje (Taxonomía de Anderson et al)." data-original-title="Proceso cognitivo (info)">+ info</button>
+                                data-toggle="popover" data-placement="bottom" 
+                                data-img="{{ url_for('static', filename='/images/popups/RESAP_ProcesoCognitivo.png') }}"  data-original-title="Proceso cognitivo (info)">+ info</button>
                             </div>
                             <div class="col-sm-3">                        
                                 <select name="cognitivo" id="cognitivo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
@@ -208,15 +199,8 @@
                                     <label for="" class="form-control"><strong>Tipo de conocimiento</strong></label>
                             </div>                                                       
                             <div class="col-sm-4">
-                                <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="right" 
-                                data-content="
-                                Tipos de conocimiento que se infiere del resultado de aprendizaje:
-                                -Se mantienen dos prioridades.     -Cuando está explícito un conocimiento factual o conceptual y otro procedimental se seleccionan ambos, siendo más prioritario el procedimental.
-                                -Cuando sólo se explicita un conocimiento procedimental, aunque lleve implícito otros, sólo se indica el procedimental.
-                                -Principalmente aplicar es procedimental y relaciona.
-                                -Sólo liderazgo: metacognitivo (prioridad 1) y procedimental (prioridad 2)
-                                -Comunicar los resultados de un informe (procedimental) o comunicar a públicos diferentes adaptando el discurso (metacognitivo)
-                                " data-original-title="Proceso cognitivo (info)">+ info</button>
+                                <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="bottom" 
+                                data-img="{{ url_for('static', filename='/images/popups/RESAP_TipoConocimiento.png') }}"  data-original-title="Proceso cognitivo (info)">+ info</button>
                             </div>
                         </div>
                         <div class="form-row">
@@ -273,9 +257,8 @@
                                 </div>                        
                                 <div class="col-sm-3">
                                         <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" 
-                                        data-placement="right"
-                                        data-content="Estructura del conocimiento que se infiere del resultado de aprendizaje 
-                                        (preestructural, uniestructural, multiestructural, relacional y abstracto ampliado). (Taxonomía SOLO)." 
+                                        data-placement="bottom"
+                                        data-img="{{ url_for('static', filename='/images/popups/RESAP_EstructuraConocimiento.png') }}"  
                                         data-original-title="Estructura del conocimiento (info)">+ info</button>
                                     </div>
                                 <div class="col">                        
@@ -298,15 +281,8 @@
                                     </div>                        
                                     <div class="col-sm-3">
                                             <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" 
-                                            data-placement="right"
-                                            data-content="Se contempla el carácter afectivo/actitudinal del resultado de aprendizaje, 
-                                            el carácter tecnológico y el carácter colaborativo.
-                                            
-                                            
-                                            -	Elemento tecnológico, siempre que aparezca la palabra o se utilice (salvo entregar trabajos a ordenador)
-                                            -	La comunicación como elemento de afectivo/actitudinal: debe especificarse alguna actitud o emoción que se busque con la competencia
-                                            -	Puede darse el caso de que no aparezca ninguna
-" 
+                                            data-placement="bottom"
+                                            data-img="{{ url_for('static', filename='/images/popups/RESAP_Transversalidad.png') }}"  
                                             data-original-title="Tramsversalidad (info)">+ info</button>
                                     </div>
                                 </div>
@@ -358,13 +334,13 @@
                                 <div class="form-row  mt-3">  
                                     <div class="col-sm-2">
                                         <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="right" 
-                                        data-content="Si marca esta casilla, los cambios se aplicarán a todos los resultados de aprendizaje a nivel de universidad">+ info</button>
+                                        data-content="Si marca esta casilla, los cambios se aplicarán a todas las apariciones de este resultados de aprendizaje en el títullo">+ info</button>
                                     </div>
                                     <div class="col-sm-6"> 
                                         <div class="form-check">
                                             <label class="form-check-label">
                                                 <input class="form-check-input" type="checkbox" name="aplicar" id="aplicar" {% if document['correccion']=='0' %} disabled {% endif %}>
-                                                Aplicar los cambios a nivel de universidad
+                                                Aplicar los cambios a nivel de título
                                             </label>
                                         </div>
                                     </div>
