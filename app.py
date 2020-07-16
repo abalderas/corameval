@@ -189,45 +189,47 @@ def buscar(id):
 
 
     else:
-        documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": request.form['university'], "area": request.form['area']})
-        documents_unis = mongo.db.asignaturas.distinct("universidad")
-        documents_area = mongo.db.asignaturas.distinct("area")
-        documents_unis = mongo.db.asignaturas.distinct("universidad")
-        selected_uni = request.form['university']
-        documents_area = mongo.db.asignaturas.distinct("area", {"universidad": selected_uni})
-        selected_area = request.form['area']
-        documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": selected_uni, "area": selected_area}) 
-        selected_titu = request.form.get('titulo','')
-        documents_nivel1 = mongo.db.asignaturas.distinct("nivel1", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu})
-        selected_nivel1 = request.form.get('nivel1','')
-        documents_nivel2 = mongo.db.asignaturas.distinct("nivel2", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1})
-        selected_nivel2 = request.form.get('nivel2','')
-        documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2})
-        selected_cour = request.form.get('asignatura','')
-        document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"modalidad": 1, "creditos":1, "tipo":1}) 
-        if document_detl:
-            data_selected = {
-                'universidad': selected_uni,
-                'area': selected_area,
-                'titulo': selected_titu,
-                'nivel1': selected_nivel1,
-                'nivel2': selected_nivel2,
-                'asignatura': selected_cour,
-                'modalidad': document_detl.get('modalidad',' '),
-                'tipo': document_detl.get('tipo',''),
-                'creditos': document_detl.get('creditos','')
-                }
-            # skills
-            course_id = document_detl['_id']
-            documents_skills = mongo.db.competencias.find({"course_id": course_id}).sort("name",1)
-            documents_results = mongo.db.resultados.find({"course_id": course_id}).sort("name",1)
-            documents_instruments = mongo.db.instrumentos.find({"course_id": course_id}).sort("name",1)
+        data_selected = {}
+        documents_skills = {}
+        documents_results = {}
+        documents_instruments = {}
+        # Atascado en este error. Cuando lo submito en blanco (entre paréntesis la selección de universidad) 
+        # Da error de area. No entiendo por qué area da error, pero si completo el area entonces no hay errores
+        # Si completas solo la universidad, ya funciona bien y no casca. Pudiendo completar buscar uno a uno
+        if request.form['university']!="0":
+            documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": request.form['university']})
+            documents_unis = mongo.db.asignaturas.distinct("universidad")
+            selected_uni = request.form['university']
+            
+            data_selected['universidad'] = selected_uni
+            documents_area = mongo.db.asignaturas.distinct("area", {"universidad": selected_uni})
+            selected_area = request.form['area']
+            data_selected['area'] = selected_area
+            documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": selected_uni, "area": selected_area}) 
+            selected_titu = request.form.get('titulo','')
+            data_selected['titulo'] = selected_titu
+            documents_nivel1 = mongo.db.asignaturas.distinct("nivel1", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu})
+            selected_nivel1 = request.form.get('nivel1','')
+            data_selected['nivel1'] = selected_nivel1
+            documents_nivel2 = mongo.db.asignaturas.distinct("nivel2", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1})
+            selected_nivel2 = request.form.get('nivel2','')
+            data_selected['nivel2'] = selected_nivel2
+            documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2})
+            selected_cour = request.form.get('asignatura','')
+            data_selected['asignatura'] = documents_cour
+            document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"modalidad": 1, "creditos":1, "tipo":1}) 
+            if document_detl:
+                data_selected['modalidad'] = document_detl.get('modalidad',' ')
+                data_selected['tipo'] = document_detl.get('tipo','')
+                data_selected['creditos'] = document_detl.get('creditos','')                
+                # skills
+                course_id = document_detl['_id']
+                documents_skills = mongo.db.competencias.find({"course_id": course_id}).sort("name",1)
+                documents_results = mongo.db.resultados.find({"course_id": course_id}).sort("name",1)
+                documents_instruments = mongo.db.instrumentos.find({"course_id": course_id}).sort("name",1) 
         else:
-            data_selected = {}
-            documents_skills = {}
-            documents_results = {}
-            documents_instruments = {}
-
+            return Index()    
+    
     return render_template('index.html', universidades = documents_unis, areas = documents_area, titulos = documents_titu, 
         niveles1 = documents_nivel1, niveles2 = documents_nivel2, asignaturas = documents_cour, selected = data_selected, 
         skills = documents_skills, results = documents_results, instruments = documents_instruments)

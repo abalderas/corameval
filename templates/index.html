@@ -12,7 +12,7 @@
                         </div>
                         <div class="col-sm-4">
                             <select name="university" id="university" class="form-control">
-                                <option value="">(seleccione universidad)</option>
+                                <option value="0">(seleccione universidad {{selected.nivel1}})</option>
                                 {% for universidad in universidades %}
                                 <option value="{{universidad}}" {% if selected.universidad == universidad %}  selected {% endif %}>{{universidad}}</option>
                                 {% endfor %}
@@ -82,7 +82,7 @@
                             <input type="text" name="credits" id="credits" class="form-control" placeholder="0.0" disabled="" value="{{selected.creditos}}">
                         </div> 
                         <div class="col-sm-1">
-                            <label for="type" class="form-control"><small>Tipo</small></label>  
+                            <label for="type" class="form-control"><small>Carácter</small></label>  
                         </div>  
                         <div class="col-sm-3">                    
                             <input type="text" name="type" id="type" class="form-control"  placeholder="..." disabled="" value="{{selected.tipo}}">
