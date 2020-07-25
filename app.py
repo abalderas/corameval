@@ -13,12 +13,12 @@ app = Flask(__name__)
 # mongo = PyMongo(app)
 
 # MongoDB koala.uca.es
-# app.config['MONGO_URI'] = 'mongodb://coramevaluser:Floass2019Psi@localhost:27017/coramevaldb'
-# mongo = PyMongo(app)
+app.config['MONGO_URI'] = 'mongodb://coramevaluser:Floass2019Psi@localhost:27017/coramevaldb'
+mongo = PyMongo(app)
 
 # MondoDB Atlas Remote Connection
-mongo = pymongo.MongoClient("mongodb+srv://CORAMevalDBUser:donx7Xb6uGFKMbUL@cluster0-cz4qg.mongodb.net/test?retryWrites=true&w=majority")
-mongo.db = mongo.skillsdb
+# mongo = pymongo.MongoClient("mongodb+srv://CORAMevalDBUser:donx7Xb6uGFKMbUL@cluster0-cz4qg.mongodb.net/test?retryWrites=true&w=majority")
+# mongo.db = mongo.skillsdb
 
 # Session
 app.secret_key = 'mysecretkey'

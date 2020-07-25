@@ -1,2 +1,7 @@
 venv
 *.pyc
+controller.py
+corameval.wsgi
+data
+logs
+
