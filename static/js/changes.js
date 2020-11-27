@@ -55,7 +55,6 @@ $("#correccion").change(function(){ //correccion medios
         $('#afectivo').prop('disabled', true);
         $('#tecnologico').prop('disabled', true);
         $('#colaborativo').prop('disabled', true);
-        $('#aplicar').prop('disabled', true);
     }
     else
     {
