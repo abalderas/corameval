@@ -6,6 +6,13 @@ from bson.objectid import ObjectId
 from flask_bcrypt import bcrypt
 from datetime import datetime
 
+# librerías para la figura
+#import matplotlib
+#matplotlib.use('Agg')
+#import matplotlib.pyplot as plt; plt.rcdefaults()
+#import numpy as np
+#import matplotlib.pyplot as plt
+
 app = Flask(__name__)
 
 # MongoDB local connection
@@ -43,6 +50,8 @@ def logout():
         session.pop('username')
     if 'universidad' in session:
         session.pop('universidad')
+    if 'admin' in session:
+        session.pop('admin')
 
     return login(0)
 
@@ -56,6 +65,8 @@ def access():
             session['username'] = request.form['username']
             if 'universidad' in login_user:
                 session['universidad'] = login_user['universidad']
+            if 'admin' in login_user:
+                session['admin'] = login_user['admin']
             return Index()
         return login(1)
     return login(2)
@@ -466,8 +477,12 @@ def institution(id):
         }
     return data_course
 
-def asignaturas_universidad(universidad, area, titulo):    
-    documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad, "area": area, "titulo": titulo}, {"_id":1})    
+def asignaturas_universidad(universidad, area, titulo):   
+    if (area == '0' and titulo == '0'):
+        documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad}, {"_id":1}) 
+    else: 
+        documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad, "area": area, "titulo": titulo}, {"_id":1})    
+    
     return documents_asignaturas
 
 @app.route('/asignaturas', methods=['POST'])
@@ -627,6 +642,64 @@ def cargar_instrumentos():
 
     return 'INSTRUMENTOS CARGADOS!'
 
+@app.route('/informes')
+@app.route('/informes', methods=['POST'])
+def informes():
+    if 'username' not in session:
+        return login(0)
+
+    # Consultas comprobacion datos insertados
+    query_competencias = {'estructura': {"$exists": True}}
+    query_medios = {'correccion': {"$exists": True}}
+    query_resultados = {'autenticidad': {"$exists": True}}
+    query = {}
+
+    if 'universidad' in session:
+        universidad = session['universidad']
+        documents_unis = mongo.db.asignaturas.distinct("universidad", {"universidad": universidad})
+    elif request.form.get('universidad'):
+        universidad = request.form['universidad']
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+    else:
+        universidad = 'TODAS'
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+
+    if universidad != 'TODAS':
+        asignaturas = asignaturas_universidad(universidad,'0','0')
+        lista_asignaturas = []
+        for asignatura in asignaturas:
+            lista_asignaturas.append(asignatura.get('_id', ''))
+        query = {'course_id':{'$in': lista_asignaturas}}
+        
+        query_competencias['course_id'] = query['course_id']
+        query_medios['course_id'] = query['course_id']
+        query_resultados['course_id'] = query['course_id']
+
+
+    data = {
+        'competencias': {
+            'registradas': mongo.db.competencias.count_documents(query_competencias),
+            'total': mongo.db.competencias.count_documents(query)
+        },
+        'medios': {
+            'registradas': mongo.db.instrumentos.count_documents(query_medios),
+            'total': mongo.db.instrumentos.count_documents(query)
+        },
+        'resultados': {
+            'registradas': mongo.db.resultados.count_documents(query_resultados),
+            'total': mongo.db.resultados.count_documents(query)
+        }
+    }
+
+    
+
+    data['competencias']['pendientes'] = int(data['competencias']['total']) - int(data['competencias']['registradas'])
+    data['medios']['pendientes'] = int(data['medios']['total']) - int(data['medios']['registradas'])
+    data['resultados']['pendientes'] = int(data['resultados']['total']) - int(data['resultados']['registradas'])
+    data['universidad'] = universidad 
+    
+    return render_template('report.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
+
 def tipo_competencia(tipo):
     switcher = {
         "Básicas": '0',
@@ -644,6 +717,24 @@ def tipo_asignatura(tipo):
         "Transversales": '3'
     }
     return switcher.get(tipo, "Invalid option")
+
+
+# figure 
+#def create_barchart(data):
+#    objects = ('Competencias','Resultados','Medios')
+#    y_pos = np.arange(len(objects))
+#    performance = [int(data['competencias']['total']),int(data['resultados']['total']),int(data['medios']['total'])]
+
+#    plt.bar(y_pos, performance, align='center', alpha=0.5)
+#    plt.xticks(y_pos, objects)
+#    plt.ylabel('total')
+#    plt.title(data['universidad'])
+
+#    url = 'static/images/plot.png'
+
+ #   plt.savefig(url)
+
+ #   return url
 
 import os
 	

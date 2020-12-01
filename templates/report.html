@@ -1,0 +1,126 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 "> 
+            <div class="card-header">
+                <form action="/informes" method="post">
+                    <div class="form-row">
+                        <div class="col-sm-2">
+                            <label for="universidad" class="form-control"><strong>Universidad</strong></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <select name="universidad" id="universidad" class="form-control">
+                                <option value="TODAS">Todas las universidades</option>
+                                {% for universidad in universidades %}
+                                <option value="{{universidad}}" {% if selected.universidad == universidad %}  selected {% endif %}>{{universidad}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-1"><input type="submit" value="Buscar" class="btn btn-primary" /></div>
+                    </div>
+                </form>
+            </div>    
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{data['universidad']}}</th>
+                            <th class="text-md-right">Total</th>
+                            <th class="text-md-right">Registradas</th>
+                            <th class="text-md-right">Pendientes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Competencias</td>
+                            <td class="text-md-right">{{data['competencias']['total']}} </td>
+                            <td class="text-md-right">
+                                {{data['competencias']['registradas']}} 
+                                <span class="badge badge-success">{{(100*data['competencias']['registradas']/data['competencias']['total'])|round(1)}} %</span> 
+                            </td>
+                            <td class="text-md-right">
+                                {{data['competencias']['pendientes']}}  
+                                <span class="badge badge-danger">{{(100*data['competencias']['pendientes']/data['competencias']['total'])|round(1)}} %</span> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Resultados de aprendizaje</td>
+                            <td class="text-md-right">{{data['resultados']['total']}} </td>
+                            <td class="text-md-right">
+                                {{data['resultados']['registradas']}} 
+                                <span class="badge badge-success">{{(100*data['resultados']['registradas']/data['resultados']['total'])|round(1)}} %</span> 
+                            </td>
+                            <td class="text-md-right">
+                                {{data['resultados']['pendientes']}} 
+                                <span class="badge badge-danger">{{(100*data['resultados']['pendientes']/data['resultados']['total'])|round(1)}} %</span> 
+                            </td>
+                        <tr>
+                            <td>Medios de evaluación</td>
+                            <td class="text-md-right">{{data['medios']['total']}} </td>
+                            <td class="text-md-right">
+                                {{data['medios']['registradas']}}  
+                                <span class="badge badge-success">{{(100*data['medios']['registradas']/data['medios']['total'])|round(1)}} %</span> 
+                            </td>
+                            <td class="text-md-right">
+                                {{data['medios']['pendientes']}} 
+                                <span class="badge badge-danger">{{(100*data['medios']['pendientes']/data['medios']['total'])|round(1)}} %</span> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <canvas id="myChart" width="100" height="100"></canvas>
+        <script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Competencias registradas', 'Pendientes', 'Resultados registrados', 'Pendientes', 'Medios registrados', 'Pendientes'],
+                datasets: [{
+                    label: '{{data['universidad']}}',
+                    data: [{{data['competencias']['registradas']}},
+                    {{data['competencias']['pendientes']}},
+                    {{data['resultados']['registradas']}},
+                    {{data['resultados']['pendientes']}},
+                    {{data['medios']['registradas']}},
+                    {{data['medios']['pendientes']}}],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 99, 132, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+    </div>        
+</div>
+{% endblock %}
