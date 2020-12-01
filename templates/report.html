@@ -82,7 +82,7 @@
             var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Competencias registradas', 'Pendientes', 'Resultados registrados', 'Pendientes', 'Medios registrados', 'Pendientes'],
+                labels: ['Competencias registradas', 'Competencias pendientes', 'Resultados registrados', 'Resultados pendientes', 'Medios registrados', 'Medios pendientes'],
                 datasets: [{
                     label: '{{data['universidad']}}',
                     data: [{{data['competencias']['registradas']}},
