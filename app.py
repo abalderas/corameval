@@ -649,8 +649,10 @@ def informes():
         return login(0)
 
     # Consultas comprobacion datos insertados
-    query_competencias = {'estructura': {"$exists": True}}
-    query_medios = {'correccion': {"$exists": True}}
+    # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
+    # por tanto, se consideran no valoradas aunque existan otros campos
+    query_competencias = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
+    query_medios = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
     query_resultados = {'autenticidad': {"$exists": True}}
     query = {}
 
@@ -664,9 +666,9 @@ def informes():
         universidad = 'TODAS'
         documents_unis = mongo.db.asignaturas.distinct("universidad")
 
+    lista_asignaturas = []
     if universidad != 'TODAS':
-        asignaturas = asignaturas_universidad(universidad,'0','0')
-        lista_asignaturas = []
+        asignaturas = asignaturas_universidad(universidad,'0','0')        
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
         query = {'course_id':{'$in': lista_asignaturas}}
@@ -674,12 +676,18 @@ def informes():
         query_competencias['course_id'] = query['course_id']
         query_medios['course_id'] = query['course_id']
         query_resultados['course_id'] = query['course_id']
-
+    
 
     data = {
         'competencias': {
             'registradas': mongo.db.competencias.count_documents(query_competencias),
-            'total': mongo.db.competencias.count_documents(query)
+            'total': mongo.db.competencias.count_documents(query),
+            'correccion': report_correccion(lista_asignaturas),
+            'cognitivo': report_cognitivo(lista_asignaturas),
+            'estructura': report_estructura(lista_asignaturas),
+            'afectivo': report_afectivo(lista_asignaturas),
+            'tecnologico': report_tecnologico(lista_asignaturas),
+            'colaborativo': report_colaborativo(lista_asignaturas)
         },
         'medios': {
             'registradas': mongo.db.instrumentos.count_documents(query_medios),
@@ -689,16 +697,388 @@ def informes():
             'registradas': mongo.db.resultados.count_documents(query_resultados),
             'total': mongo.db.resultados.count_documents(query)
         }
-    }
-
-    
+    } 
 
     data['competencias']['pendientes'] = int(data['competencias']['total']) - int(data['competencias']['registradas'])
     data['medios']['pendientes'] = int(data['medios']['total']) - int(data['medios']['registradas'])
     data['resultados']['pendientes'] = int(data['resultados']['total']) - int(data['resultados']['registradas'])
     data['universidad'] = universidad 
-    
+   
     return render_template('report.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
+
+def report_afectivo(lista_asignaturas):    
+    if(len(lista_asignaturas)==0):
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "afectivo": { "$exists":"true"}
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$afectivo",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+    else:
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "$and":
+                        [
+                            {"course_id":
+                            {
+                                "$in": lista_asignaturas
+                            }},
+                            {"afectivo": { "$exists":"true"}}
+                        ]
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$afectivo",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+
+    data = mongo.db.competencias.aggregate(pipeline)
+
+    lista_afectivo = {0:0, 1:0}
+    for tipo in data:
+            lista_afectivo[int(tipo.get('_id', ''))] = tipo.get('count', '')
+    
+    return lista_afectivo
+
+def report_tecnologico(lista_asignaturas):    
+    if(len(lista_asignaturas)==0):
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "tecnologico": { "$exists":"true"}
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$tecnologico",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+    else:
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "$and":
+                        [
+                            {"course_id":
+                            {
+                                "$in": lista_asignaturas
+                            }},
+                            {"tecnologico": { "$exists":"true"}}
+                        ]
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$tecnologico",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+
+    data = mongo.db.competencias.aggregate(pipeline)
+
+    lista_tecnologico = {0:0, 1:0}
+    for tipo in data:
+            lista_tecnologico[int(tipo.get('_id', ''))] = tipo.get('count', '')
+    
+    return lista_tecnologico
+
+def report_colaborativo(lista_asignaturas):    
+    if(len(lista_asignaturas)==0):
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "colaborativo": { "$exists":"true"}
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$colaborativo",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+    else:
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "$and":
+                        [
+                            {"course_id":
+                            {
+                                "$in": lista_asignaturas
+                            }},
+                            {"colaborativo": { "$exists":"true"}}
+                        ]
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$colaborativo",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+
+    data = mongo.db.competencias.aggregate(pipeline)
+
+    lista_colaborativo = {0:0, 1:0}
+    for tipo in data:
+            lista_colaborativo[int(tipo.get('_id', ''))] = tipo.get('count', '')
+    
+    return lista_colaborativo
+
+def report_cognitivo(lista_asignaturas):
+    if(len(lista_asignaturas)==0):
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "cognitivo": { "$exists":"true"}
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$cognitivo",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+    else:
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "$and":
+                        [
+                            {"course_id":
+                            {
+                                "$in": lista_asignaturas
+                            }},
+                            {"cognitivo": { "$exists":"true"}}
+                        ]
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$cognitivo",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+
+    data = mongo.db.competencias.aggregate(pipeline)
+
+    lista_cognitivo = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
+    for tipo in data:
+            lista_cognitivo[int(tipo.get('_id', ''))] = tipo.get('count', '')
+    
+    return lista_cognitivo
+
+def report_correccion(lista_asignaturas):
+    if(len(lista_asignaturas)==0):
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "correccion": { "$exists":"true"}
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$correccion",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+    else:
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "$and":
+                        [
+                            {"course_id":
+                            {
+                                "$in": lista_asignaturas
+                            }},
+                            {"correccion": { "$exists":"true"}}
+                        ]
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$correccion",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+
+    data = mongo.db.competencias.aggregate(pipeline)
+
+    # Tipos de corrección
+    lista_correccion = {
+        -1: 0,
+        0: 0,
+        1: 0,
+        2: 0
+    }
+
+    # el tipo -1 está fastidiando. INVESTIGAR. EN OVIEDO SOLO SALEN DOS TIPOS!
+    for tipo in data:
+            lista_correccion[int(tipo.get('_id', ''))] = tipo.get('count', '')
+    print(lista_correccion)
+    return lista_correccion
+
+def report_estructura(lista_asignaturas):
+    if(len(lista_asignaturas)==0):
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "estructura": { "$exists":"true"}
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$estructura",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+    else:
+        pipeline = [
+                {
+                    "$match":
+                    {
+                        "$and":
+                        [
+                            {"course_id":
+                            {
+                                "$in": lista_asignaturas
+                            }},
+                            {"estructura": { "$exists":"true"}}
+                        ]
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": "$estructura",
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+
+    data = mongo.db.competencias.aggregate(pipeline)
+
+    lista_estructura = {1:0, 2:0, 3:0, 4:0, 5:0}
+    for tipo in data:
+            lista_estructura[int(tipo.get('_id', ''))] = tipo.get('count', '')
+    
+    return lista_estructura
 
 def tipo_competencia(tipo):
     switcher = {
