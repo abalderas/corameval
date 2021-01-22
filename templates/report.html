@@ -93,18 +93,17 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'Sin valorar ({{(100 * data['competencias']['correccion'][-1] / data['competencias']['registradas'])|round(2)}} %)', 
                                     'Nivel 0 ({{(100 * data['competencias']['correccion'][0] / data['competencias']['registradas'])|round(2)}} %)',
                                     'Nivel 1 ({{(100 * data['competencias']['correccion'][1] / data['competencias']['registradas'])|round(2)}} %)', 
                                     'Nivel 2 ({{(100 * data['competencias']['correccion'][2] / data['competencias']['registradas'])|round(2)}} %)'], 
                                 datasets: [ {
                                     label: 'Correccion', 
                                     data: [
-                                    {% for corval in data['competencias']['correccion'] %}
-                                    {{data['competencias']['correccion'][corval]}},
-                                    {% endfor %}
+                                    {{data['competencias']['correccion'][0]}},
+                                    {{data['competencias']['correccion'][1]}},
+                                    {{data['competencias']['correccion'][2]}}
                                     ],
-                                    backgroundColor: ['#02126d', '#504295', '#8877bf', '#c0b0ea']
+                                    backgroundColor: ['#02126d', '#8877bf', '#c0b0ea']
                                 }]
                             }
                         })
