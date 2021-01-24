@@ -16,13 +16,11 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Database connection
-with open('config/config.json', 'r') as file:
-    config = json.load(file)
-app.config['MONGO_URI'] = config['ATLAS']['server']
+app.config.from_json('config/config.json')
 mongo = PyMongo(app)
 
 # Session
-app.secret_key = config['secret_key']
+app.secret_key = 'mysecretkey'
 
 # Login
 @app.route('/login', defaults={'error': 0})
