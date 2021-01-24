@@ -4,4 +4,5 @@ controller.py
 corameval.wsgi
 data
 logs
+config/config.json
 
