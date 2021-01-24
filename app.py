@@ -15,23 +15,16 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# MongoDB local connection
-# app.config['MONGO_URI'] = 'mongodb://skillsapp:UCa2019psi@localhost:27017/skillsdb'
-# mongo = PyMongo(app)
-
-# MongoDB koala.uca.es
-# app.config['MONGO_URI'] = 'mongodb://coramevaluser:Floass2019Psi@localhost:27017/coramevaldb'
-# mongo = PyMongo(app)
-
-# MondoDB Atlas Remote Connection
-mongo = pymongo.MongoClient("mongodb+srv://CORAMevalDBUser:donx7Xb6uGFKMbUL@cluster0-cz4qg.mongodb.net/test?retryWrites=true&w=majority")
-mongo.db = mongo.skillsdb
+# Database connection
+with open('config/config.json', 'r') as file:
+    config = json.load(file)
+app.config['MONGO_URI'] = config['ATLAS']['server']
+mongo = PyMongo(app)
 
 # Session
-app.secret_key = 'mysecretkey'
+app.secret_key = config['secret_key']
 
 # Login
-
 @app.route('/login', defaults={'error': 0})
 @app.route('/login/<error>')
 def login(error):
@@ -1016,7 +1009,7 @@ def report_correccion(lista_asignaturas):
     # el tipo -1 está fastidiando. INVESTIGAR. EN OVIEDO SOLO SALEN DOS TIPOS!
     for tipo in data:
             lista_correccion[int(tipo.get('_id', ''))] = tipo.get('count', '')
-    print(lista_correccion)
+    
     return lista_correccion
 
 def report_estructura(lista_asignaturas):
