@@ -633,9 +633,9 @@ def cargar_instrumentos():
 
     return 'INSTRUMENTOS CARGADOS!'
 
-@app.route('/informes')
-@app.route('/informes', methods=['POST'])
-def informes():
+@app.route('/informes_general')
+@app.route('/informes_general', methods=['POST'])
+def informes_general():
     if 'username' not in session:
         return login(0)
 
@@ -672,13 +672,7 @@ def informes():
     data = {
         'competencias': {
             'registradas': mongo.db.competencias.count_documents(query_competencias),
-            'total': mongo.db.competencias.count_documents(query),
-            'correccion': report_correccion(lista_asignaturas),
-            'cognitivo': report_cognitivo(lista_asignaturas),
-            'estructura': report_estructura(lista_asignaturas),
-            'afectivo': report_afectivo(lista_asignaturas),
-            'tecnologico': report_tecnologico(lista_asignaturas),
-            'colaborativo': report_colaborativo(lista_asignaturas)
+            'total': mongo.db.competencias.count_documents(query)
         },
         'medios': {
             'registradas': mongo.db.instrumentos.count_documents(query_medios),
@@ -696,6 +690,57 @@ def informes():
     data['universidad'] = universidad 
    
     return render_template('report.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
+
+@app.route('/informes_competencias')
+@app.route('/informes_competencias', methods=['POST'])
+def informes_competencias():
+    if 'username' not in session:
+        return login(0)
+
+    # Consultas comprobacion datos insertados
+    # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
+    # por tanto, se consideran no valoradas aunque existan otros campos
+    query_competencias = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
+    query = {}
+
+    if 'universidad' in session:
+        universidad = session['universidad']
+        documents_unis = mongo.db.asignaturas.distinct("universidad", {"universidad": universidad})
+    elif request.form.get('universidad'):
+        universidad = request.form['universidad']
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+    else:
+        universidad = 'TODAS'
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+
+    lista_asignaturas = []
+    if universidad != 'TODAS':
+        asignaturas = asignaturas_universidad(universidad,'0','0')        
+        for asignatura in asignaturas:
+            lista_asignaturas.append(asignatura.get('_id', ''))
+        query = {'course_id':{'$in': lista_asignaturas}}
+        
+        query_competencias['course_id'] = query['course_id']
+    
+
+    data = {
+        'competencias': {
+            'registradas': mongo.db.competencias.count_documents(query_competencias),
+            'total': mongo.db.competencias.count_documents(query),
+            'correccion': report_correccion(lista_asignaturas),
+            'cognitivo': report_cognitivo(lista_asignaturas),
+            'estructura': report_estructura(lista_asignaturas),
+            'afectivo': report_afectivo(lista_asignaturas),
+            'tecnologico': report_tecnologico(lista_asignaturas),
+            'colaborativo': report_colaborativo(lista_asignaturas)
+        }
+    } 
+
+    data['competencias']['pendientes'] = int(data['competencias']['total']) - int(data['competencias']['registradas'])
+    data['universidad'] = universidad 
+   
+    return render_template('report_competencias.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
+
 
 def report_afectivo(lista_asignaturas):    
     if(len(lista_asignaturas)==0):

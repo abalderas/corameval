@@ -5,4 +5,4 @@ corameval.wsgi
 data
 logs
 config/config.json
-
+config/alluris.json
