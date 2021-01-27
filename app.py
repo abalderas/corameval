@@ -1134,23 +1134,28 @@ def tipo_asignatura(tipo):
     }
     return switcher.get(tipo, "Invalid option")
 
+@app.route('/pendientes', defaults={'universidad': 0})
+@app.route('/pendientes/<universidad>')
+def pendientes(universidad):
+    documents_skills={}
+    documents_results={}
+    documents_instruments={}
 
-# figure 
-#def create_barchart(data):
-#    objects = ('Competencias','Resultados','Medios')
-#    y_pos = np.arange(len(objects))
-#    performance = [int(data['competencias']['total']),int(data['resultados']['total']),int(data['medios']['total'])]
+    # Si hay universidad se muestra, sino en blanco
+    if universidad!=0:
+        documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad}, {"_id":1}) 
 
-#    plt.bar(y_pos, performance, align='center', alpha=0.5)
-#    plt.xticks(y_pos, objects)
-#    plt.ylabel('total')
-#    plt.title(data['universidad'])
+        lista_asignaturas = []
+        for asignatura in documents_asignaturas:
+            lista_asignaturas.append(asignatura.get('_id', ''))
 
-#    url = 'static/images/plot.png'
+             
+        # skills
+        documents_skills = mongo.db.competencias.find({'$and':[{'$or':[{'correccion':{'$exists': False}}, {'correccion': {'$eq': '-1'}}]}, {"course_id": {'$in':lista_asignaturas}}]}).sort("name",1)
+        documents_results = mongo.db.resultados.find({'$and':[{'$or':[{'correccion':{'$exists': False}}, {'correccion': {'$eq': '-1'}}]}, {"course_id": {'$in':lista_asignaturas}}]}).sort("name",1)
+        documents_instruments = mongo.db.instrumentos.find({'$and':[{'$or':[{'correccion':{'$exists': False}}, {'correccion': {'$eq': '-1'}}]}, {"course_id": {'$in':lista_asignaturas}}]}).sort("name",1)
 
- #   plt.savefig(url)
-
- #   return url
+    return render_template('pendientes.html', skills = documents_skills, results = documents_results, instruments = documents_instruments)
 
 import os
 	

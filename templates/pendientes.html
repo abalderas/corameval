@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-striped table-bordered bg-white table-sm">
+            <thead>
+                <tr>
+                    <th>Competencias&nbsp;&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" title="" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Atributo latente, conocimiento, actitud, habilidad, destreza y facultad para el desarrollo de una profesión, puesto de trabajo o desempeño académico, ejecutando adecuada y correctamente las actuaciones y actividades laborales o académicas exigidas." data-original-title="Competencia">+info</button></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set i = namespace(value=0)%}
+                {% for skill in skills %}
+                   {% set i.value = i.value + 1 %}                                
+                <tr>
+                    <td>({{ i.value }}) <a href="/skill/{{skill['_id']}}">{{skill['name']}}</a>
+                        <span class="{% if skill['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>(Revisiones: {{skill['revisiones']|length}})</strong></span></td>
+                </tr>
+                        
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+            <table class="table table-striped table-bordered bg-white table-sm">
+                <thead>
+                    <tr>
+                        <th>Resultados de aprendizaje&nbsp;&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" title="" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Realizaciones o desempeños concretos y con determinados niveles de ejecución o de logro que evidencian lo que el estudiante es capaz de hacer y de demostrar." data-original-title="Resultados de aprendizaje">+info</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% set j = namespace(value=0)%}
+                        {% for result in results %}
+                            {% set j.value = j.value + 1 %} 
+                        <tr>
+                            <td>({{ j.value }}) <a href="/result/{{result['_id']}}">{{result['name']}}</a>
+                                <span class="{% if result['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>(Revisiones: {{result['revisiones']|length}})</strong></span></td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    <div class="col-md-4">
+        
+            <table class="table table-striped table-bordered bg-white table-sm">
+                    <thead>
+                        <tr>
+                            <th>Medios de evaluación&nbsp;&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" title="" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Evidencias o pruebas, tangibles u observables, que sirven para recabar información sobre el objeto a evaluar. Estas evidencias constituyen los productos o actuaciones de aprendizaje de los estudiantes." data-original-title="Medios de evaluación">+info</button></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% set k = namespace(value=0)%}
+                            {% for instrument in instruments %}
+                                {% set k.value = k.value + 1 %} 
+                            <tr>
+                                <td>({{ k.value }}) <a href="/instrument/{{instrument['_id']}}">{{instrument['name']}}</a>
+                                    <span class="{% if instrument['revisiones']|length > 0 %}text-primary{% else %}text-danger{% endif %}"><strong>(Revisiones: {{instrument['revisiones']|length}})</strong></span></td>
+                            </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+    </div>
+</div>
+{% endblock %}
