@@ -218,7 +218,7 @@ def buscar(id):
             data_selected['nivel2'] = selected_nivel2
             documents_cour = mongo.db.asignaturas.distinct("asignatura", {"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2})
             selected_cour = request.form.get('asignatura','')
-            data_selected['asignatura'] = documents_cour
+            data_selected['asignatura'] = selected_cour
             document_detl = mongo.db.asignaturas.find_one({"universidad": selected_uni, "area": selected_area, "titulo": selected_titu, "nivel1": selected_nivel1, "nivel2": selected_nivel2, "asignatura": selected_cour}, {"modalidad": 1, "creditos":1, "tipo":1}) 
             if document_detl:
                 data_selected['modalidad'] = document_detl.get('modalidad',' ')
