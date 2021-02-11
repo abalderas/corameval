@@ -644,7 +644,7 @@ def informes_general():
     # por tanto, se consideran no valoradas aunque existan otros campos
     query_competencias = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
     query_medios = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
-    query_resultados = {'autenticidad': {"$exists": True}}
+    query_resultados = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
     query = {}
 
     if 'universidad' in session:
