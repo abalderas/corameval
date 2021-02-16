@@ -727,12 +727,12 @@ def informes_competencias():
         'competencias': {
             'registradas': mongo.db.competencias.count_documents(query_competencias),
             'total': mongo.db.competencias.count_documents(query),
-            'correccion': report_correccion(lista_asignaturas),
-            'cognitivo': report_cognitivo(lista_asignaturas),
-            'estructura': report_estructura(lista_asignaturas),
-            'afectivo': report_afectivo(lista_asignaturas),
-            'tecnologico': report_tecnologico(lista_asignaturas),
-            'colaborativo': report_colaborativo(lista_asignaturas)
+            'correccion': report_correccion(lista_asignaturas, "competencias"),
+            'cognitivo': report_cognitivo(lista_asignaturas, "competencias"),
+            'estructura': report_estructura(lista_asignaturas, "competencias"),
+            'afectivo': report_afectivo(lista_asignaturas, "competencias"),
+            'tecnologico': report_tecnologico(lista_asignaturas, "competencias"),
+            'colaborativo': report_colaborativo(lista_asignaturas, "competencias")
         }
     } 
 
@@ -741,8 +741,59 @@ def informes_competencias():
    
     return render_template('report_competencias.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
 
+@app.route('/informes_resultados')
+@app.route('/informes_resultados', methods=['POST'])
+def informes_resultados():
+    if 'username' not in session:
+        return login(0)
 
-def report_afectivo(lista_asignaturas):    
+    # Consultas comprobacion datos insertados
+    # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
+    # por tanto, se consideran no valoradas aunque existan otros campos
+    query_resultados = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
+    query = {}
+
+    if 'universidad' in session:
+        universidad = session['universidad']
+        documents_unis = mongo.db.asignaturas.distinct("universidad", {"universidad": universidad})
+    elif request.form.get('universidad'):
+        universidad = request.form['universidad']
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+    else:
+        universidad = 'TODAS'
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+
+    lista_asignaturas = []
+    if universidad != 'TODAS':
+        asignaturas = asignaturas_universidad(universidad,'0','0')        
+        for asignatura in asignaturas:
+            lista_asignaturas.append(asignatura.get('_id', ''))
+        query = {'course_id':{'$in': lista_asignaturas}}
+        
+        query_resultados['course_id'] = query['course_id']
+    
+
+    data = {
+        'resultados': {
+            'registrados': mongo.db.resultados.count_documents(query_resultados),
+            'total': mongo.db.resultados.count_documents(query),
+            'correccion': report_correccion(lista_asignaturas, "resultados"),
+            'cognitivo': report_cognitivo(lista_asignaturas, "resultados"),
+            'estructura': report_estructura(lista_asignaturas, "resultados"),
+            'afectivo': report_afectivo(lista_asignaturas, "resultados"),
+            'tecnologico': report_tecnologico(lista_asignaturas, "resultados"),
+            'colaborativo': report_colaborativo(lista_asignaturas, "resultados")
+        }
+    } 
+
+    data['resultados']['pendientes'] = int(data['resultados']['total']) - int(data['resultados']['registrados'])
+    data['universidad'] = universidad 
+   
+    return render_template('report_resultados.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
+
+
+
+def report_afectivo(lista_asignaturas, element):    
     if(len(lista_asignaturas)==0):
         pipeline = [
                 {
@@ -795,7 +846,10 @@ def report_afectivo(lista_asignaturas):
                 }
             ]
 
-    data = mongo.db.competencias.aggregate(pipeline)
+    if element == "resultados":
+        data = mongo.db.resultados.aggregate(pipeline)
+    else: # competencias
+        data = mongo.db.competencias.aggregate(pipeline)
 
     lista_afectivo = {0:0, 1:0}
     for tipo in data:
@@ -803,7 +857,7 @@ def report_afectivo(lista_asignaturas):
     
     return lista_afectivo
 
-def report_tecnologico(lista_asignaturas):    
+def report_tecnologico(lista_asignaturas, element):    
     if(len(lista_asignaturas)==0):
         pipeline = [
                 {
@@ -856,7 +910,10 @@ def report_tecnologico(lista_asignaturas):
                 }
             ]
 
-    data = mongo.db.competencias.aggregate(pipeline)
+    if element == "resultados":
+        data = mongo.db.resultados.aggregate(pipeline)
+    else: # competencias
+        data = mongo.db.competencias.aggregate(pipeline)
 
     lista_tecnologico = {0:0, 1:0}
     for tipo in data:
@@ -864,7 +921,7 @@ def report_tecnologico(lista_asignaturas):
     
     return lista_tecnologico
 
-def report_colaborativo(lista_asignaturas):    
+def report_colaborativo(lista_asignaturas, element):    
     if(len(lista_asignaturas)==0):
         pipeline = [
                 {
@@ -917,7 +974,10 @@ def report_colaborativo(lista_asignaturas):
                 }
             ]
 
-    data = mongo.db.competencias.aggregate(pipeline)
+    if element == "resultados":
+        data = mongo.db.resultados.aggregate(pipeline)
+    else: # competencias
+        data = mongo.db.competencias.aggregate(pipeline)
 
     lista_colaborativo = {0:0, 1:0}
     for tipo in data:
@@ -925,7 +985,7 @@ def report_colaborativo(lista_asignaturas):
     
     return lista_colaborativo
 
-def report_cognitivo(lista_asignaturas):
+def report_cognitivo(lista_asignaturas, element):
     if(len(lista_asignaturas)==0):
         pipeline = [
                 {
@@ -978,7 +1038,10 @@ def report_cognitivo(lista_asignaturas):
                 }
             ]
 
-    data = mongo.db.competencias.aggregate(pipeline)
+    if element == "resultados":
+        data = mongo.db.resultados.aggregate(pipeline)
+    else: # competencias
+        data = mongo.db.competencias.aggregate(pipeline)
 
     lista_cognitivo = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
     for tipo in data:
@@ -986,7 +1049,7 @@ def report_cognitivo(lista_asignaturas):
     
     return lista_cognitivo
 
-def report_correccion(lista_asignaturas):
+def report_correccion(lista_asignaturas,element):
     if(len(lista_asignaturas)==0):
         pipeline = [
                 {
@@ -1039,7 +1102,10 @@ def report_correccion(lista_asignaturas):
                 }
             ]
 
-    data = mongo.db.competencias.aggregate(pipeline)
+    if element == "resultados":
+        data = mongo.db.resultados.aggregate(pipeline)
+    else: # competencias
+        data = mongo.db.competencias.aggregate(pipeline)
 
     # Tipos de corrección
     lista_correccion = {
@@ -1055,7 +1121,7 @@ def report_correccion(lista_asignaturas):
     
     return lista_correccion
 
-def report_estructura(lista_asignaturas):
+def report_estructura(lista_asignaturas, element):
     if(len(lista_asignaturas)==0):
         pipeline = [
                 {
@@ -1108,7 +1174,12 @@ def report_estructura(lista_asignaturas):
                 }
             ]
 
-    data = mongo.db.competencias.aggregate(pipeline)
+
+
+    if element == "resultados":
+        data = mongo.db.resultados.aggregate(pipeline)
+    else: # competencias
+        data = mongo.db.competencias.aggregate(pipeline)
 
     lista_estructura = {1:0, 2:0, 3:0, 4:0, 5:0}
     for tipo in data:

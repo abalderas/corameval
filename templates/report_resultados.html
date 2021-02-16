@@ -1,0 +1,190 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 "> 
+            <div class="card-header">
+                <form action="/informes_resultados" method="post">
+                    <div class="form-row">
+                        <div class="col-sm-2">
+                            <label for="universidad" class="form-control"><strong>Universidad</strong></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <select name="universidad" id="universidad" class="form-control">
+                                <option value="TODAS">Todas las universidades</option>
+                                {% for universidad in universidades %}
+                                <option value="{{universidad}}" {% if selected.universidad == universidad %}  selected {% endif %}>{{universidad}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-1"><input type="submit" value="Buscar" class="btn btn-primary" /></div>
+                    </div>
+                </form>
+            </div>    
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{data['universidad']}}</th>
+                            <th class="text-md-right">Total</th>
+                            <th class="text-md-right">Registrados</th>
+                            <th class="text-md-right">Pendientes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Resultados</td>
+                            <td class="text-md-right">{{data['resultados']['total']}} </td>
+                            <td class="text-md-right">
+                                {{data['resultados']['registrados']}} 
+                                <span class="badge badge-success">{{(100*data['resultados']['registrados']/data['resultados']['total'])|round(1)}} %</span> 
+                            </td>
+                            <td class="text-md-right">
+                                {{data['resultados']['pendientes']}}  
+                                <span class="badge badge-danger">{{(100*data['resultados']['pendientes']/data['resultados']['total'])|round(1)}} %</span> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 "> 
+            <div class="card-header">
+                <b>Informes de resultados</b>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Corrección</b>
+                    </div>                 
+                    <canvas id="pie_correccion" width="100" height="100"></canvas>
+                    <script>
+                        var ctx1 = document.getElementById('pie_correccion').getContext('2d');
+                        var pie_correccion = new Chart(ctx1, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'Nivel 0 ({{(100 * data['resultados']['correccion'][0] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Nivel 1 ({{(100 * data['resultados']['correccion'][1] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    'Nivel 2 ({{(100 * data['resultados']['correccion'][2] / data['resultados']['registrados'])|round(2)}} %)'], 
+                                datasets: [ {
+                                    label: 'Correccion', 
+                                    data: [
+                                    {{data['resultados']['correccion'][0]}},
+                                    {{data['resultados']['correccion'][1]}},
+                                    {{data['resultados']['correccion'][2]}}
+                                    ],
+                                    backgroundColor: ['#02126d', '#8877bf', '#c0b0ea']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+                <div class="col-sm-2"></div>
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Proceso Cognitivo</b>
+                    </div>                 
+                    <canvas id="pie_cognitivo" width="100" height="100"></canvas>
+                    <script>
+                        var ctx2 = document.getElementById('pie_cognitivo').getContext('2d');
+                        var pie_cognitive = new Chart(ctx2, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    '1 Recordar ({{(100 * data['resultados']['cognitivo'][1] / data['resultados']['registrados'])|round(2)}} %)',
+                                    '2 Comprender ({{(100 * data['resultados']['cognitivo'][2] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    '3 Aplicar ({{(100 * data['resultados']['cognitivo'][3] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    '4 Analizar ({{(100 * data['resultados']['cognitivo'][4] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    '5 Evaluar ({{(100 * data['resultados']['cognitivo'][5] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    '6 Crear ({{(100 * data['resultados']['cognitivo'][6] / data['resultados']['registrados'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Cognitivo', 
+                                    data: [
+                                    {% for cogval in data['resultados']['cognitivo'] %}
+                                    {{data['resultados']['cognitivo'][cogval]}},
+                                    {% endfor %}
+                                    ],
+                                    backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200', '#ffa600']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Estructura del conocimiento</b>
+                    </div> 
+                    <canvas id="pie_estructura" width="100" height="100"></canvas>
+                    <script>
+                        var ctx3 = document.getElementById('pie_estructura').getContext('2d');
+                        var pie_cognitive = new Chart(ctx3, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    '1 Preestructural ({{(100 * data['resultados']['estructura'][1] / data['resultados']['registrados'])|round(2)}} %)',
+                                    '2 Uniestructural ({{(100 * data['resultados']['estructura'][2] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    '3 Multiestructural ({{(100 * data['resultados']['estructura'][3] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    '4 Relacional ({{(100 * data['resultados']['estructura'][4] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    '5 Abstracto ampliado ({{(100 * data['resultados']['estructura'][5] / data['resultados']['registrados'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Estructura del conocimiento', 
+                                    data: [
+                                    {% for estval in data['resultados']['estructura'] %}
+                                    {{data['resultados']['estructura'][estval]}},
+                                    {% endfor %}
+                                    ],
+                                    backgroundColor: ['#2c055c', '#860061', '#ca1152', '#f45e35', '#ffa600']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Transversalidad</b>
+                    </div> 
+                    <canvas id="pie_transversalidad" width="100" height="100"></canvas>
+                    <script>
+                        var ctx4 = document.getElementById('pie_transversalidad').getContext('2d');
+                        var pie_cognitive = new Chart(ctx4, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'Afectivo/Actitudinal ({{(100 * data['resultados']['afectivo'][1] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Tecnológico ({{(100 * data['resultados']['tecnologico'][1] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    'Colaborativo ({{(100 * data['resultados']['colaborativo'][1] / data['resultados']['registrados'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Transversalidad', 
+                                    data: [
+                                    {{data['resultados']['afectivo'][1]}},
+                                    {{data['resultados']['tecnologico'][1]}},
+                                    {{data['resultados']['colaborativo'][1]}}
+                                    ],
+                                    backgroundColor: ['#6d0768', '#a55e9e', '#dea8d7']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
