@@ -792,6 +792,52 @@ def informes_resultados():
     return render_template('report_resultados.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
 
 
+@app.route('/informes_medios')
+@app.route('/informes_medios', methods=['POST'])
+def informes_medios():
+    if 'username' not in session:
+        return login(0)
+
+    # Consultas comprobacion datos insertados
+    # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
+    # por tanto, se consideran no valoradas aunque existan otros campos
+    query_medios = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
+    query = {}
+
+    if 'universidad' in session:
+        universidad = session['universidad']
+        documents_unis = mongo.db.asignaturas.distinct("universidad", {"universidad": universidad})
+    elif request.form.get('universidad'):
+        universidad = request.form['universidad']
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+    else:
+        universidad = 'TODAS'
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+
+    lista_asignaturas = []
+    if universidad != 'TODAS':
+        asignaturas = asignaturas_universidad(universidad,'0','0')        
+        for asignatura in asignaturas:
+            lista_asignaturas.append(asignatura.get('_id', ''))
+        query = {'course_id':{'$in': lista_asignaturas}}
+        
+        query_medios['course_id'] = query['course_id']
+    
+
+    data = {
+        'medios': {
+            'registrados': mongo.db.instrumentos.count_documents(query_medios),
+            'total': mongo.db.instrumentos.count_documents(query),
+            'correccion': report_correccion(lista_asignaturas, "medios")
+        }
+    } 
+
+    data['medios']['pendientes'] = int(data['medios']['total']) - int(data['medios']['registrados'])
+    data['universidad'] = universidad 
+   
+    return render_template('report_medios.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
+
+
 
 def report_afectivo(lista_asignaturas, element):    
     if(len(lista_asignaturas)==0):
@@ -1104,6 +1150,8 @@ def report_correccion(lista_asignaturas,element):
 
     if element == "resultados":
         data = mongo.db.resultados.aggregate(pipeline)
+    elif element == "medios":
+        data = mongo.db.instrumentos.aggregate(pipeline)
     else: # competencias
         data = mongo.db.competencias.aggregate(pipeline)
 

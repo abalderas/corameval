@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 "> 
+            <div class="card-header">
+                <form action="/informes_resultados" method="post">
+                    <div class="form-row">
+                        <div class="col-sm-2">
+                            <label for="universidad" class="form-control"><strong>Universidad</strong></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <select name="universidad" id="universidad" class="form-control">
+                                <option value="TODAS">Todas las universidades</option>
+                                {% for universidad in universidades %}
+                                <option value="{{universidad}}" {% if selected.universidad == universidad %}  selected {% endif %}>{{universidad}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-1"><input type="submit" value="Buscar" class="btn btn-primary" /></div>
+                    </div>
+                </form>
+            </div>    
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{data['universidad']}}</th>
+                            <th class="text-md-right">Total</th>
+                            <th class="text-md-right">Registrados</th>
+                            <th class="text-md-right">Pendientes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Medios de evaluación</td>
+                            <td class="text-md-right">{{data['medios']['total']}} </td>
+                            <td class="text-md-right">
+                                {{data['medios']['registrados']}} 
+                                <span class="badge badge-success">{{(100*data['medios']['registrados']/data['medios']['total'])|round(1)}} %</span> 
+                            </td>
+                            <td class="text-md-right">
+                                {{data['medios']['pendientes']}}  
+                                <span class="badge badge-danger">{{(100*data['medios']['pendientes']/data['medios']['total'])|round(1)}} %</span> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 "> 
+            <div class="card-header">
+                <b>Informe de medios de evaluación</b>
+            </div>
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Corrección</b>
+                    </div>                 
+                    <canvas id="pie_correccion" width="100" height="100"></canvas>
+                    <script>
+                        var ctx1 = document.getElementById('pie_correccion').getContext('2d');
+                        var pie_correccion = new Chart(ctx1, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'Nivel 0 ({{(100 * data['medios']['correccion'][0] / data['medios']['registrados'])|round(2)}} %)',
+                                    'Nivel 1 ({{(100 * data['medios']['correccion'][1] / data['medios']['registrados'])|round(2)}} %)', 
+                                    'Nivel 2 ({{(100 * data['medios']['correccion'][2] / data['medios']['registrados'])|round(2)}} %)'], 
+                                datasets: [ {
+                                    label: 'Correccion', 
+                                    data: [
+                                    {{data['medios']['correccion'][0]}},
+                                    {{data['medios']['correccion'][1]}},
+                                    {{data['medios']['correccion'][2]}}
+                                    ],
+                                    backgroundColor: ['#02126d', '#8877bf', '#c0b0ea']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+                <div class="col-sm-2"></div>
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b></b>
+                    </div>                 
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b></b>
+                    </div> 
+                    
+                </div>
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b></b>
+                    </div> 
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
