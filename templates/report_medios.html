@@ -70,9 +70,11 @@
                             type: 'pie',
                             data: {
                                 labels: [
+                                    {% if data['medios']['registrados'] > 0 %}
                                     'Nivel 0 ({{(100 * data['medios']['correccion'][0] / data['medios']['registrados'])|round(2)}} %)',
                                     'Nivel 1 ({{(100 * data['medios']['correccion'][1] / data['medios']['registrados'])|round(2)}} %)', 
                                     'Nivel 2 ({{(100 * data['medios']['correccion'][2] / data['medios']['registrados'])|round(2)}} %)'], 
+                                    {% endif %}
                                 datasets: [ {
                                     label: 'Correccion', 
                                     data: [

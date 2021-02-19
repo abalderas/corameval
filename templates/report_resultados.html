@@ -70,9 +70,11 @@
                             type: 'pie',
                             data: {
                                 labels: [
+                                    {% if data['resultados']['registrados'] > 0 %}
                                     'Nivel 0 ({{(100 * data['resultados']['correccion'][0] / data['resultados']['registrados'])|round(2)}} %)',
                                     'Nivel 1 ({{(100 * data['resultados']['correccion'][1] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    'Nivel 2 ({{(100 * data['resultados']['correccion'][2] / data['resultados']['registrados'])|round(2)}} %)'], 
+                                    'Nivel 2 ({{(100 * data['resultados']['correccion'][2] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    {% endif %} 
                                 datasets: [ {
                                     label: 'Correccion', 
                                     data: [
@@ -97,13 +99,15 @@
                         var pie_cognitive = new Chart(ctx2, {
                             type: 'pie',
                             data: {
-                                labels: [
+                                labels: [                                    
+                                    {% if data['resultados']['registrados'] > 0 %}
                                     '1 Recordar ({{(100 * data['resultados']['cognitivo'][1] / data['resultados']['registrados'])|round(2)}} %)',
                                     '2 Comprender ({{(100 * data['resultados']['cognitivo'][2] / data['resultados']['registrados'])|round(2)}} %)', 
                                     '3 Aplicar ({{(100 * data['resultados']['cognitivo'][3] / data['resultados']['registrados'])|round(2)}} %)', 
                                     '4 Analizar ({{(100 * data['resultados']['cognitivo'][4] / data['resultados']['registrados'])|round(2)}} %)', 
                                     '5 Evaluar ({{(100 * data['resultados']['cognitivo'][5] / data['resultados']['registrados'])|round(2)}} %)', 
                                     '6 Crear ({{(100 * data['resultados']['cognitivo'][6] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    {% endif %}
                                 datasets: [ {
                                     label: 'Cognitivo', 
                                     data: [
@@ -136,12 +140,14 @@
                         var pie_cognitive = new Chart(ctx3, {
                             type: 'pie',
                             data: {
-                                labels: [
+                                labels: [                                    
+                                    {% if data['resultados']['registrados'] > 0 %}
                                     '1 Preestructural ({{(100 * data['resultados']['estructura'][1] / data['resultados']['registrados'])|round(2)}} %)',
                                     '2 Uniestructural ({{(100 * data['resultados']['estructura'][2] / data['resultados']['registrados'])|round(2)}} %)', 
                                     '3 Multiestructural ({{(100 * data['resultados']['estructura'][3] / data['resultados']['registrados'])|round(2)}} %)', 
                                     '4 Relacional ({{(100 * data['resultados']['estructura'][4] / data['resultados']['registrados'])|round(2)}} %)', 
                                     '5 Abstracto ampliado ({{(100 * data['resultados']['estructura'][5] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    {% endif %}
                                 datasets: [ {
                                     label: 'Estructura del conocimiento', 
                                     data: [
@@ -167,9 +173,11 @@
                             type: 'pie',
                             data: {
                                 labels: [
+                                    {% if data['resultados']['registrados'] > 0 %}
                                     'Afectivo/Actitudinal ({{(100 * data['resultados']['afectivo'][1] / data['resultados']['registrados'])|round(2)}} %)',
                                     'Tecnológico ({{(100 * data['resultados']['tecnologico'][1] / data['resultados']['registrados'])|round(2)}} %)', 
                                     'Colaborativo ({{(100 * data['resultados']['colaborativo'][1] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    {% endif %}
                                 datasets: [ {
                                     label: 'Transversalidad', 
                                     data: [
