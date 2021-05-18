@@ -691,12 +691,112 @@ def informes_general():
    
     return render_template('report.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
 
+# STATUS:
+#
+# Muestra comparación de competencias entre títulos (hay que seleccionar los 3 niveles)
+#       --> Mejora 1: realizar comparación desde un solo nivel
+#       --> Mejora 2: ampliar a resultados y medios
+#       --> Mejora 3: cambiar formato de tartas (¿quitar leyendas, cambiar de sitio, ...? estudiar)
+#
+# Llevar a koala y probar
+
+@app.route('/informes_combinados')
+@app.route('/informes_combinados', methods=['POST'])
+def informes_combinados():
+    if 'username' not in session:
+        return login(0)       
+       
+
+    if request.form.get('university'):
+        data_selected = {
+            'universidad': request.form.get('university',''),
+            'area': request.form.get('area',''),
+            'titulo': request.form.get('titulo',''),
+            'universidadCompara': request.form.get('universityCompara',''),
+            'areaCompara': request.form.get('areaCompara',''),
+            'tituloCompara': request.form.get('tituloCompara',''),
+            } 
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+        documents_area = mongo.db.asignaturas.distinct("area", {"universidad": data_selected["universidad"]}) 
+        documents_titu = mongo.db.asignaturas.distinct("titulo", {"universidad": data_selected["universidad"], "area": data_selected["area"]}) 
+        documents_area_compara = mongo.db.asignaturas.distinct("area", {"universidad": data_selected["universidadCompara"]}) 
+        documents_titu_compara = mongo.db.asignaturas.distinct("titulo", {"universidad": data_selected["universidadCompara"], "area": data_selected["areaCompara"]}) 
+    # copiado 
+        lista_asignaturas = []
+
+        asignaturas = asignaturas_universidad(data_selected["universidad"],data_selected["area"],data_selected["titulo"])        
+        for asignatura in asignaturas:
+            lista_asignaturas.append(asignatura.get('_id', ''))
+        query_competencias = { '$and': [
+            {"course_id": { "$in": lista_asignaturas}}, 
+            {'correccion':{'$exists': True}}, 
+            {'correccion': {'$ne': '-1'}}
+            ] }
+        
+        
+        lista_asignaturas_compara = []
+        query_competencias_compara = { '$and': [
+            {"course_id": { "$in": lista_asignaturas}}, 
+            {'correccion':{'$exists': True}}, 
+            {'correccion': {'$ne': '-1'}}
+            ] }
+
+        asignaturas_compara = asignaturas_universidad(data_selected["universidadCompara"],data_selected["areaCompara"],data_selected["tituloCompara"])        
+        for asignatura in asignaturas_compara:
+            lista_asignaturas_compara.append(asignatura.get('_id', ''))
+        query_competencias_compara = { '$and': [
+            {"course_id": { "$in": lista_asignaturas_compara}}, 
+            {'correccion':{'$exists': True}}, 
+            {'correccion': {'$ne': '-1'}}
+            ] }
+        
+        data = {
+            'competencias': {
+                'registradas': mongo.db.competencias.count_documents(query_competencias),
+                'correccion': report_correccion(lista_asignaturas, "competencias"),
+                'cognitivo': report_cognitivo(lista_asignaturas, "competencias"),
+                'estructura': report_estructura(lista_asignaturas, "competencias"),
+                'afectivo': report_afectivo(lista_asignaturas, "competencias"),
+                'tecnologico': report_tecnologico(lista_asignaturas, "competencias"),
+                'colaborativo': report_colaborativo(lista_asignaturas, "competencias")
+            },
+            'competencias_compara': {
+                'registradas': mongo.db.competencias.count_documents(query_competencias_compara),
+                'correccion': report_correccion(lista_asignaturas_compara, "competencias"),
+                'cognitivo': report_cognitivo(lista_asignaturas_compara, "competencias"),
+                'estructura': report_estructura(lista_asignaturas_compara, "competencias"),
+                'afectivo': report_afectivo(lista_asignaturas_compara, "competencias"),
+                'tecnologico': report_tecnologico(lista_asignaturas_compara, "competencias"),
+                'colaborativo': report_colaborativo(lista_asignaturas_compara, "competencias")
+            }
+        }
+
+        #data['competencias']['pendientes'] = int(data['competencias']['total']) - int(data['competencias']['registradas'])
+        #data['universidad'] = universidad 
+    # fin copiado
+    
+    
+    
+    
+    else:
+        data_selected = {}
+        documents_unis = mongo.db.asignaturas.distinct("universidad")
+        documents_area = {}
+        documents_titu = {}
+        documents_area_compara = {}
+        documents_titu_compara = {}
+        data = {}
+
+    return render_template('report_combinacion.html', universidades = documents_unis, areas = documents_area, 
+    titulos = documents_titu, areasCompara = documents_area_compara, titulosCompara = documents_titu_compara,  selected = data_selected, 
+    data = data)
+
 @app.route('/informes_competencias')
 @app.route('/informes_competencias', methods=['POST'])
 def informes_competencias():
     if 'username' not in session:
         return login(0)
-
+    
     # Consultas comprobacion datos insertados
     # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
     # por tanto, se consideran no valoradas aunque existan otros campos

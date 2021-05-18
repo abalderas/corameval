@@ -79,6 +79,20 @@ $(document).ready(function() {
         listing_details();
     
    });
+
+
+    $('#universityCompara').on('change', function(event) {        
+        listing_areas("comparar");
+        $('#tituloCompara').empty();
+
+    });
+
+    $('#areaCompara').on('change click', function(event) {
+
+        listing_degrees("comparar");
+
+    });
+
 });
 
 function listing_details()
@@ -166,41 +180,83 @@ function listing_niveles1()
     });
 }
 
-function listing_degrees()
+function listing_degrees(element = "no comparar")
 {
-    $.ajax({
-        data : {
-            universidad : $('#university').val(),
-            area : $('#area').val()
-        },
-        type : 'POST',
-        url : '/listing_degrees'
-    })
-    .done(function(data) {
+    if (element != "comparar")
+    {
+        $.ajax({
+            data : {
+                universidad : $('#university').val(),
+                area : $('#area').val()
+            },
+            type : 'POST',
+            url : '/listing_degrees'
+        })
+        .done(function(data) {
 
-        $('#titulo').empty();
-        $('#titulo').append('<option value="">(selecciona curso)</option>');
-        for (var i=0; i<data.length; i++)
-            $('#titulo').append('<option value="' + data[i] + '">' + data[i] + '</option>');
-    });
+            $('#titulo').empty();
+            $('#titulo').append('<option value="">(selecciona curso)</option>');
+            for (var i=0; i<data.length; i++)
+                $('#titulo').append('<option value="' + data[i] + '">' + data[i] + '</option>');
+        });
+    }
+    else
+    {
+        $.ajax({
+            data : {
+                universidad : $('#universityCompara').val(),
+                area : $('#areaCompara').val()
+            },
+            type : 'POST',
+            url : '/listing_degrees'
+        })
+        .done(function(data) {
+
+            $('#tituloCompara').empty();
+            $('#tituloCompara').append('<option value="">(selecciona curso)</option>');
+            for (var i=0; i<data.length; i++)
+                $('#tituloCompara').append('<option value="' + data[i] + '">' + data[i] + '</option>');
+        });
+    }
 }
 
 
-function listing_areas()
+function listing_areas(element = "no comparar")
 {
-    $.ajax({
-        data : {
-            universidad : $('#university').val()
-        },
-        type : 'POST',
-        url : '/listing_areas'
-    })
-    .done(function(data) {
+    if (element != "comparar")
+    {
+        $.ajax({
+            data : {
+                universidad : $('#university').val()
+            },
+            type : 'POST',
+            url : '/listing_areas'
+        })
+        .done(function(data) {
 
-        $('#area').empty();
-        $('#area').append('<option value="">(selecciona área)</option>');
-        for (var i=0; i<data.length; i++)
-            $('#area').append('<option value="' + data[i] + '">' + data[i] + '</option>');
+            $('#area').empty();
+            $('#area').append('<option value="">(selecciona área)</option>');
+            for (var i=0; i<data.length; i++)
+                $('#area').append('<option value="' + data[i] + '">' + data[i] + '</option>');
 
-    });
+        });
+    }
+    else
+    {
+        $.ajax({
+            data : {
+                universidad : $('#universityCompara').val()
+            },
+            type : 'POST',
+            url : '/listing_areas'
+        })
+        .done(function(data) {
+
+            $('#areaCompara').empty();
+            $('#areaCompara').append('<option value="">(selecciona área)</option>');
+            for (var i=0; i<data.length; i++)
+                $('#areaCompara').append('<option value="' + data[i] + '">' + data[i] + '</option>');
+
+        });
+    }
 }
