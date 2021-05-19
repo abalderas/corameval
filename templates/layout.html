@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel='shortcut icon' type='image/x-icon' href="{{ url_for('static', filename='favicon.ico') }}" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.js"></script>
 </head>
 <body>
     <div class="alert alert-light border-0 mb-0 rounded-0 px-0" role="alert">
@@ -44,6 +44,7 @@
                     <a class="nav-link dropdown-toggle"  data-toggle="dropdown"  href="">Informes <span class="sr-only">(current)</span></a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="/informes_general">Registros general</a>
+                        <a class="dropdown-item" href="/informes_combinados">Combinados</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/informes_competencias">Competencias</a>
                         <a class="dropdown-item" href="/informes_resultados">Resultados de aprenziaje</a>
