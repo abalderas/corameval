@@ -5,3 +5,8 @@ body {
 .popover{
     max-width:600px !important;
 }
+
+canvas.labels{
+    margin-bottom: -60px !important;
+    margin-top: -60px !important;
+}

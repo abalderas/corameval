@@ -696,7 +696,8 @@ def informes_general():
 # Muestra comparación de competencias entre títulos (hay que seleccionar los 3 niveles)
 #       --> Mejora 1: realizar comparación desde un solo nivel
 #       --> Mejora 2: ampliar a resultados y medios
-#       --> Mejora 3: cambiar formato de tartas (¿quitar leyendas, cambiar de sitio, ...? estudiar)
+#       --> Mejora 3: cambiar formato de tartas (¿quitar leyendas, cambiar de sitio, ...? estudiar): he añadido js para quitr leyenda pero
+#               no funciona, aunque sí funciona en su web https://www.chartjs.org/docs/3.0.2/configuration/legend.html
 #
 # Llevar a koala y probar
 
