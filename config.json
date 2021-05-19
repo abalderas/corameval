@@ -1,0 +1,11 @@
+{
+    "ATLAS": {
+        "server": "mongodb+srv://CORAMevalDBUser:donx7Xb6uGFKMbUL@cluster0-cz4qg.mongodb.net/skillsdb?retryWrites=true&w=majority/skillsdb"
+    },
+    "PRODUCTION": {
+        "server": "mongodb://coramevaluser:Floass2019Psi@localhost:27017/coramevaldb"
+    },
+    "secret_key": "mysecretkey"
+}
+
+
