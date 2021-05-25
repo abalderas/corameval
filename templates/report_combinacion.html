@@ -14,7 +14,7 @@
                         <div class="col-sm-2">
                             <label for="university" class="form-control"><strong>Universidad</strong></label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <select name="university" id="university" class="form-control">
                                 <option value="0">(seleccione universidad 1)</option>
                                 {% for universidad in universidades %}
@@ -22,39 +22,31 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <select name="universityCompara" id="universityCompara" class="form-control">
                                 <option value="0">(seleccione universidad 2)</option>
                                 {% for universidad in universidades %}
                                 <option value="{{universidad}}" {% if selected.universidadCompara == universidad %}  selected {% endif %}>{{universidad}}</option>
                                 {% endfor %}
                             </select>
-                        </div>                        
-                        <div class="col-sm-2">
-                            <label for="componente" class="form-control"><strong>Componente</strong></label>
-                        </div>
+                        </div>   
                     </div>
                     <div class="form-row">
                         <div class="col-sm-2">
                             <label for="area" class="form-control"><strong>Área</strong></label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <select name="area" id="area" class="form-control">
                                 {% for area in areas %}
                                 <option value="{{area}}" {% if selected.area == area %}  selected {% endif %}>{{area}}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <select name="areaCompara" id="areaCompara" class="form-control">
                                 {% for area in areasCompara %}
                                 <option value="{{area}}" {% if selected.areaCompara == area %}  selected {% endif %}>{{area}}</option>
                                 {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-sm-2">
-                            <select name="componente" id="componente" class="form-control">
-                                <option value="competencias">Competencias</option>                                
                             </select>
                         </div>
                     </div>
@@ -62,21 +54,46 @@
                         <div class="col-sm-2">
                                 <label for="titulo" class="form-control"><strong>Título</strong></label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <select name="titulo" id="titulo" class="form-control">
                                     {% for titulo in titulos %}
                                     <option value="{{titulo}}" {% if selected.titulo == titulo %}  selected {% endif %}>{{titulo}}</option>
                                     {% endfor %}
                             </select>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <select name="tituloCompara" id="tituloCompara" class="form-control">
                                     {% for titulo in titulosCompara %}
                                     <option value="{{titulo}}" {% if selected.tituloCompara == titulo %}  selected {% endif %}>{{titulo}}</option>
                                     {% endfor %}
                             </select>
                         </div>                        
-                        <div class="col-sm-1"><input type="submit" value="Buscar" class="btn btn-primary" /></div>
+                        
+                    </div>
+                    <div class="form-row border-top border-secondary">    
+                            <div class="col-sm-2">
+                                <label for="componente" class="form-control"><strong>Componente</strong></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select name="componente" id="componente" class="form-control"  >
+                                    <option value="competencias" {% if selected.componente=='competencias' %} selected="selected" {% endif %}>Competencias</option>
+                                    <option value="resultados" {% if selected.componente=='resultados' %} selected="selected" {% endif %}>Resultados de aprendizaje</option>
+                                    <option value="instrumentos" {% if selected.componente=='instrumentos' %} selected="selected" {% endif %}>Medios de evaluación</option>
+                                </select>  
+                            </div>               
+                            <div class="col-sm-2">
+                                <label for="tipoCompetencia" class="form-control"><strong>Carácter</strong></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <select name="tipoCompetencia" id="tipoCompetencia" class="form-control" {% if selected.componente!='competencias' %} disabled {% endif %} >
+                                    <option value="4"{% if selected.tipoCompetencia=='4' %} selected="selected" {% endif %}>TODOS (solo competencias)</option>
+                                    <option value="0"{% if selected.tipoCompetencia=='0' %} selected="selected" {% endif %}>Básicas</option>
+                                    <option value="1"{% if selected.tipoCompetencia=='1' %} selected="selected" {% endif %}>Específicas</option>
+                                    <option value="2"{% if selected.tipoCompetencia=='2' %} selected="selected" {% endif %}>Generales</option>
+                                    <option value="3"{% if selected.tipoCompetencia=='3' %} selected="selected" {% endif %}>Transversales</option>
+                                </select>  
+                            </div>
+                            <div class="col-sm-1"><input type="submit" value="Buscar" class="btn btn-primary" /></div>
                     </div>
                 </form>
             </div>
@@ -120,6 +137,9 @@
                         });
                     </script>
                 </div>
+                
+                    <!-- Los medios solo tienen la correccion -->         
+                    {% if selected.componente!='instrumentos' %}
                 <div class="col-sm-3"> 
                     <div class="card-header">
                         <b>Proceso Cognitivo</b>
@@ -157,11 +177,6 @@
                                     backgroundColor: ['#2c055c', '#860061', '#ca1152', '#f45e35', '#ffa600']
                                 }];
                         var label_estructura = ['1 Preestructural', '2 Uniestructural', '3 Multiestructural', '4 Relacional',  '5 Abstracto'];
-                        var label_estructura_porcentaje = ['1 Preestructural ({{(100 * data['competencias']['estructura'][1] / data['competencias']['registradas'])|round(2)}} %)',
-                                    '2 Uniestructural ({{(100 * data['competencias']['estructura'][2] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '3 Multiestructural ({{(100 * data['competencias']['estructura'][3] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '4 Relacional ({{(100 * data['competencias']['estructura'][4] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '5 Abstracto ampliado ({{(100 * data['competencias']['estructura'][5] / data['competencias']['registradas'])|round(2)}} %)']
                         var pie_cognitive = new Chart(ctx3_label, {
                             type: 'pie',
                             options: options,
@@ -195,10 +210,21 @@
                         })
                     </script>    
                 </div>
+                    {% endif %}
             </div>
     </div>        
 </div>
 {% endif %}
+
+<script>                 
+        var options = {
+        plugins: {
+            legend: {
+                display: false,
+            }
+        }
+    };
+</script>
 
 {% if selected.universidad is defined %}  
 <div class="col-md-12">
@@ -216,32 +242,26 @@
             {% endif %}
             </b>    
         </div>           
-            <div class="form-row">                
+            <div class="form-row">                    
+                {% if  data['items']['registradas'] > 0 %}                  
                 <div class="col-sm-3">               
                     <canvas id="pie_correccion" width="100" height="100"></canvas>
-                    <script>                       
-                        var options = {
-                            plugins: {
-                                legend: {
-                                    display: false,
-                                }
-                            }
-                        };
+                    <script>
                         var ctx1 = document.getElementById('pie_correccion').getContext('2d');
                         var datasets_correccion = [ {
                                 label: 'Correccion', 
                                 data: [
-                                {{data['competencias']['correccion'][0]}},
-                                {{data['competencias']['correccion'][1]}},
-                                {{data['competencias']['correccion'][2]}}
+                                {{data['items']['correccion'][0]}},
+                                {{data['items']['correccion'][1]}},
+                                {{data['items']['correccion'][2]}}
                                 ],
                                 backgroundColor: ['#02126d', '#8877bf', '#c0b0ea']
                             }];
                         var label_correccion = [ 'Nivel 0', 'Nivel 1',  'Nivel 2'];
                         var label_correccion_porcentaje = [
-                                'Nivel 0 ({{(100 * data['competencias']['correccion'][0] / data['competencias']['registradas'])|round(2)}} %)',
-                                'Nivel 1 ({{(100 * data['competencias']['correccion'][1] / data['competencias']['registradas'])|round(2)}} %)', 
-                                'Nivel 2 ({{(100 * data['competencias']['correccion'][2] / data['competencias']['registradas'])|round(2)}} %)'];
+                                'Nivel 0 ({{(100 * data['items']['correccion'][0] / data['items']['registradas'])|round(2)}} %)',
+                                'Nivel 1 ({{(100 * data['items']['correccion'][1] / data['items']['registradas'])|round(2)}} %)', 
+                                'Nivel 2 ({{(100 * data['items']['correccion'][2] / data['items']['registradas'])|round(2)}} %)'];
                         var data = {                            
                             labels: label_correccion_porcentaje, 
                             datasets: datasets_correccion
@@ -254,25 +274,27 @@
                         });
 
                     </script>
-                </div>
+                </div>       
+                    <!-- Los medios solo tienen la correccion -->         
+                    {% if selected.componente!='instrumentos' %}
                 <div class="col-sm-3">            
                     <canvas id="pie_cognitivo" width="100" height="100"></canvas>
                     <script>
                         var ctx2 = document.getElementById('pie_cognitivo').getContext('2d');
                         var label_cognitivo = [ '1 Recordar', '2 Comprender',  '3 Aplicar', '4 Analizar', '5 Evaluar',  '6 Crear'];
                         var label_porcentaje = [
-                                    '1 Recordar ({{(100 * data['competencias']['cognitivo'][1] / data['competencias']['registradas'])|round(2)}} %)',
-                                    '2 Comprender ({{(100 * data['competencias']['cognitivo'][2] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '3 Aplicar ({{(100 * data['competencias']['cognitivo'][3] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '4 Analizar ({{(100 * data['competencias']['cognitivo'][4] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '5 Evaluar ({{(100 * data['competencias']['cognitivo'][5] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '6 Crear ({{(100 * data['competencias']['cognitivo'][6] / data['competencias']['registradas'])|round(2)}} %)'];
+                                    '1 Recordar ({{(100 * data['items']['cognitivo'][1] / data['items']['registradas'])|round(2)}} %)',
+                                    '2 Comprender ({{(100 * data['items']['cognitivo'][2] / data['items']['registradas'])|round(2)}} %)', 
+                                    '3 Aplicar ({{(100 * data['items']['cognitivo'][3] / data['items']['registradas'])|round(2)}} %)', 
+                                    '4 Analizar ({{(100 * data['items']['cognitivo'][4] / data['items']['registradas'])|round(2)}} %)', 
+                                    '5 Evaluar ({{(100 * data['items']['cognitivo'][5] / data['items']['registradas'])|round(2)}} %)', 
+                                    '6 Crear ({{(100 * data['items']['cognitivo'][6] / data['items']['registradas'])|round(2)}} %)'];
                                
                         var datasets_cognitivo =  [ {
                                     label: 'Cognitivo', 
                                     data: [
-                                    {% for cogval in data['competencias']['cognitivo'] %}
-                                    {{data['competencias']['cognitivo'][cogval]}},
+                                    {% for cogval in data['items']['cognitivo'] %}
+                                    {{data['items']['cognitivo'][cogval]}},
                                     {% endfor %}
                                     ],
                                     backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200', '#ffa600']
@@ -295,18 +317,18 @@
                         var datasets_estructura =  [{
                                     label: 'Estructura del conocimiento', 
                                     data: [
-                                    {% for estval in data['competencias']['estructura'] %}
-                                    {{data['competencias']['estructura'][estval]}},
+                                    {% for estval in data['items']['estructura'] %}
+                                    {{data['items']['estructura'][estval]}},
                                     {% endfor %}
                                     ],
                                     backgroundColor: ['#2c055c', '#860061', '#ca1152', '#f45e35', '#ffa600']
                                 }];
                         var label_estructura = ['1 Preestructural', '2 Uniestructural', '3 Multiestructural', '4 Relacional',  '5 Abstracto'];
-                        var label_estructura_porcentaje = ['1 Preestructural ({{(100 * data['competencias']['estructura'][1] / data['competencias']['registradas'])|round(2)}} %)',
-                                    '2 Uniestructural ({{(100 * data['competencias']['estructura'][2] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '3 Multiestructural ({{(100 * data['competencias']['estructura'][3] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '4 Relacional ({{(100 * data['competencias']['estructura'][4] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    '5 Abstracto ampliado ({{(100 * data['competencias']['estructura'][5] / data['competencias']['registradas'])|round(2)}} %)']
+                        var label_estructura_porcentaje = ['1 Preestructural ({{(100 * data['items']['estructura'][1] / data['items']['registradas'])|round(2)}} %)',
+                                    '2 Uniestructural ({{(100 * data['items']['estructura'][2] / data['items']['registradas'])|round(2)}} %)', 
+                                    '3 Multiestructural ({{(100 * data['items']['estructura'][3] / data['items']['registradas'])|round(2)}} %)', 
+                                    '4 Relacional ({{(100 * data['items']['estructura'][4] / data['items']['registradas'])|round(2)}} %)', 
+                                    '5 Abstracto ampliado ({{(100 * data['items']['estructura'][5] / data['items']['registradas'])|round(2)}} %)']
                         var pie_cognitive = new Chart(ctx3, {
                             type: 'pie',
                             options: options,
@@ -324,17 +346,17 @@
                         var datasets_transversalidad =  [ {
                                     label: 'Transversalidad', 
                                     data: [
-                                    {{data['competencias']['afectivo'][1]}},
-                                    {{data['competencias']['tecnologico'][1]}},
-                                    {{data['competencias']['colaborativo'][1]}}
+                                    {{data['items']['afectivo'][1]}},
+                                    {{data['items']['tecnologico'][1]}},
+                                    {{data['items']['colaborativo'][1]}}
                                     ],
                                     backgroundColor: ['#6d0768', '#a55e9e', '#dea8d7']
                                 }];
                         var label_transversalidad = [ 'Afectivo/Actitudinal',   'Tecnológico',  'Colaborativo'];
                         var label_transversalidad_porcentaje =  [
-                                    'Afectivo/Actitudinal ({{(100 * data['competencias']['afectivo'][1] / data['competencias']['registradas'])|round(2)}} %)',
-                                    'Tecnológico ({{(100 * data['competencias']['tecnologico'][1] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    'Colaborativo ({{(100 * data['competencias']['colaborativo'][1] / data['competencias']['registradas'])|round(2)}} %)'];
+                                    'Afectivo/Actitudinal ({{(100 * data['items']['afectivo'][1] / data['items']['registradas'])|round(2)}} %)',
+                                    'Tecnológico ({{(100 * data['items']['tecnologico'][1] / data['items']['registradas'])|round(2)}} %)', 
+                                    'Colaborativo ({{(100 * data['items']['colaborativo'][1] / data['items']['registradas'])|round(2)}} %)'];
                         var pie_cognitive = new Chart(ctx4, {
                             type: 'pie',
                             options: options,
@@ -345,12 +367,17 @@
                         })
                     </script>    
                 </div>
+                    {% endif %}
+                {% else %}
+                <div class="col-sm-12">Sin datos registrados</div>
+                
+                {% endif %}
             </div>
     </div>        
 </div>
 {% endif %}
 
-{% if selected.universidadCompara is defined %} 
+{% if selected.universidadCompara is defined  %} 
 <div class="col-md-12">
     <div class="card border-secondary mb-3 "> 
         <div class="card-header">
@@ -366,7 +393,8 @@
             {% endif %}
             </b>
         </div>           
-        <div class="form-row">                
+        <div class="form-row">    
+            {% if  data['items_compara']['registradas'] > 0 %}            
                 <div class="col-sm-3">               
                     <canvas id="pie_correccion_compara" width="100" height="100"></canvas>
                     <script> 
@@ -374,16 +402,16 @@
                         var datasets_correccion_compara =   [ {
                                     label: 'Correccion', 
                                     data: [
-                                    {{data['competencias_compara']['correccion'][0]}},
-                                    {{data['competencias_compara']['correccion'][1]}},
-                                    {{data['competencias_compara']['correccion'][2]}}
+                                    {{data['items_compara']['correccion'][0]}},
+                                    {{data['items_compara']['correccion'][1]}},
+                                    {{data['items_compara']['correccion'][2]}}
                                     ],
                                     backgroundColor: ['#02126d', '#8877bf', '#c0b0ea']
                                 }];
                         var label_correccion_porcentaje_compara = [
-                                    'Nivel 0 ({{(100 * data['competencias_compara']['correccion'][0] / data['competencias_compara']['registradas'])|round(2)}} %)',
-                                    'Nivel 1 ({{(100 * data['competencias_compara']['correccion'][1] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    'Nivel 2 ({{(100 * data['competencias_compara']['correccion'][2] / data['competencias_compara']['registradas'])|round(2)}} %)'];
+                                    'Nivel 0 ({{(100 * data['items_compara']['correccion'][0] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    'Nivel 1 ({{(100 * data['items_compara']['correccion'][1] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    'Nivel 2 ({{(100 * data['items_compara']['correccion'][2] / data['items_compara']['registradas'])|round(2)}} %)'];
                         var pie_correccion_compara = new Chart(ctx1_compara, {
                             type: 'pie',
                             options: options,
@@ -394,6 +422,9 @@
                         })
                     </script>
                 </div>
+                
+                    <!-- Los medios solo tienen la correccion -->         
+                    {% if selected.componente!='instrumentos' %}
                 <div class="col-sm-3">             
                     <canvas id="pie_cognitivo_compara" width="100" height="100"></canvas>
                     <script>
@@ -401,19 +432,19 @@
                         var datasets_cognitivo_compara = [ {
                                     label: 'Cognitivo', 
                                     data: [
-                                    {% for cogval in data['competencias_compara']['cognitivo'] %}
-                                    {{data['competencias_compara']['cognitivo'][cogval]}},
+                                    {% for cogval in data['items_compara']['cognitivo'] %}
+                                    {{data['items_compara']['cognitivo'][cogval]}},
                                     {% endfor %}
                                     ],
                                     backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200', '#ffa600']
                                 }];
                         var label_cognitivo_porcentaje_compara =  [
-                                    '1 Recordar ({{(100 * data['competencias_compara']['cognitivo'][1] / data['competencias_compara']['registradas'])|round(2)}} %)',
-                                    '2 Comprender ({{(100 * data['competencias_compara']['cognitivo'][2] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    '3 Aplicar ({{(100 * data['competencias_compara']['cognitivo'][3] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    '4 Analizar ({{(100 * data['competencias_compara']['cognitivo'][4] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    '5 Evaluar ({{(100 * data['competencias_compara']['cognitivo'][5] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    '6 Crear ({{(100 * data['competencias_compara']['cognitivo'][6] / data['competencias_compara']['registradas'])|round(2)}} %)'];
+                                    '1 Recordar ({{(100 * data['items_compara']['cognitivo'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    '2 Comprender ({{(100 * data['items_compara']['cognitivo'][2] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    '3 Aplicar ({{(100 * data['items_compara']['cognitivo'][3] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    '4 Analizar ({{(100 * data['items_compara']['cognitivo'][4] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    '5 Evaluar ({{(100 * data['items_compara']['cognitivo'][5] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    '6 Crear ({{(100 * data['items_compara']['cognitivo'][6] / data['items_compara']['registradas'])|round(2)}} %)'];
                         var pie_cognitive_compara = new Chart(ctx2_compara, {
                             type: 'pie',
                             options: options,
@@ -431,18 +462,18 @@
                         var datasets_estructura_compara =  [ {
                                     label: 'Estructura del conocimiento', 
                                     data: [
-                                    {% for estval in data['competencias_compara']['estructura'] %}
-                                    {{data['competencias_compara']['estructura'][estval]}},
+                                    {% for estval in data['items_compara']['estructura'] %}
+                                    {{data['items_compara']['estructura'][estval]}},
                                     {% endfor %}
                                     ],
                                     backgroundColor: ['#2c055c', '#860061', '#ca1152', '#f45e35', '#ffa600']
                                 }];
                         var label_estructura_porcentaje_compara = [
-                                    '1 Preestructural ({{(100 * data['competencias_compara']['estructura'][1] / data['competencias_compara']['registradas'])|round(2)}} %)',
-                                    '2 Uniestructural ({{(100 * data['competencias_compara']['estructura'][2] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    '3 Multiestructural ({{(100 * data['competencias_compara']['estructura'][3] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    '4 Relacional ({{(100 * data['competencias_compara']['estructura'][4] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    '5 Abstracto ampliado ({{(100 * data['competencias_compara']['estructura'][5] / data['competencias_compara']['registradas'])|round(2)}} %)'];
+                                    '1 Preestructural ({{(100 * data['items_compara']['estructura'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    '2 Uniestructural ({{(100 * data['items_compara']['estructura'][2] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    '3 Multiestructural ({{(100 * data['items_compara']['estructura'][3] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    '4 Relacional ({{(100 * data['items_compara']['estructura'][4] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    '5 Abstracto ampliado ({{(100 * data['items_compara']['estructura'][5] / data['items_compara']['registradas'])|round(2)}} %)'];
                                
                         var pie_cognitive_compara = new Chart(ctx3_compara, {
                             type: 'pie',
@@ -461,16 +492,16 @@
                         var datasets_transversalidad_compara = [ {
                                     label: 'Transversalidad', 
                                     data: [
-                                    {{data['competencias_compara']['afectivo'][1]}},
-                                    {{data['competencias_compara']['tecnologico'][1]}},
-                                    {{data['competencias_compara']['colaborativo'][1]}}
+                                    {{data['items_compara']['afectivo'][1]}},
+                                    {{data['items_compara']['tecnologico'][1]}},
+                                    {{data['items_compara']['colaborativo'][1]}}
                                     ],
                                     backgroundColor: ['#6d0768', '#a55e9e', '#dea8d7']
                                 }];
                         var label_transversalidad_porcentaje_compara = [
-                                    'Afectivo/Actitudinal ({{(100 * data['competencias_compara']['afectivo'][1] / data['competencias_compara']['registradas'])|round(2)}} %)',
-                                    'Tecnológico ({{(100 * data['competencias_compara']['tecnologico'][1] / data['competencias_compara']['registradas'])|round(2)}} %)', 
-                                    'Colaborativo ({{(100 * data['competencias_compara']['colaborativo'][1] / data['competencias_compara']['registradas'])|round(2)}} %)'];
+                                    'Afectivo/Actitudinal ({{(100 * data['items_compara']['afectivo'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    'Tecnológico ({{(100 * data['items_compara']['tecnologico'][1] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    'Colaborativo ({{(100 * data['items_compara']['colaborativo'][1] / data['items_compara']['registradas'])|round(2)}} %)'];
                         var pie_cognitive_compara = new Chart(ctx4_compara, {
                             type: 'pie',
                             options: options,
@@ -481,7 +512,13 @@
                         })
                     </script>
                 </div>
+                    {% endif %}
+                {% else %}
+                <div class="col-sm-12">Sin datos registrados</div>
+                
+                {% endif %}
             </div>
+            
     </div>        
 </div>
 {% endif %}
