@@ -758,35 +758,38 @@ def informes_combinados():
             data = {
                 'items': {
                     'registradas': mongo.db[data_selected['componente']].count_documents(query),
-                    'correccion': report_correccion(lista_asignaturas, data_selected['componente']),
-                    'cognitivo': report_cognitivo(lista_asignaturas, data_selected['componente']),
-                    'estructura': report_estructura(lista_asignaturas, data_selected['componente']),
-                    'afectivo': report_afectivo(lista_asignaturas, data_selected['componente']),
-                    'tecnologico': report_tecnologico(lista_asignaturas, data_selected['componente']),
-                    'colaborativo': report_colaborativo(lista_asignaturas, data_selected['componente'])
+                    'correccion': report_correccion(data_selected['componente'],buscar1),
+                    'cognitivo': report_cognitivo(data_selected['componente'], buscar1),
+                    'estructura': report_estructura(data_selected['componente'], buscar1),
+                    'afectivo': report_afectivo(data_selected['componente'], buscar1),
+                    'tecnologico': report_tecnologico(data_selected['componente'], buscar1),
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar1)
                 },
                 'items_compara': {
                     'registradas': mongo.db[data_selected['componente']].count_documents(query_compara),
-                    'correccion': report_correccion(lista_asignaturas_compara, data_selected['componente']),
-                    'cognitivo': report_cognitivo(lista_asignaturas_compara, data_selected['componente']),
-                    'estructura': report_estructura(lista_asignaturas_compara, data_selected['componente']),
-                    'afectivo': report_afectivo(lista_asignaturas_compara, data_selected['componente']),
-                    'tecnologico': report_tecnologico(lista_asignaturas_compara, data_selected['componente']),
-                    'colaborativo': report_colaborativo(lista_asignaturas_compara, data_selected['componente'])
+                    'correccion': report_correccion(data_selected['componente'],buscar2),
+                    'cognitivo': report_cognitivo(data_selected['componente'], buscar2),
+                    'estructura': report_estructura(data_selected['componente'], buscar2),
+                    'afectivo': report_afectivo(data_selected['componente'], buscar2),
+                    'tecnologico': report_tecnologico(data_selected['componente'], buscar2),
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar2)
                 }
             }
+            print(data['items']['registradas'])
         else: 
             print(query_compara)    
             data = {
                 'items': {
                     'registradas': mongo.db[data_selected['componente']].count_documents(query),
-                    'correccion': report_correccion(lista_asignaturas, data_selected['componente'])
+                    'correccion': report_correccion(data_selected['componente'],buscar1)
                 },
                 'items_compara': {
                     'registradas': mongo.db[data_selected['componente']].count_documents(query_compara),
-                    'correccion': report_correccion(lista_asignaturas_compara, data_selected['componente'])
+                    'correccion': report_correccion(data_selected['componente'],buscar2)
                 }
-            }  
+            }            
+            print(data['items']['registradas'])
+            print(data['items']['correccion'])
     else:
         data_selected = { 'componente': 'competencias' }
         documents_unis = mongo.db.asignaturas.distinct("universidad")
@@ -809,7 +812,8 @@ def informes_competencias():
     # Consultas comprobacion datos insertados
     # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
     # por tanto, se consideran no valoradas aunque existan otros campos
-    query_competencias = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
+    buscar =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
+    query_competencias = { '$and': buscar }
     query = {}
 
     if 'universidad' in session:
@@ -822,12 +826,14 @@ def informes_competencias():
         universidad = 'TODAS'
         documents_unis = mongo.db.asignaturas.distinct("universidad")
 
+    
     lista_asignaturas = []
     if universidad != 'TODAS':
         asignaturas = asignaturas_universidad(universidad,'0','0')        
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
         query = {'course_id':{'$in': lista_asignaturas}}
+        buscar.append({"course_id": { "$in": lista_asignaturas}})
         
         query_competencias['course_id'] = query['course_id']
     
@@ -836,12 +842,12 @@ def informes_competencias():
         'competencias': {
             'registradas': mongo.db.competencias.count_documents(query_competencias),
             'total': mongo.db.competencias.count_documents(query),
-            'correccion': report_correccion(lista_asignaturas, "competencias"),
-            'cognitivo': report_cognitivo(lista_asignaturas, "competencias"),
-            'estructura': report_estructura(lista_asignaturas, "competencias"),
-            'afectivo': report_afectivo(lista_asignaturas, "competencias"),
-            'tecnologico': report_tecnologico(lista_asignaturas, "competencias"),
-            'colaborativo': report_colaborativo(lista_asignaturas, "competencias")
+            'correccion': report_correccion("competencias", buscar),
+            'cognitivo': report_cognitivo("competencias", buscar),
+            'estructura': report_estructura("competencias", buscar),
+            'afectivo': report_afectivo("competencias", buscar),
+            'tecnologico': report_tecnologico("competencias", buscar),
+            'colaborativo': report_colaborativo("competencias", buscar)
         }
     } 
 
@@ -859,7 +865,8 @@ def informes_resultados():
     # Consultas comprobacion datos insertados
     # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
     # por tanto, se consideran no valoradas aunque existan otros campos
-    query_resultados = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
+    buscar =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
+    query_resultados = { '$and': buscar }
     query = {}
 
     if 'universidad' in session:
@@ -878,6 +885,7 @@ def informes_resultados():
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
         query = {'course_id':{'$in': lista_asignaturas}}
+        buscar.append({"course_id": { "$in": lista_asignaturas}})
         
         query_resultados['course_id'] = query['course_id']
     
@@ -886,12 +894,12 @@ def informes_resultados():
         'resultados': {
             'registrados': mongo.db.resultados.count_documents(query_resultados),
             'total': mongo.db.resultados.count_documents(query),
-            'correccion': report_correccion(lista_asignaturas, "resultados"),
-            'cognitivo': report_cognitivo(lista_asignaturas, "resultados"),
-            'estructura': report_estructura(lista_asignaturas, "resultados"),
-            'afectivo': report_afectivo(lista_asignaturas, "resultados"),
-            'tecnologico': report_tecnologico(lista_asignaturas, "resultados"),
-            'colaborativo': report_colaborativo(lista_asignaturas, "resultados")
+            'correccion': report_correccion("resultados", buscar),
+            'cognitivo': report_cognitivo("resultados", buscar),
+            'estructura': report_estructura("resultados", buscar),
+            'afectivo': report_afectivo("resultados", buscar),
+            'tecnologico': report_tecnologico("resultados", buscar),
+            'colaborativo': report_colaborativo("resultados", buscar)
         }
     } 
 
@@ -910,7 +918,8 @@ def informes_medios():
     # Consultas comprobacion datos insertados
     # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
     # por tanto, se consideran no valoradas aunque existan otros campos
-    query_medios = { '$and': [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}] }
+    buscar =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
+    query_medios = { '$and': buscar }
     query = {}
 
     if 'universidad' in session:
@@ -929,6 +938,7 @@ def informes_medios():
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
         query = {'course_id':{'$in': lista_asignaturas}}
+        buscar.append({"course_id": { "$in": lista_asignaturas}})
         
         query_medios['course_id'] = query['course_id']
     
@@ -937,7 +947,7 @@ def informes_medios():
         'medios': {
             'registrados': mongo.db.instrumentos.count_documents(query_medios),
             'total': mongo.db.instrumentos.count_documents(query),
-            'correccion': report_correccion(lista_asignaturas, "medios")
+            'correccion': report_correccion("medios", buscar)
         }
     } 
 
@@ -948,58 +958,31 @@ def informes_medios():
 
 
 
-def report_afectivo(lista_asignaturas, element):    
-    if(len(lista_asignaturas)==0):
-        pipeline = [
+def report_afectivo(element, query):  
+    query1 = query.copy()
+    query1.append({"afectivo": { "$exists":"true"}})       
+    
+    pipeline = [
+            {
+                "$match":
                 {
-                    "$match":
-                    {
-                        "afectivo": { "$exists":"true"}
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$afectivo",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "$and": query1
                 }
-            ]
-    else:
-        pipeline = [
+            },
+            {
+                "$group": 
                 {
-                    "$match":
-                    {
-                        "$and":
-                        [
-                            {"course_id":
-                            {
-                                "$in": lista_asignaturas
-                            }},
-                            {"afectivo": { "$exists":"true"}}
-                        ]
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$afectivo",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "_id": "$afectivo",
+                    "count": { "$sum": 1}
                 }
-            ]
+            },
+            {
+                "$sort":
+                {
+                    "_id": 1
+                }
+            }
+        ]
 
     if element == "resultados":
         data = mongo.db.resultados.aggregate(pipeline)
@@ -1012,58 +995,31 @@ def report_afectivo(lista_asignaturas, element):
     
     return lista_afectivo
 
-def report_tecnologico(lista_asignaturas, element):    
-    if(len(lista_asignaturas)==0):
-        pipeline = [
+def report_tecnologico(element, query):  
+    query1 = query.copy()
+    query1.append({"tecnologico": { "$exists":"true"}})     
+   
+    pipeline = [
+            {
+                "$match":
                 {
-                    "$match":
-                    {
-                        "tecnologico": { "$exists":"true"}
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$tecnologico",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "$and": query1
                 }
-            ]
-    else:
-        pipeline = [
+            },
+            {
+                "$group": 
                 {
-                    "$match":
-                    {
-                        "$and":
-                        [
-                            {"course_id":
-                            {
-                                "$in": lista_asignaturas
-                            }},
-                            {"tecnologico": { "$exists":"true"}}
-                        ]
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$tecnologico",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "_id": "$tecnologico",
+                    "count": { "$sum": 1}
                 }
-            ]
+            },
+            {
+                "$sort":
+                {
+                    "_id": 1
+                }
+            }
+        ]
 
     if element == "resultados":
         data = mongo.db.resultados.aggregate(pipeline)
@@ -1076,58 +1032,31 @@ def report_tecnologico(lista_asignaturas, element):
     
     return lista_tecnologico
 
-def report_colaborativo(lista_asignaturas, element):    
-    if(len(lista_asignaturas)==0):
-        pipeline = [
+def report_colaborativo(element, query):
+    query1 = query.copy()
+    query1.append({"colaborativo": { "$exists":"true"}})    
+    
+    pipeline = [
+            {
+                "$match":
                 {
-                    "$match":
-                    {
-                        "colaborativo": { "$exists":"true"}
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$colaborativo",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "$and": query1
                 }
-            ]
-    else:
-        pipeline = [
+            },
+            {
+                "$group": 
                 {
-                    "$match":
-                    {
-                        "$and":
-                        [
-                            {"course_id":
-                            {
-                                "$in": lista_asignaturas
-                            }},
-                            {"colaborativo": { "$exists":"true"}}
-                        ]
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$colaborativo",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "_id": "$colaborativo",
+                    "count": { "$sum": 1}
                 }
-            ]
+            },
+            {
+                "$sort":
+                {
+                    "_id": 1
+                }
+            }
+        ]
 
     if element == "resultados":
         data = mongo.db.resultados.aggregate(pipeline)
@@ -1140,58 +1069,30 @@ def report_colaborativo(lista_asignaturas, element):
     
     return lista_colaborativo
 
-def report_cognitivo(lista_asignaturas, element):
-    if(len(lista_asignaturas)==0):
-        pipeline = [
+def report_cognitivo(element, query):
+    query1 = query.copy()
+    query1.append({"cognitivo": { "$exists":"true"}}) 
+    pipeline = [
+            {
+                "$match":
                 {
-                    "$match":
-                    {
-                        "cognitivo": { "$exists":"true"}
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$cognitivo",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "$and": query1
                 }
-            ]
-    else:
-        pipeline = [
+            },
+            {
+                "$group": 
                 {
-                    "$match":
-                    {
-                        "$and":
-                        [
-                            {"course_id":
-                            {
-                                "$in": lista_asignaturas
-                            }},
-                            {"cognitivo": { "$exists":"true"}}
-                        ]
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$cognitivo",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "_id": "$cognitivo",
+                    "count": { "$sum": 1}
                 }
-            ]
+            },
+            {
+                "$sort":
+                {
+                    "_id": 1
+                }
+            }
+        ]
 
     if element == "resultados":
         data = mongo.db.resultados.aggregate(pipeline)
@@ -1199,67 +1100,38 @@ def report_cognitivo(lista_asignaturas, element):
         data = mongo.db.competencias.aggregate(pipeline)
 
     lista_cognitivo = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
+    
     for tipo in data:
-            lista_cognitivo[int(tipo.get('_id', ''))] = tipo.get('count', '')
+        lista_cognitivo[int(tipo.get('_id', ''))] = tipo.get('count', '')
     
     return lista_cognitivo
 
-def report_correccion(lista_asignaturas,element):
-    if(len(lista_asignaturas)==0):
-        pipeline = [
+def report_correccion(element,query):
+    pipeline = [
+            {
+                "$match":
                 {
-                    "$match":
-                    {
-                        "correccion": { "$exists":"true"}
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$correccion",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "$and": query
                 }
-            ]
-    else:
-        pipeline = [
+            },
+            {
+                "$group": 
                 {
-                    "$match":
-                    {
-                        "$and":
-                        [
-                            {"course_id":
-                            {
-                                "$in": lista_asignaturas
-                            }},
-                            {"correccion": { "$exists":"true"}}
-                        ]
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$correccion",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "_id": "$correccion",
+                    "count": { "$sum": 1}
                 }
-            ]
+            },
+            {
+                "$sort":
+                {
+                    "_id": 1
+                }
+            }
+        ]
 
     if element == "resultados":
         data = mongo.db.resultados.aggregate(pipeline)
-    elif element == "medios":
+    elif element == "medios" or element == "instrumentos":
         data = mongo.db.instrumentos.aggregate(pipeline)
     else: # competencias
         data = mongo.db.competencias.aggregate(pipeline)
@@ -1274,62 +1146,35 @@ def report_correccion(lista_asignaturas,element):
 
     # el tipo -1 está fastidiando. INVESTIGAR. EN OVIEDO SOLO SALEN DOS TIPOS!
     for tipo in data:
-            lista_correccion[int(tipo.get('_id', ''))] = tipo.get('count', '')
+        lista_correccion[int(tipo.get('_id', ''))] = tipo.get('count', '')
     
     return lista_correccion
 
-def report_estructura(lista_asignaturas, element):
-    if(len(lista_asignaturas)==0):
-        pipeline = [
+def report_estructura(element, query):
+    query1 = query.copy()
+    query1.append({"estructura": { "$exists":"true"}}) 
+    
+    pipeline = [
+            {
+                "$match":
                 {
-                    "$match":
-                    {
-                        "estructura": { "$exists":"true"}
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$estructura",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "$and": query1
                 }
-            ]
-    else:
-        pipeline = [
+            },
+            {
+                "$group": 
                 {
-                    "$match":
-                    {
-                        "$and":
-                        [
-                            {"course_id":
-                            {
-                                "$in": lista_asignaturas
-                            }},
-                            {"estructura": { "$exists":"true"}}
-                        ]
-                    }
-                },
-                {
-                    "$group": 
-                    {
-                        "_id": "$estructura",
-                        "count": { "$sum": 1}
-                    }
-                },
-                {
-                    "$sort":
-                    {
-                        "_id": 1
-                    }
+                    "_id": "$estructura",
+                    "count": { "$sum": 1}
                 }
-            ]
+            },
+            {
+                "$sort":
+                {
+                    "_id": 1
+                }
+            }
+        ]
 
 
 
