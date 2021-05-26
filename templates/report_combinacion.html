@@ -37,6 +37,7 @@
                         </div>
                         <div class="col-sm-5">
                             <select name="area" id="area" class="form-control">
+                                <option value="0">(en blanco)</option>
                                 {% for area in areas %}
                                 <option value="{{area}}" {% if selected.area == area %}  selected {% endif %}>{{area}}</option>
                                 {% endfor %}
@@ -44,6 +45,7 @@
                         </div>
                         <div class="col-sm-5">
                             <select name="areaCompara" id="areaCompara" class="form-control">
+                                <option value="0">(en blanco)</option>
                                 {% for area in areasCompara %}
                                 <option value="{{area}}" {% if selected.areaCompara == area %}  selected {% endif %}>{{area}}</option>
                                 {% endfor %}
@@ -56,6 +58,7 @@
                         </div>
                         <div class="col-sm-5">
                             <select name="titulo" id="titulo" class="form-control">
+                                    <option value="0">(en blanco)</option>
                                     {% for titulo in titulos %}
                                     <option value="{{titulo}}" {% if selected.titulo == titulo %}  selected {% endif %}>{{titulo}}</option>
                                     {% endfor %}
@@ -63,6 +66,7 @@
                         </div>
                         <div class="col-sm-5">
                             <select name="tituloCompara" id="tituloCompara" class="form-control">
+                                    <option value="0">(en blanco)</option>
                                     {% for titulo in titulosCompara %}
                                     <option value="{{titulo}}" {% if selected.tituloCompara == titulo %}  selected {% endif %}>{{titulo}}</option>
                                     {% endfor %}
@@ -232,11 +236,11 @@
         <div class="card-header">
             <b>
             {{selected.universidad}}
-            {% if selected.area is defined %} 
+            {% if selected.area is defined and selected.area != '0' %} 
                 &#8594;
                 {{selected.area}}
             {% endif %}
-            {% if selected.titulo is defined %} 
+            {% if selected.titulo is defined and selected.titulo != '0' %} 
                 &#8594;  
                 {{selected.titulo}}
             {% endif %}
@@ -383,11 +387,11 @@
         <div class="card-header">
             <b>
             {{selected.universidadCompara}}
-            {% if selected.areaCompara is defined %} 
+            {% if selected.areaCompara is defined and selected.areaCompara != '0' %} 
                 &#8594;
                 {{selected.areaCompara}}
             {% endif %}
-            {% if selected.tituloCompara is defined %} 
+            {% if selected.tituloCompara is defined and selected.tituloCompara != '0' %} 
                 &#8594;  
                 {{selected.tituloCompara}}
             {% endif %}

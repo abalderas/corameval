@@ -84,6 +84,7 @@ $(document).ready(function() {
     $('#universityCompara').on('change', function(event) {        
         listing_areas("comparar");
         $('#tituloCompara').empty();
+        $('#tituloCompara').append('<option value="0">(en blanco)</option>');
 
     });
 
@@ -195,7 +196,7 @@ function listing_degrees(element = "no comparar")
         .done(function(data) {
 
             $('#titulo').empty();
-            $('#titulo').append('<option value="">(selecciona curso)</option>');
+            $('#titulo').append('<option value="0">(selecciona curso)</option>');
             for (var i=0; i<data.length; i++)
                 $('#titulo').append('<option value="' + data[i] + '">' + data[i] + '</option>');
         });
@@ -213,7 +214,7 @@ function listing_degrees(element = "no comparar")
         .done(function(data) {
 
             $('#tituloCompara').empty();
-            $('#tituloCompara').append('<option value="">(selecciona curso)</option>');
+            $('#tituloCompara').append('<option value="0">(selecciona curso)</option>');
             for (var i=0; i<data.length; i++)
                 $('#tituloCompara').append('<option value="' + data[i] + '">' + data[i] + '</option>');
         });
@@ -235,7 +236,7 @@ function listing_areas(element = "no comparar")
         .done(function(data) {
 
             $('#area').empty();
-            $('#area').append('<option value="">(selecciona área)</option>');
+            $('#area').append('<option value="0">(selecciona área)</option>');
             for (var i=0; i<data.length; i++)
                 $('#area').append('<option value="' + data[i] + '">' + data[i] + '</option>');
 
@@ -253,7 +254,7 @@ function listing_areas(element = "no comparar")
         .done(function(data) {
 
             $('#areaCompara').empty();
-            $('#areaCompara').append('<option value="">(selecciona área)</option>');
+            $('#areaCompara').append('<option value="0">(selecciona área)</option>');
             for (var i=0; i<data.length; i++)
                 $('#areaCompara').append('<option value="' + data[i] + '">' + data[i] + '</option>');
 
