@@ -84,7 +84,7 @@ $("#componente").change(function() {
     }
     else{
         $('#tipoCompetencia').prop('disabled', true);
-        $('#tipoCompetencia').val('-1');
+        $('#tipoCompetencia').val('4');
     }
 });
 

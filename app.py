@@ -468,9 +468,11 @@ def institution(id):
         }
     return data_course
 
-def asignaturas_universidad(universidad, area, titulo):   
+def asignaturas_universidad(universidad, area, titulo): 
     if (area == '0' and titulo == '0'):
         documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad}, {"_id":1}) 
+    elif (titulo == '0'):
+        documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad, "area": area}, {"_id":1}) 
     else: 
         documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad, "area": area, "titulo": titulo}, {"_id":1})    
     
@@ -705,14 +707,13 @@ def informes_general():
 @app.route('/informes_combinados', methods=['POST'])
 def informes_combinados():
     if 'username' not in session:
-        return login(0)       
-       
+        return login(0)            
 
     if request.form.get('university'):
         data_selected = {
             'universidad': request.form.get('university',''),
-            'area': request.form.get('area',''),
-            'titulo': request.form.get('titulo',''),
+            'area': request.form.get('area','0'),
+            'titulo': request.form.get('titulo','0'),
             'universidadCompara': request.form.get('universityCompara',''),
             'areaCompara': request.form.get('areaCompara',''),
             'tituloCompara': request.form.get('tituloCompara',''),
@@ -730,7 +731,6 @@ def informes_combinados():
         if 'tipoCompetencia' in data_selected:
             if data_selected['tipoCompetencia'] != '4': # Si no es TODAS
                 buscar.append({'tipo': data_selected["tipoCompetencia"]})
-            
 
         buscar1 = buscar.copy()
         
@@ -740,7 +740,7 @@ def informes_combinados():
             lista_asignaturas.append(asignatura.get('_id', ''))
 
         buscar1.append({"course_id": { "$in": lista_asignaturas}})
-        query = { '$and': buscar1 }        
+        query = { '$and': buscar1 }  
         
         lista_asignaturas_compara = []
 
@@ -775,7 +775,6 @@ def informes_combinados():
                     'colaborativo': report_colaborativo(data_selected['componente'], buscar2)
                 }
             }
-            print(data['items']['registradas'])
         else: 
             print(query_compara)    
             data = {
