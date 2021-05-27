@@ -635,6 +635,10 @@ def cargar_instrumentos():
 
     return 'INSTRUMENTOS CARGADOS!'
 
+# ---------------------------------------------------------------------------------------------
+# Informes_general: diagrama de barras con los datos de componentes registrados por universidad
+# ---------------------------------------------------------------------------------------------
+
 @app.route('/informes_general')
 @app.route('/informes_general', methods=['POST'])
 def informes_general():
@@ -693,15 +697,9 @@ def informes_general():
    
     return render_template('report.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
 
-# STATUS:
-#
-# Muestra comparación de competencias entre títulos (hay que seleccionar los 3 niveles)
-#       --> Mejora 1: realizar comparación desde un solo nivel
-#       --> Mejora 2: ampliar a resultados y medios
-#       --> Mejora 3: cambiar formato de tartas (¿quitar leyendas, cambiar de sitio, ...? estudiar): he añadido js para quitar leyenda pero
-#               no funciona, aunque sí funciona en su web https://www.chartjs.org/docs/3.0.2/configuration/legend.html
-#
-# Llevar a koala y probar
+# ---------------------------------------------------------------------------------------------
+# Informes_combinados: selecciona dos elementos y muestra los diagramas de tartas para ambos
+# ---------------------------------------------------------------------------------------------
 
 @app.route('/informes_combinados')
 @app.route('/informes_combinados', methods=['POST'])
@@ -802,6 +800,10 @@ def informes_combinados():
     titulos = documents_titu, areasCompara = documents_area_compara, titulosCompara = documents_titu_compara,  selected = data_selected, 
     data = data)
 
+# ---------------------------------------------------------------------------------------------
+# Informes_competencias: diagrama de porciones de tartas de competencias por universidad
+# ---------------------------------------------------------------------------------------------
+
 @app.route('/informes_competencias')
 @app.route('/informes_competencias', methods=['POST'])
 def informes_competencias():
@@ -855,6 +857,10 @@ def informes_competencias():
    
     return render_template('report_competencias.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
 
+# ---------------------------------------------------------------------------------------------
+# Informes_resultados: diagrama de porciones de tartas de resultados por universidad
+# ---------------------------------------------------------------------------------------------
+
 @app.route('/informes_resultados')
 @app.route('/informes_resultados', methods=['POST'])
 def informes_resultados():
@@ -907,7 +913,11 @@ def informes_resultados():
    
     return render_template('report_resultados.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
 
-
+# ---------------------------------------------------------------------------------------------
+# Informes_medios: diagrama de porciones de tartas de medios de evaluación por universidad
+# Nota:     en la BD los medios se almacenan en la colección 'instrumentos', pero en la 
+#           nomenclatura del proyecto se denominan medios de evaluación.
+# ---------------------------------------------------------------------------------------------
 @app.route('/informes_medios')
 @app.route('/informes_medios', methods=['POST'])
 def informes_medios():
@@ -946,7 +956,7 @@ def informes_medios():
         'medios': {
             'registrados': mongo.db.instrumentos.count_documents(query_medios),
             'total': mongo.db.instrumentos.count_documents(query),
-            'correccion': report_correccion("medios", buscar)
+            'correccion': report_correccion("instrumentos", buscar)
         }
     } 
 
@@ -955,38 +965,19 @@ def informes_medios():
    
     return render_template('report_medios.html', universidades = documents_unis, selected = {'universidad': universidad}, data = data)
 
-
+# ---------------------------------------------------------------------------------------------
+# report_xxxxxx: datos de las categorías de competencias, resultados y medios
+#   Hay una función para cada uno de ellos. Devuelve un array asociativo con el número de
+#   elementos que hay para cada valor dentro de la categoría
+# ---------------------------------------------------------------------------------------------
 
 def report_afectivo(element, query):  
     query1 = query.copy()
-    query1.append({"afectivo": { "$exists":"true"}})       
-    
-    pipeline = [
-            {
-                "$match":
-                {
-                    "$and": query1
-                }
-            },
-            {
-                "$group": 
-                {
-                    "_id": "$afectivo",
-                    "count": { "$sum": 1}
-                }
-            },
-            {
-                "$sort":
-                {
-                    "_id": 1
-                }
-            }
-        ]
+    query1.append({"afectivo": { "$exists":"true"}})    
+      
+    pipeline = build_pipeline(query1, "$afectivo")
 
-    if element == "resultados":
-        data = mongo.db.resultados.aggregate(pipeline)
-    else: # competencias
-        data = mongo.db.competencias.aggregate(pipeline)
+    data = mongo.db[element].aggregate(pipeline)
 
     lista_afectivo = {0:0, 1:0}
     for tipo in data:
@@ -997,33 +988,10 @@ def report_afectivo(element, query):
 def report_tecnologico(element, query):  
     query1 = query.copy()
     query1.append({"tecnologico": { "$exists":"true"}})     
-   
-    pipeline = [
-            {
-                "$match":
-                {
-                    "$and": query1
-                }
-            },
-            {
-                "$group": 
-                {
-                    "_id": "$tecnologico",
-                    "count": { "$sum": 1}
-                }
-            },
-            {
-                "$sort":
-                {
-                    "_id": 1
-                }
-            }
-        ]
 
-    if element == "resultados":
-        data = mongo.db.resultados.aggregate(pipeline)
-    else: # competencias
-        data = mongo.db.competencias.aggregate(pipeline)
+    pipeline = build_pipeline(query1, "$tecnologico")
+
+    data = mongo.db[element].aggregate(pipeline)
 
     lista_tecnologico = {0:0, 1:0}
     for tipo in data:
@@ -1033,34 +1001,11 @@ def report_tecnologico(element, query):
 
 def report_colaborativo(element, query):
     query1 = query.copy()
-    query1.append({"colaborativo": { "$exists":"true"}})    
-    
-    pipeline = [
-            {
-                "$match":
-                {
-                    "$and": query1
-                }
-            },
-            {
-                "$group": 
-                {
-                    "_id": "$colaborativo",
-                    "count": { "$sum": 1}
-                }
-            },
-            {
-                "$sort":
-                {
-                    "_id": 1
-                }
-            }
-        ]
+    query1.append({"colaborativo": { "$exists":"true"}})  
+      
+    pipeline = build_pipeline(query1, "$colaborativo")
 
-    if element == "resultados":
-        data = mongo.db.resultados.aggregate(pipeline)
-    else: # competencias
-        data = mongo.db.competencias.aggregate(pipeline)
+    data = mongo.db[element].aggregate(pipeline)
 
     lista_colaborativo = {0:0, 1:0}
     for tipo in data:
@@ -1071,32 +1016,10 @@ def report_colaborativo(element, query):
 def report_cognitivo(element, query):
     query1 = query.copy()
     query1.append({"cognitivo": { "$exists":"true"}}) 
-    pipeline = [
-            {
-                "$match":
-                {
-                    "$and": query1
-                }
-            },
-            {
-                "$group": 
-                {
-                    "_id": "$cognitivo",
-                    "count": { "$sum": 1}
-                }
-            },
-            {
-                "$sort":
-                {
-                    "_id": 1
-                }
-            }
-        ]
 
-    if element == "resultados":
-        data = mongo.db.resultados.aggregate(pipeline)
-    else: # competencias
-        data = mongo.db.competencias.aggregate(pipeline)
+    pipeline = build_pipeline(query1, "$cognitivo")
+
+    data = mongo.db[element].aggregate(pipeline)
 
     lista_cognitivo = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
     
@@ -1105,45 +1028,14 @@ def report_cognitivo(element, query):
     
     return lista_cognitivo
 
-def report_correccion(element,query):
-    pipeline = [
-            {
-                "$match":
-                {
-                    "$and": query
-                }
-            },
-            {
-                "$group": 
-                {
-                    "_id": "$correccion",
-                    "count": { "$sum": 1}
-                }
-            },
-            {
-                "$sort":
-                {
-                    "_id": 1
-                }
-            }
-        ]
+def report_correccion(element,query):    
+    pipeline = build_pipeline(query, "$correccion")
 
-    if element == "resultados":
-        data = mongo.db.resultados.aggregate(pipeline)
-    elif element == "medios" or element == "instrumentos":
-        data = mongo.db.instrumentos.aggregate(pipeline)
-    else: # competencias
-        data = mongo.db.competencias.aggregate(pipeline)
+    data = mongo.db[element].aggregate(pipeline)
 
     # Tipos de corrección
-    lista_correccion = {
-        -1: 0,
-        0: 0,
-        1: 0,
-        2: 0
-    }
+    lista_correccion = { -1: 0, 0: 0, 1: 0, 2: 0 }
 
-    # el tipo -1 está fastidiando. INVESTIGAR. EN OVIEDO SOLO SALEN DOS TIPOS!
     for tipo in data:
         lista_correccion[int(tipo.get('_id', ''))] = tipo.get('count', '')
     
@@ -1153,40 +1045,45 @@ def report_estructura(element, query):
     query1 = query.copy()
     query1.append({"estructura": { "$exists":"true"}}) 
     
-    pipeline = [
-            {
-                "$match":
-                {
-                    "$and": query1
-                }
-            },
-            {
-                "$group": 
-                {
-                    "_id": "$estructura",
-                    "count": { "$sum": 1}
-                }
-            },
-            {
-                "$sort":
-                {
-                    "_id": 1
-                }
-            }
-        ]
+    pipeline = build_pipeline(query1, "$estructura")
 
-
-
-    if element == "resultados":
-        data = mongo.db.resultados.aggregate(pipeline)
-    else: # competencias
-        data = mongo.db.competencias.aggregate(pipeline)
+    data = mongo.db[element].aggregate(pipeline)
 
     lista_estructura = {1:0, 2:0, 3:0, 4:0, 5:0}
     for tipo in data:
             lista_estructura[int(tipo.get('_id', ''))] = tipo.get('count', '')
     
     return lista_estructura
+
+# ---------------------------------------------------------------------------------------------
+# Build_pipeline: Crea un pipeline para la consulta mongo. Lo utilizan los reports para generar las consultas
+# Nota:     Recibe el filtrado y el elemento que se utilizará como id para el group by
+# ---------------------------------------------------------------------------------------------
+ 
+def build_pipeline(filter, element_grouped):
+
+    pipeline = [
+                {
+                    "$match":
+                    {
+                        "$and": filter
+                    }
+                },
+                {
+                    "$group": 
+                    {
+                        "_id": element_grouped,
+                        "count": { "$sum": 1}
+                    }
+                },
+                {
+                    "$sort":
+                    {
+                        "_id": 1
+                    }
+                }
+            ]
+    return pipeline
 
 def tipo_competencia(tipo):
     switcher = {
@@ -1205,6 +1102,10 @@ def tipo_asignatura(tipo):
         "Transversales": '3'
     }
     return switcher.get(tipo, "Invalid option")
+
+# ---------------------------------------------------------------------------------------------
+# Pendientes: Listado con componentes pendientes de ser valorados
+# ---------------------------------------------------------------------------------------------
 
 @app.route('/pendientes', defaults={'universidad': 0})
 @app.route('/pendientes/<universidad>')
