@@ -91,8 +91,37 @@
                 <div class="col-sm-2"></div>
                 <div class="col-sm-5">   
                     <div class="card-header">
-                        <b></b>
+                        <b>Autenticidad</b>
                     </div>                 
+                    <canvas id="pie_autenticidad" width="100" height="100"></canvas>
+                    <script>
+                        var ctx2 = document.getElementById('pie_autenticidad').getContext('2d');
+                        var pie_autenticidad = new Chart(ctx2, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    {% if data['medios']['registrados'] > 0 %}
+                                    'Nivel 1 - ninguna ({{(100 * data['medios']['autenticidad'][1] / data['medios']['registrados'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['medios']['autenticidad'][2] / data['medios']['registrados'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['medios']['autenticidad'][3] / data['medios']['registrados'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['medios']['autenticidad'][4] / data['medios']['registrados'])|round(2)}} %)',
+                                    'Nivel 5 - real y útil ({{(100 * data['medios']['autenticidad'][5] / data['medios']['registrados'])|round(2)}} %)'], 
+                                    {% endif %}
+                                datasets: [ {
+                                    label: 'Autenticidad', 
+                                    data: [
+                                    {{data['medios']['autenticidad'][1]}},
+                                    {{data['medios']['autenticidad'][2]}},
+                                    {{data['medios']['autenticidad'][3]}},
+                                    {{data['medios']['autenticidad'][4]}},
+                                    {{data['medios']['autenticidad'][5]}}
+                                    ],
+                                    backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>                 
                     
                 </div>
             </div>

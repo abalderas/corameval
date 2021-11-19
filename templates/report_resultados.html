@@ -164,33 +164,166 @@
                 <div class="col-sm-2"></div> 
                 <div class="col-sm-5">   
                     <div class="card-header">
-                        <b>Transversalidad</b>
+                        <b>Transversalidad - Afectivo/Actitudinal</b>
                     </div> 
-                    <canvas id="pie_transversalidad" width="100" height="100"></canvas>
+                    <canvas id="pie_afectivo" width="100" height="100"></canvas>
                     <script>
-                        var ctx4 = document.getElementById('pie_transversalidad').getContext('2d');
+                        var ctx4 = document.getElementById('pie_afectivo').getContext('2d');
                         var pie_cognitive = new Chart(ctx4, {
                             type: 'pie',
                             data: {
                                 labels: [
-                                    {% if data['resultados']['registrados'] > 0 %}
-                                    'Afectivo/Actitudinal ({{(100 * data['resultados']['afectivo'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Tecnológico ({{(100 * data['resultados']['tecnologico'][1] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    'Colaborativo ({{(100 * data['resultados']['colaborativo'][1] / data['resultados']['registrados'])|round(2)}} %)'],
-                                    {% endif %}
+                                    'No ({{(100 * data['resultados']['afectivo'][0] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['afectivo'][1] / data['resultados']['registrados'])|round(2)}} %)'], 
                                 datasets: [ {
-                                    label: 'Transversalidad', 
+                                    label: 'Afectivo', 
                                     data: [
-                                    {{data['resultados']['afectivo'][1]}},
-                                    {{data['resultados']['tecnologico'][1]}},
-                                    {{data['resultados']['colaborativo'][1]}}
+                                    {{data['resultados']['afectivo'][0]}},
+                                    {{data['resultados']['afectivo'][1]}}
                                     ],
-                                    backgroundColor: ['#6d0768', '#a55e9e', '#dea8d7']
+                                    backgroundColor: ['#BFC9CA', '#138D75']
                                 }]
                             }
                         })
                     </script>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Transversalidad - Tecnológico</b>
+                    </div> 
+                    <canvas id="pie_tecnologico" width="100" height="100"></canvas>
+                    <script>
+                        var ctx5 = document.getElementById('pie_tecnologico').getContext('2d');
+                        var pie_cognitive = new Chart(ctx5, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'No ({{(100 * data['resultados']['tecnologico'][0] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['tecnologico'][1] / data['resultados']['registrados'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Transversalidad', 
+                                    data: [
+                                    {{data['resultados']['tecnologico'][0]}},
+                                    {{data['resultados']['tecnologico'][1]}}
+                                    ],
+                                    backgroundColor: ['#AEB6BF', '#D4AC0D']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Transversalidad - Colaborativo</b>
+                    </div> 
+                    <canvas id="pie_colaborativo" width="100" height="100"></canvas>
+                    <script>
+                        var ctx6 = document.getElementById('pie_colaborativo').getContext('2d');
+                        var pie_cognitive = new Chart(ctx6, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'No ({{(100 * data['resultados']['colaborativo'][0] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['colaborativo'][1] / data['resultados']['registrados'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Transversalidad', 
+                                    data: [
+                                    {{data['resultados']['colaborativo'][0]}},
+                                    {{data['resultados']['colaborativo'][1]}}
+                                    ],
+                                    backgroundColor: ['#AEB6BF', '#E74C3C']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Verificabilidad</b>
+                    </div>                 
+                    <canvas id="pie_verificabilidad" width="100" height="100"></canvas>
+                    <script>
+                        var ctx5 = document.getElementById('pie_verificabilidad').getContext('2d');
+                        var pie_autenticidad = new Chart(ctx5, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    {% if data['resultados']['registrados'] > 0 %}
+                                    'Nivel 1 - ninguna ({{(100 * data['resultados']['verificabilidad'][1] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['resultados']['verificabilidad'][2] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['resultados']['verificabilidad'][3] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['resultados']['verificabilidad'][4] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Nivel 5 - evaluable, medible ({{(100 * data['resultados']['verificabilidad'][5] / data['resultados']['registrados'])|round(2)}} %)'], 
+                                    {% endif %}
+                                datasets: [ {
+                                    label: 'Autenticidad', 
+                                    data: [
+                                    {{data['resultados']['verificabilidad'][1]}},
+                                    {{data['resultados']['verificabilidad'][2]}},
+                                    {{data['resultados']['verificabilidad'][3]}},
+                                    {{data['resultados']['verificabilidad'][4]}},
+                                    {{data['resultados']['verificabilidad'][5]}}
+                                    ],
+                                    backgroundColor: ['#2E4053', '#AAB7B8', '#5C6BC0', '#DAF7A6', '#FFC300']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>                    
+                
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Autenticidad</b>
+                    </div>                 
+                    <canvas id="pie_autenticidad" width="100" height="100"></canvas>
+                    <script>
+                        var ctx6 = document.getElementById('pie_autenticidad').getContext('2d');
+                        var pie_autenticidad = new Chart(ctx6, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    {% if data['resultados']['registrados'] > 0 %}
+                                    'Nivel 1 - ninguna ({{(100 * data['resultados']['autenticidad'][1] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['resultados']['autenticidad'][2] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['resultados']['autenticidad'][3] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['resultados']['autenticidad'][4] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Nivel 5 - real y útil ({{(100 * data['resultados']['autenticidad'][5] / data['resultados']['registrados'])|round(2)}} %)'], 
+                                    {% endif %}
+                                datasets: [ {
+                                    label: 'Autenticidad', 
+                                    data: [
+                                    {{data['resultados']['autenticidad'][1]}},
+                                    {{data['resultados']['autenticidad'][2]}},
+                                    {{data['resultados']['autenticidad'][3]}},
+                                    {{data['resultados']['autenticidad'][4]}},
+                                    {{data['resultados']['autenticidad'][5]}}
+                                    ],
+                                    backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>  
             </div>
         </div>
     </div>

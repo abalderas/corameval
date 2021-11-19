@@ -773,20 +773,20 @@ def informes_combinados():
                     'colaborativo': report_colaborativo(data_selected['componente'], buscar2)
                 }
             }
-        else: 
-            print(query_compara)    
+        else:
+                
             data = {
                 'items': {
                     'registradas': mongo.db[data_selected['componente']].count_documents(query),
-                    'correccion': report_correccion(data_selected['componente'],buscar1)
+                    'correccion': report_correccion(data_selected['componente'],buscar1),
+                    'autenticidad': report_autenticidad(data_selected['componente'],buscar1)
                 },
                 'items_compara': {
                     'registradas': mongo.db[data_selected['componente']].count_documents(query_compara),
-                    'correccion': report_correccion(data_selected['componente'],buscar2)
+                    'correccion': report_correccion(data_selected['componente'],buscar2),
+                    'autenticidad': report_autenticidad(data_selected['componente'],buscar2)
                 }
             }            
-            print(data['items']['registradas'])
-            print(data['items']['correccion'])
     else:
         data_selected = { 'componente': 'competencias' }
         documents_unis = mongo.db.asignaturas.distinct("universidad")
@@ -904,7 +904,9 @@ def informes_resultados():
             'estructura': report_estructura("resultados", buscar),
             'afectivo': report_afectivo("resultados", buscar),
             'tecnologico': report_tecnologico("resultados", buscar),
-            'colaborativo': report_colaborativo("resultados", buscar)
+            'colaborativo': report_colaborativo("resultados", buscar),
+            'verificabilidad': report_verificabilidad("resultados", buscar),
+            'autenticidad': report_autenticidad("resultados", buscar)
         }
     } 
 
@@ -956,7 +958,8 @@ def informes_medios():
         'medios': {
             'registrados': mongo.db.instrumentos.count_documents(query_medios),
             'total': mongo.db.instrumentos.count_documents(query),
-            'correccion': report_correccion("instrumentos", buscar)
+            'correccion': report_correccion("instrumentos", buscar),
+            'autenticidad': report_autenticidad("instrumentos", buscar)
         }
     } 
 
@@ -1040,6 +1043,38 @@ def report_correccion(element,query):
         lista_correccion[int(tipo.get('_id', ''))] = tipo.get('count', '')
     
     return lista_correccion
+
+def report_autenticidad(element,query):    
+    query1 = query.copy()
+    query1.append({"autenticidad": {"$exists": "true"}})
+
+    pipeline = build_pipeline(query1, "$autenticidad")
+
+    data = mongo.db[element].aggregate(pipeline)
+
+    # Tipos de autenticidad
+    lista_autenticidad = { -1: 0, 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+
+    for tipo in data:
+        lista_autenticidad[int(tipo.get('_id', ''))] = tipo.get('count', '')
+    
+    return lista_autenticidad
+
+def report_verificabilidad(element,query):    
+    query1 = query.copy()
+    query1.append({"verificabilidad": {"$exists": "true"}})
+
+    pipeline = build_pipeline(query1, "$verificabilidad")
+
+    data = mongo.db[element].aggregate(pipeline)
+
+    # Tipos de verificabilidad
+    lista_verificabilidad = { -1: 0, 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+
+    for tipo in data:
+        lista_verificabilidad[int(tipo.get('_id', ''))] = tipo.get('count', '')
+    
+    return lista_verificabilidad
 
 def report_estructura(element, query):
     query1 = query.copy()
