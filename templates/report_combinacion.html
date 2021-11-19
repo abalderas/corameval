@@ -108,11 +108,13 @@
 {% if selected.universidad is defined %}  
 <div class="col-md-12">
     <div class="card border-secondary mb-3 ">          
-            <div class="form-row">                
-                <div class="col-sm-3">
+            <div class="form-row"  style="height: 200px;">                
+                <div class="col-sm-2">
                     <div class="card-header">
                         <b>Corrección</b>
-                    </div>                 
+                    </div> 
+                    <br>  
+                    <br>               
                     <canvas id="pie_correccion_label" class="labels"></canvas>
                     <script>
                         var ctx1_label = document.getElementById('pie_correccion_label').getContext('2d');
@@ -144,10 +146,12 @@
                 
                     <!-- Los medios solo tienen la correccion -->         
                     {% if selected.componente!='instrumentos' %}
-                <div class="col-sm-3"> 
+                <div class="col-sm-2"> 
                     <div class="card-header">
                         <b>Proceso Cognitivo</b>
-                    </div>                 
+                    </div>   
+                    <br>  
+                    <br>             
                     <canvas id="pie_cognitivo_label" class="labels"></canvas>
                     <script>
                         var ctx2_label = document.getElementById('pie_cognitivo_label').getContext('2d');
@@ -168,10 +172,12 @@
                         })
                     </script>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="card-header">
                         <b>Estructura del conocimiento</b>
-                    </div> 
+                    </div>                     
+                    <br> 
+                    <br> 
                     <canvas id="pie_estructura_label" class="labels"></canvas>
                     <script>
                         var ctx3_label = document.getElementById('pie_estructura_label').getContext('2d');
@@ -191,30 +197,112 @@
                         })
                     </script>    
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="card-header">
-                        <b>Transversalidad</b>
-                    </div> 
-                    <canvas id="pie_transversalidad_label" class="labels"></canvas>
+                        <b>Transversalidad - <span style="font-size: small;">Afectivo/Actitudinal</span></b>
+                    </div>  
+                    <br>  
+                    <br>  
+                    <canvas id="pie_afectivo_label" class="labels"></canvas>
                     <script>
-                        var ctx4_label = document.getElementById('pie_transversalidad_label').getContext('2d');
-                        var datasets_transversalidad =  [ {
-                                    label: 'Transversalidad', 
-                                    data: [0,0,0],
-                                    backgroundColor: ['#6d0768', '#a55e9e', '#dea8d7']
+                        var ctx4_label = document.getElementById('pie_afectivo_label').getContext('2d');
+                        var datasets_afectivo =  [ {
+                                    label: 'Afectivo', 
+                                    data: [0,0],
+                                    backgroundColor: ['#BFC9CA', '#138D75']
                                 }];
-                        var label_transversalidad = [ 'Afectivo/Actitudinal',   'Tecnológico',  'Colaborativo'];
+                        var label_afectivo = ['No', 'Sí'];
                         var pie_cognitive = new Chart(ctx4_label, {
                             type: 'pie',
                             options: options,
                             data: {
-                                labels:label_transversalidad,
-                                datasets: datasets_transversalidad
+                                labels:label_afectivo,
+                                datasets: datasets_afectivo
+                            }
+                        })
+                    </script>    
+                </div>
+                <div class="col-sm-2">
+                    <div class="card-header">
+                        <b>Transversalidad - <span style="font-size: small;">Tecnológico</span></b>
+                    </div>  
+                    <br>  
+                    <br>  
+                    <canvas id="pie_tecnologico_label" class="labels"></canvas>
+                    <script>
+                        var ctx5_label = document.getElementById('pie_tecnologico_label').getContext('2d');
+                        var datasets_tecnologico =  [ {
+                                    label: 'Tecnológico', 
+                                    data: [0,0],
+                                    backgroundColor: ['#AEB6BF', '#D4AC0D']
+                                }];
+                        var label_tecnologico = [ 'No', 'Sí'];
+                        var pie_cognitive = new Chart(ctx5_label, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_tecnologico,
+                                datasets: datasets_tecnologico
+                            }
+                        })
+                    </script>    
+                </div>
+                <div class="col-sm-2">
+                    <div class="card-header">
+                        <b>Transversalidad - <span style="font-size: small;">Colaborativo</span></b>
+                    </div>  
+                    <br>  
+                    <br>  
+                    <canvas id="pie_colaborativo_label" class="labels"></canvas>
+                    <script>
+                        var ctx6_label = document.getElementById('pie_colaborativo_label').getContext('2d');
+                        var datasets_colaborativo =  [ {
+                                    label: 'Colaborativo', 
+                                    data: [0,0],
+                                    backgroundColor: ['#AEB6BF', '#E74C3C']
+                                }];
+                        var label_colaborativo = [ 'No', 'Sí'];
+                        var pie_cognitive = new Chart(ctx6_label, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_colaborativo,
+                                datasets: datasets_colaborativo
                             }
                         })
                     </script>    
                 </div>
                     {% endif %}
+
+                 <!-- Los medios tienen autenticidad (también lo tienen los resultados pero no caben) -->         
+                 {% if selected.componente=='instrumentos' %}
+                <div class="col-sm-2">
+                    <div class="card-header">
+                        <b>Autenticidad</span></b>
+                    </div>  
+                    <br>  
+                    <br>  
+                    <canvas id="pie_autenticidad_label" class="labels"></canvas>
+                    <script>
+                        var ctx7_label = document.getElementById('pie_autenticidad_label').getContext('2d');
+                        var datasets_autenticidad =  [ {
+                                    label: 'Autenticidad', 
+                                    data: [0,0,0,0,0],
+                                    backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
+                                }];
+                        var label_autenticidad = [ 'Nivel 1 - ninguna', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5 - real y útil'];
+                        var pie_cognitive = new Chart(ctx7_label, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_autenticidad,
+                                datasets: datasets_autenticidad
+                            }
+                        })
+                    </script>    
+                </div>                 
+                     {% endif %}
+
             </div>
     </div>        
 </div>
@@ -248,7 +336,7 @@
         </div>           
             <div class="form-row">                    
                 {% if  data['items']['registradas'] > 0 %}                  
-                <div class="col-sm-3">               
+                <div class="col-sm-2">               
                     <canvas id="pie_correccion" width="100" height="100"></canvas>
                     <script>
                         var ctx1 = document.getElementById('pie_correccion').getContext('2d');
@@ -281,7 +369,7 @@
                 </div>       
                     <!-- Los medios solo tienen la correccion -->         
                     {% if selected.componente!='instrumentos' %}
-                <div class="col-sm-3">            
+                <div class="col-sm-2">            
                     <canvas id="pie_cognitivo" width="100" height="100"></canvas>
                     <script>
                         var ctx2 = document.getElementById('pie_cognitivo').getContext('2d');
@@ -314,7 +402,7 @@
                         })
                     </script>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <canvas id="pie_estructura" width="100" height="100"></canvas>
                     <script>
                         var ctx3 = document.getElementById('pie_estructura').getContext('2d');
@@ -343,35 +431,122 @@
                         })
                     </script>    
                 </div>
-                <div class="col-sm-3">
-                    <canvas id="pie_transversalidad" width="100" height="100"></canvas>
+                <div class="col-sm-2">
+                    <canvas id="pie_afectivo" width="100" height="100"></canvas>
                     <script>
-                        var ctx4 = document.getElementById('pie_transversalidad').getContext('2d');
-                        var datasets_transversalidad =  [ {
-                                    label: 'Transversalidad', 
+                        var ctx4 = document.getElementById('pie_afectivo').getContext('2d');
+                        var datasets_afectivo =  [ {
+                                    label: 'Afectivo', 
                                     data: [
                                     {{data['items']['afectivo'][1]}},
-                                    {{data['items']['tecnologico'][1]}},
-                                    {{data['items']['colaborativo'][1]}}
+                                    {{data['items']['afectivo'][0]}}
                                     ],
-                                    backgroundColor: ['#6d0768', '#a55e9e', '#dea8d7']
+                                    backgroundColor: ['#138D75', '#BFC9CA']
                                 }];
-                        var label_transversalidad = [ 'Afectivo/Actitudinal',   'Tecnológico',  'Colaborativo'];
-                        var label_transversalidad_porcentaje =  [
-                                    'Afectivo/Actitudinal ({{(100 * data['items']['afectivo'][1] / data['items']['registradas'])|round(2)}} %)',
-                                    'Tecnológico ({{(100 * data['items']['tecnologico'][1] / data['items']['registradas'])|round(2)}} %)', 
-                                    'Colaborativo ({{(100 * data['items']['colaborativo'][1] / data['items']['registradas'])|round(2)}} %)'];
+                        var label_afectivo = [ 'Afectivo/Actitudinal Sí',   'Afectivo/Actitudinal No'];
+                        var label_afectivo_porcentaje =  [
+                                    'Afectivo/Act Sí ({{(100 * data['items']['afectivo'][1] / data['items']['registradas'])|round(2)}} %)',
+                                    'Afectivo/Act No ({{(100 * data['items']['afectivo'][0] / data['items']['registradas'])|round(2)}} %)'];
                         var pie_cognitive = new Chart(ctx4, {
                             type: 'pie',
                             options: options,
                             data: {
-                                labels:label_transversalidad_porcentaje,
-                                datasets: datasets_transversalidad
+                                labels:label_afectivo_porcentaje,
+                                datasets: datasets_afectivo
+                            }
+                        })
+                    </script>    
+                </div>
+                <div class="col-sm-2">
+                    <canvas id="pie_tecnologico" width="100" height="100"></canvas>
+                    <script>
+                        var ctx5 = document.getElementById('pie_tecnologico').getContext('2d');
+                        var datasets_tecnologico =  [ {
+                                    label: 'Tecnológico', 
+                                    data: [
+                                    {{data['items']['tecnologico'][1]}},
+                                    {{data['items']['tecnologico'][0]}}
+                                    ],
+                                    backgroundColor: ['#D4AC0D', '#AEB6BF']
+                                }];
+                        var label_tecnologico = [ 'Tecnológico Sí',   'Tecnológico No'];
+                        var label_tecnologico_porcentaje =  [
+                                    'Tecnológico Sí ({{(100 * data['items']['tecnologico'][1] / data['items']['registradas'])|round(2)}} %)',
+                                    'Tecnológico No ({{(100 * data['items']['tecnologico'][0] / data['items']['registradas'])|round(2)}} %)'];
+                        var pie_cognitive = new Chart(ctx5, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_tecnologico_porcentaje,
+                                datasets: datasets_tecnologico
+                            }
+                        })
+                    </script>    
+                </div>
+                <div class="col-sm-2">
+                    <canvas id="pie_colaborativo" width="100" height="100"></canvas>
+                    <script>
+                        var ctx6 = document.getElementById('pie_colaborativo').getContext('2d');
+                        var datasets_colaborativo =  [ {
+                                    label: 'Colaborativo', 
+                                    data: [
+                                    {{data['items']['colaborativo'][1]}},
+                                    {{data['items']['colaborativo'][0]}}
+                                    ],
+                                    backgroundColor: ['#E74C3C', '#AEB6BF']
+                                }];
+                        var label_colaborativo = [ 'Colaborativo Sí',   'Colaborativo No'];
+                        var label_colaborativo_porcentaje =  [
+                                    'Sí ({{(100 * data['items']['colaborativo'][1] / data['items']['registradas'])|round(2)}} %)',
+                                    'No ({{(100 * data['items']['colaborativo'][0] / data['items']['registradas'])|round(2)}} %)'];
+                        var pie_cognitive = new Chart(ctx6, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_colaborativo_porcentaje,
+                                datasets: datasets_colaborativo
                             }
                         })
                     </script>    
                 </div>
                     {% endif %}
+
+                    <!-- Los medios tienen autenticidad (también lo tienen los resultados pero no caben) -->         
+                    {% if selected.componente=='instrumentos' %}
+                <div class="col-sm-2">
+                    <canvas id="pie_autenticidad" width="100" height="100"></canvas>
+                    <script>
+                        var ctx7 = document.getElementById('pie_autenticidad').getContext('2d');
+                        var datasets_autenticidad =  [ {
+                                    label: 'Autenticidad', 
+                                    data: [
+                                    {{data['items']['autenticidad'][1]}},
+                                    {{data['items']['autenticidad'][2]}},
+                                    {{data['items']['autenticidad'][3]}},
+                                    {{data['items']['autenticidad'][4]}},
+                                    {{data['items']['autenticidad'][5]}}
+                                    ],
+                                    backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
+                                }];
+                        var label_autenticidad = [ 'Nivel 1 - ninguna', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5 - real y útil'];
+                        var label_autenticidad_porcentaje =  [
+                                    'Nivel 1 - ninguna ({{(100 * data['items']['autenticidad'][1] / data['items']['registradas'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['items']['autenticidad'][2] / data['items']['registradas'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['items']['autenticidad'][3] / data['items']['registradas'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['items']['autenticidad'][4] / data['items']['registradas'])|round(2)}} %)',
+                                    'Nivel 5 - real y útil ({{(100 * data['items']['autenticidad'][5] / data['items']['registradas'])|round(2)}} %)']; 
+                        var pie_cognitive = new Chart(ctx7, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_autenticidad_porcentaje,
+                                datasets: datasets_autenticidad
+                            }
+                        })
+                    </script>    
+                </div>
+                    {% endif %}
+
                 {% else %}
                 <div class="col-sm-12">Sin datos registrados</div>
                 
@@ -399,7 +574,7 @@
         </div>           
         <div class="form-row">    
             {% if  data['items_compara']['registradas'] > 0 %}            
-                <div class="col-sm-3">               
+                <div class="col-sm-2">               
                     <canvas id="pie_correccion_compara" width="100" height="100"></canvas>
                     <script> 
                         var ctx1_compara = document.getElementById('pie_correccion_compara').getContext('2d');   
@@ -429,7 +604,7 @@
                 
                     <!-- Los medios solo tienen la correccion -->         
                     {% if selected.componente!='instrumentos' %}
-                <div class="col-sm-3">             
+                <div class="col-sm-2">             
                     <canvas id="pie_cognitivo_compara" width="100" height="100"></canvas>
                     <script>
                         var ctx2_compara = document.getElementById('pie_cognitivo_compara').getContext('2d');
@@ -459,7 +634,7 @@
                         })
                     </script>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <canvas id="pie_estructura_compara" width="100" height="100"></canvas>
                     <script>
                         var ctx3_compara = document.getElementById('pie_estructura_compara').getContext('2d');
@@ -489,34 +664,123 @@
                         })
                     </script>    
                 </div>
-                <div class="col-sm-3">
-                    <canvas id="pie_transversalidad_compara" width="100" height="100"></canvas>
+                <div class="col-sm-2">
+                    <canvas id="pie_afectivo_compara" width="100" height="100"></canvas>
                     <script>
-                        var ctx4_compara = document.getElementById('pie_transversalidad_compara').getContext('2d');
-                        var datasets_transversalidad_compara = [ {
-                                    label: 'Transversalidad', 
+                        var ctx4_compara = document.getElementById('pie_afectivo_compara').getContext('2d');
+                        var datasets_afectivo_compara =  [ {
+                                    label: 'Afectivo', 
                                     data: [
                                     {{data['items_compara']['afectivo'][1]}},
-                                    {{data['items_compara']['tecnologico'][1]}},
-                                    {{data['items_compara']['colaborativo'][1]}}
+                                    {{data['items_compara']['afectivo'][0]}}
                                     ],
-                                    backgroundColor: ['#6d0768', '#a55e9e', '#dea8d7']
+                                    backgroundColor: ['#138D75', '#BFC9CA']
                                 }];
-                        var label_transversalidad_porcentaje_compara = [
-                                    'Afectivo/Actitudinal ({{(100 * data['items_compara']['afectivo'][1] / data['items_compara']['registradas'])|round(2)}} %)',
-                                    'Tecnológico ({{(100 * data['items_compara']['tecnologico'][1] / data['items_compara']['registradas'])|round(2)}} %)', 
-                                    'Colaborativo ({{(100 * data['items_compara']['colaborativo'][1] / data['items_compara']['registradas'])|round(2)}} %)'];
+                        var label_afectivo_compara = [ 'Afectivo/Actitudinal Sí',   'Afectivo/Actitudinal No'];
+                        var label_afectivo_porcentaje_compara =  [
+                                    'Afectivo/Act Sí ({{(100 * data['items_compara']['afectivo'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    'Afectivo/Act No ({{(100 * data['items_compara']['afectivo'][0] / data['items_compara']['registradas'])|round(2)}} %)'];
                         var pie_cognitive_compara = new Chart(ctx4_compara, {
                             type: 'pie',
                             options: options,
                             data: {
-                                labels: label_transversalidad_porcentaje_compara,
-                                datasets: datasets_transversalidad_compara
+                                labels:label_afectivo_porcentaje_compara,
+                                datasets: datasets_afectivo_compara
                             }
                         })
-                    </script>
+                    </script>    
+                </div>
+                <div class="col-sm-2">
+                    <canvas id="pie_tecnologico_compara" width="100" height="100"></canvas>
+                    <script>
+                        var ctx5_compara = document.getElementById('pie_tecnologico_compara').getContext('2d');
+                        var datasets_tecnologico_compara =  [ {
+                                    label: 'Tecnológico', 
+                                    data: [
+                                    {{data['items_compara']['tecnologico'][1]}},
+                                    {{data['items_compara']['tecnologico'][0]}}
+                                    ],
+                                    backgroundColor: ['#D4AC0D', '#AEB6BF']
+                                }];
+                        var label_tecnologico_compara = [ 'Tecnológico Sí',   'Tecnológico No'];
+                        var label_tecnologico_porcentaje_compara =  [
+                                    'Tecnológico Sí ({{(100 * data['items_compara']['tecnologico'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    'Tecnológico No ({{(100 * data['items_compara']['tecnologico'][0] / data['items_compara']['registradas'])|round(2)}} %)'];
+                        var pie_cognitive_compara = new Chart(ctx5_compara, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_tecnologico_porcentaje_compara,
+                                datasets: datasets_tecnologico_compara
+                            }
+                        })
+                    </script>    
+                </div>
+                <div class="col-sm-2">
+                    <canvas id="pie_colaborativo_compara" width="100" height="100"></canvas>
+                    <script>
+                        var ctx6_compara = document.getElementById('pie_colaborativo_compara').getContext('2d');
+                        var datasets_colaborativo_compara =  [ {
+                                    label: 'Colaborativo', 
+                                    data: [
+                                    {{data['items_compara']['colaborativo'][1]}},
+                                    {{data['items_compara']['colaborativo'][0]}}
+                                    ],
+                                    backgroundColor: ['#E74C3C', '#AEB6BF']
+                                }];
+                        var label_colaborativo_compara = [ 'Colaborativo Sí',   'Colaborativo No'];
+                        var label_colaborativo_porcentaje_compara =  [
+                                    'Sí ({{(100 * data['items_compara']['colaborativo'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    'No ({{(100 * data['items_compara']['colaborativo'][0] / data['items_compara']['registradas'])|round(2)}} %)'];
+                        var pie_cognitive_compara = new Chart(ctx6_compara, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_colaborativo_porcentaje_compara,
+                                datasets: datasets_colaborativo_compara
+                            }
+                        })
+                    </script>    
                 </div>
                     {% endif %}
+                             
+                    {% if selected.componente=='instrumentos' %}
+                    <!-- Los medios tienen autenticidad (también lo tienen los resultados pero no caben) -->
+                <div class="col-sm-2">
+                    <canvas id="pie_autenticidad_compara" width="100" height="100"></canvas>
+                    <script>
+                        var ctx7_compara = document.getElementById('pie_autenticidad_compara').getContext('2d');
+                        var datasets_autenticidad_compara =  [ {
+                                    label: 'Autenticidad', 
+                                    data: [
+                                    {{data['items_compara']['autenticidad'][1]}},
+                                    {{data['items_compara']['autenticidad'][2]}},
+                                    {{data['items_compara']['autenticidad'][3]}},
+                                    {{data['items_compara']['autenticidad'][4]}},
+                                    {{data['items_compara']['autenticidad'][5]}}
+                                    ],
+                                    backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
+                                }];
+                        var label_autenticidad_compara = [ 'Nivel 1 - ninguna', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5 - real y útil'];
+                        var label_autenticidad_porcentaje_compara =  [
+                                    'Nivel 1 - ninguna ({{(100 * data['items_compara']['autenticidad'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['items_compara']['autenticidad'][2] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['items_compara']['autenticidad'][3] / data['items_compara']['registradas'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['items_compara']['autenticidad'][4] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    'Nivel 5 - real y útil ({{(100 * data['items_compara']['autenticidad'][5] / data['items_compara']['registradas'])|round(2)}} %)']; 
+                        var pie_cognitive_compara = new Chart(ctx7_compara, {
+                            type: 'pie',
+                            options: options,
+                            data: {
+                                labels:label_autenticidad_porcentaje_compara,
+                                datasets: datasets_autenticidad_compara
+                            }
+                        })
+                    </script>    
+                </div>
+                    {% endif %}          
+                    
+
                 {% else %}
                 <div class="col-sm-12">Sin datos registrados</div>
                 

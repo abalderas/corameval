@@ -158,7 +158,98 @@
                 <div class="col-sm-2"></div> 
                 <div class="col-sm-5">   
                     <div class="card-header">
-                        <b>Transversalidad</b>
+                        <b>Transversalidad - Afectivo/Actitudinal</b>
+                    </div> 
+                    <canvas id="pie_afectivo" width="100" height="100"></canvas>
+                    <script>
+                        var ctx4 = document.getElementById('pie_afectivo').getContext('2d');
+                        var pie_cognitive = new Chart(ctx4, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'No ({{(100 * data['competencias']['afectivo'][0] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['competencias']['afectivo'][1] / data['competencias']['registradas'])|round(2)}} %)'], 
+                                datasets: [ {
+                                    label: 'Afectivo', 
+                                    data: [
+                                    {{data['competencias']['afectivo'][0]}},
+                                    {{data['competencias']['afectivo'][1]}}
+                                    ],
+                                    backgroundColor: ['#BFC9CA', '#138D75']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Transversalidad - Tecnológico</b>
+                    </div> 
+                    <canvas id="pie_tecnologico" width="100" height="100"></canvas>
+                    <script>
+                        var ctx5 = document.getElementById('pie_tecnologico').getContext('2d');
+                        var pie_cognitive = new Chart(ctx5, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'No ({{(100 * data['competencias']['tecnologico'][0] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['competencias']['tecnologico'][1] / data['competencias']['registradas'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Transversalidad', 
+                                    data: [
+                                    {{data['competencias']['tecnologico'][0]}},
+                                    {{data['competencias']['tecnologico'][1]}}
+                                    ],
+                                    backgroundColor: ['#AEB6BF', '#D4AC0D']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Transversalidad - Colaborativo</b>
+                    </div> 
+                    <canvas id="pie_colaborativo" width="100" height="100"></canvas>
+                    <script>
+                        var ctx6 = document.getElementById('pie_colaborativo').getContext('2d');
+                        var pie_cognitive = new Chart(ctx6, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'No ({{(100 * data['competencias']['colaborativo'][0] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['competencias']['colaborativo'][1] / data['competencias']['registradas'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Transversalidad', 
+                                    data: [
+                                    {{data['competencias']['colaborativo'][0]}},
+                                    {{data['competencias']['colaborativo'][1]}}
+                                    ],
+                                    backgroundColor: ['#AEB6BF', '#E74C3C']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+    <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Transversalidad - Colaborativo</b>
                     </div> 
                     <canvas id="pie_transversalidad" width="100" height="100"></canvas>
                     <script>
@@ -182,9 +273,5 @@
                             }
                         })
                     </script>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    -->
 {% endblock %}
