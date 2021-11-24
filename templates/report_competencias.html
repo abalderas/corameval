@@ -246,32 +246,179 @@
     </div>
 </div>
 
-<!--
-    <div class="col-sm-5">   
+<!-- factual y conceptual -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
                     <div class="card-header">
-                        <b>Transversalidad - Colaborativo</b>
+                        <b>Tipo de conocimiento - Factual</b>
                     </div> 
-                    <canvas id="pie_transversalidad" width="100" height="100"></canvas>
+                    <canvas id="pie_factual" width="100" height="100"></canvas>
                     <script>
-                        var ctx4 = document.getElementById('pie_transversalidad').getContext('2d');
-                        var pie_cognitive = new Chart(ctx4, {
+                        var ctx7 = document.getElementById('pie_factual').getContext('2d');
+                        var pie_cognitive = new Chart(ctx7, {
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'Afectivo/Actitudinal ({{(100 * data['competencias']['afectivo'][1] / data['competencias']['registradas'])|round(2)}} %)',
-                                    'Tecnológico ({{(100 * data['competencias']['tecnologico'][1] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    'Colaborativo ({{(100 * data['competencias']['colaborativo'][1] / data['competencias']['registradas'])|round(2)}} %)'],
+                                    'No ({{(100 * data['competencias']['factual'][0] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['competencias']['factual'][1] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['competencias']['factual'][2] / data['competencias']['registradas'])|round(2)}} %)'],
                                 datasets: [ {
-                                    label: 'Transversalidad', 
+                                    label: 'Factual', 
                                     data: [
-                                    {{data['competencias']['afectivo'][1]}},
-                                    {{data['competencias']['tecnologico'][1]}},
-                                    {{data['competencias']['colaborativo'][1]}}
+                                    {{data['competencias']['factual'][0]}},
+                                    {{data['competencias']['factual'][1]}},
+                                    {{data['competencias']['factual'][2]}}
                                     ],
-                                    backgroundColor: ['#6d0768', '#a55e9e', '#dea8d7']
+                                    backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
                                 }]
                             }
                         })
                     </script>
-    -->
+                </div>
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Tipo de conocimiento - Conceptual</b>
+                    </div> 
+                    <canvas id="pie_conceptual" width="100" height="100"></canvas>
+                    <script>
+                        var ctx8 = document.getElementById('pie_conceptual').getContext('2d');
+                        var pie_cognitive = new Chart(ctx8, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'No ({{(100 * data['competencias']['conceptual'][0] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['competencias']['conceptual'][1] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['competencias']['conceptual'][2] / data['competencias']['registradas'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Conceptual', 
+                                    data: [
+                                    {{data['competencias']['conceptual'][0]}},
+                                    {{data['competencias']['conceptual'][1]}},
+                                    {{data['competencias']['conceptual'][2]}}
+                                    ],
+                                    backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- procedimental y metacognitivo -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Tipo de conocimiento - Procedimental</b>
+                    </div> 
+                    <canvas id="pie_procedimental" width="100" height="100"></canvas>
+                    <script>
+                        var ctx9 = document.getElementById('pie_procedimental').getContext('2d');
+                        var pie_cognitive = new Chart(ctx9, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'No ({{(100 * data['competencias']['procedimental'][0] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['competencias']['procedimental'][1] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['competencias']['procedimental'][2] / data['competencias']['registradas'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Procedimental', 
+                                    data: [
+                                    {{data['competencias']['procedimental'][0]}},
+                                    {{data['competencias']['procedimental'][1]}},
+                                    {{data['competencias']['procedimental'][2]}}
+                                    ],
+                                    backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Tipo de conocimiento - Metacognitivo</b>
+                    </div> 
+                    <canvas id="pie_metacognitivo" width="100" height="100"></canvas>
+                    <script>
+                        var ctx10 = document.getElementById('pie_metacognitivo').getContext('2d');
+                        var pie_cognitive = new Chart(ctx10, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'No ({{(100 * data['competencias']['metacognitivo'][0] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['competencias']['metacognitivo'][1] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['competencias']['metacognitivo'][2] / data['competencias']['registradas'])|round(2)}} %)'],
+                                datasets: [ {
+                                    label: 'Metacognitivo', 
+                                    data: [
+                                    {{data['competencias']['metacognitivo'][0]}},
+                                    {{data['competencias']['metacognitivo'][1]}},
+                                    {{data['competencias']['metacognitivo'][2]}}
+                                    ],
+                                    backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- prioridad 1 -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Tipo de conocimiento - Prioridad 1</b>
+                    </div> 
+                    <canvas id="pie_prioridad1" width="100" height="100"></canvas>
+                    <script>
+                        var ctx11 = document.getElementById('pie_prioridad1').getContext('2d');
+                        {% set total_prioridad1 = data['competencias']['registradas'] - (data['competencias']['factual'][1] + data['competencias']['conceptual'][1]
+                            + data['competencias']['procedimental'][1] + data['competencias']['metacognitivo'][1])%};
+                        var pie_cognitive = new Chart(ctx11, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'Factual ({{(100 * data['competencias']['factual'][1] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Conceptual ({{(100 * data['competencias']['conceptual'][1] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Procedimental ({{(100 * data['competencias']['procedimental'][1] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Metacognitivo ({{(100 * data['competencias']['metacognitivo'][1] / data['competencias']['registradas'])|round(2)}} %)',
+                                    'Sin definir ({{(100 * total_prioridad1 / data['competencias']['registradas'])|round(2) }})'],
+                                datasets: [ {
+                                    label: 'Procedimental', 
+                                    data: [
+                                    {{data['competencias']['factual'][1]}},
+                                    {{data['competencias']['conceptual'][1]}},
+                                    {{data['competencias']['procedimental'][1]}},
+                                    {{data['competencias']['metacognitivo'][1]}},
+                                    {{total_prioridad1}}
+                                    ],
+                                    backgroundColor: ['#FFE0B2', '#F57C00', '#339999', '#A9CCE3', '#000000']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
