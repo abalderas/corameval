@@ -848,7 +848,11 @@ def informes_competencias():
             'estructura': report_estructura("competencias", buscar),
             'afectivo': report_afectivo("competencias", buscar),
             'tecnologico': report_tecnologico("competencias", buscar),
-            'colaborativo': report_colaborativo("competencias", buscar)
+            'colaborativo': report_colaborativo("competencias", buscar),
+            'factual': report_factual("competencias", buscar),
+            'metacognitivo': report_metacognitivo("competencias", buscar),
+            'procedimental': report_procedimental("competencias", buscar),
+            'conceptual': report_conceptual("competencias", buscar)
         }
     } 
 
@@ -906,7 +910,11 @@ def informes_resultados():
             'tecnologico': report_tecnologico("resultados", buscar),
             'colaborativo': report_colaborativo("resultados", buscar),
             'verificabilidad': report_verificabilidad("resultados", buscar),
-            'autenticidad': report_autenticidad("resultados", buscar)
+            'autenticidad': report_autenticidad("resultados", buscar),
+            'factual': report_factual("resultados", buscar),
+            'metacognitivo': report_metacognitivo("resultados", buscar),
+            'procedimental': report_procedimental("resultados", buscar),
+            'conceptual': report_conceptual("resultados", buscar)
         }
     } 
 
@@ -973,6 +981,62 @@ def informes_medios():
 #   Hay una función para cada uno de ellos. Devuelve un array asociativo con el número de
 #   elementos que hay para cada valor dentro de la categoría
 # ---------------------------------------------------------------------------------------------
+
+def report_procedimental(element, query): 
+    query1 = query.copy()
+    query1.append({"procedimental": { "$exists":"true"}})    
+      
+    pipeline = build_pipeline(query1, "$procedimental")
+
+    data = mongo.db[element].aggregate(pipeline)
+
+    lista_procedimental = {0:0, 1:0, 2:0}
+    for tipo in data:
+            lista_procedimental[int(tipo.get('_id', ''))] = tipo.get('count', '')
+
+    return lista_procedimental
+
+def report_metacognitivo(element, query): 
+    query1 = query.copy()
+    query1.append({"metacognitivo": { "$exists":"true"}})    
+      
+    pipeline = build_pipeline(query1, "$metacognitivo")
+
+    data = mongo.db[element].aggregate(pipeline)
+
+    lista_metacognitivo = {0:0, 1:0, 2:0}
+    for tipo in data:
+            lista_metacognitivo[int(tipo.get('_id', ''))] = tipo.get('count', '')
+
+    return lista_metacognitivo
+
+def report_conceptual(element, query): 
+    query1 = query.copy()
+    query1.append({"conceptual": { "$exists":"true"}})    
+      
+    pipeline = build_pipeline(query1, "$conceptual")
+
+    data = mongo.db[element].aggregate(pipeline)
+
+    lista_conceptual = {0:0, 1:0, 2:0}
+    for tipo in data:
+            lista_conceptual[int(tipo.get('_id', ''))] = tipo.get('count', '')
+
+    return lista_conceptual
+
+def report_factual(element, query): 
+    query1 = query.copy()
+    query1.append({"factual": { "$exists":"true"}})    
+      
+    pipeline = build_pipeline(query1, "$factual")
+
+    data = mongo.db[element].aggregate(pipeline)
+
+    lista_factual = {0:0, 1:0, 2:0}
+    for tipo in data:
+            lista_factual[int(tipo.get('_id', ''))] = tipo.get('count', '')
+
+    return lista_factual
 
 def report_afectivo(element, query):  
     query1 = query.copy()
