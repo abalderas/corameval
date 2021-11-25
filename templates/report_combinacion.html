@@ -528,13 +528,13 @@
                                     ],
                                     backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
                                 }];
-                        var label_autenticidad = [ 'Nivel 1 - ninguna', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5 - real y útil'];
+                        var label_autenticidad = [ 'Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'];
                         var label_autenticidad_porcentaje =  [
-                                    'Nivel 1 - ninguna ({{(100 * data['items']['autenticidad'][1] / data['items']['registradas'])|round(2)}} %)',
+                                    'Nivel 1 ({{(100 * data['items']['autenticidad'][1] / data['items']['registradas'])|round(2)}} %)',
                                     'Nivel 2 ({{(100 * data['items']['autenticidad'][2] / data['items']['registradas'])|round(2)}} %)', 
                                     'Nivel 3 ({{(100 * data['items']['autenticidad'][3] / data['items']['registradas'])|round(2)}} %)', 
                                     'Nivel 4 ({{(100 * data['items']['autenticidad'][4] / data['items']['registradas'])|round(2)}} %)',
-                                    'Nivel 5 - real y útil ({{(100 * data['items']['autenticidad'][5] / data['items']['registradas'])|round(2)}} %)']; 
+                                    'Nivel 5 ({{(100 * data['items']['autenticidad'][5] / data['items']['registradas'])|round(2)}} %)']; 
                         var pie_cognitive = new Chart(ctx7, {
                             type: 'pie',
                             options: options,
@@ -761,13 +761,13 @@
                                     ],
                                     backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
                                 }];
-                        var label_autenticidad_compara = [ 'Nivel 1 - ninguna', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5 - real y útil'];
+                        var label_autenticidad_compara = [ 'Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'];
                         var label_autenticidad_porcentaje_compara =  [
-                                    'Nivel 1 - ninguna ({{(100 * data['items_compara']['autenticidad'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                    'Nivel 1 ({{(100 * data['items_compara']['autenticidad'][1] / data['items_compara']['registradas'])|round(2)}} %)',
                                     'Nivel 2 ({{(100 * data['items_compara']['autenticidad'][2] / data['items_compara']['registradas'])|round(2)}} %)', 
                                     'Nivel 3 ({{(100 * data['items_compara']['autenticidad'][3] / data['items_compara']['registradas'])|round(2)}} %)', 
                                     'Nivel 4 ({{(100 * data['items_compara']['autenticidad'][4] / data['items_compara']['registradas'])|round(2)}} %)',
-                                    'Nivel 5 - real y útil ({{(100 * data['items_compara']['autenticidad'][5] / data['items_compara']['registradas'])|round(2)}} %)']; 
+                                    'Nivel 5 ({{(100 * data['items_compara']['autenticidad'][5] / data['items_compara']['registradas'])|round(2)}} %)']; 
                         var pie_cognitive_compara = new Chart(ctx7_compara, {
                             type: 'pie',
                             options: options,
@@ -1026,191 +1026,195 @@
                 {{selected.titulo}}
             {% endif %}
             </b>    
-        </div>      
-            <div class="form-row">
-                {% if selected.componente=='resultados' %}
-                    <div class="col-sm-2">
-                        <canvas id="pie_autenticidad" width="100" height="100"></canvas>
-                        <script>
-                            var ctx7 = document.getElementById('pie_autenticidad').getContext('2d');
-                            var datasets_autenticidad =  [ {
-                                        label: 'Autenticidad', 
-                                        data: [
-                                        {{data['items']['autenticidad'][1]}},
-                                        {{data['items']['autenticidad'][2]}},
-                                        {{data['items']['autenticidad'][3]}},
-                                        {{data['items']['autenticidad'][4]}},
-                                        {{data['items']['autenticidad'][5]}}
-                                        ],
-                                        backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
-                                    }];
-                            var label_autenticidad = [ 'Nivel 1 - ninguna', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5 - real y útil'];
-                            var label_autenticidad_porcentaje =  [
-                                        'Nivel 1 - ninguna ({{(100 * data['items']['autenticidad'][1] / data['items']['registradas'])|round(2)}} %)',
-                                        'Nivel 2 ({{(100 * data['items']['autenticidad'][2] / data['items']['registradas'])|round(2)}} %)', 
-                                        'Nivel 3 ({{(100 * data['items']['autenticidad'][3] / data['items']['registradas'])|round(2)}} %)', 
-                                        'Nivel 4 ({{(100 * data['items']['autenticidad'][4] / data['items']['registradas'])|round(2)}} %)',
-                                        'Nivel 5 - real y útil ({{(100 * data['items']['autenticidad'][5] / data['items']['registradas'])|round(2)}} %)']; 
-                            var pie_cognitive = new Chart(ctx7, {
-                                type: 'pie',
-                                options: options,
-                                data: {
-                                    labels:label_autenticidad_porcentaje,
-                                    datasets: datasets_autenticidad
-                                }
-                            })
-                        </script>    
-                    </div>
-                {% endif %}
-                {% if selected.componente!='instrumentos' %}
-                <div class="col-sm-2">
-                        <canvas id="pie_factual" width="100" height="100"></canvas>
-                        <script>
-                            var ctx8 = document.getElementById('pie_factual').getContext('2d');
-                            var datasets_factual =  [ {
-                                        label: 'factual', 
-                                        data: [
-                                        {{data['items']['factual'][0]}},
-                                        {{data['items']['factual'][1]}},
-                                        {{data['items']['factual'][2]}}
-                                        ],
-                                        backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
-                                    }];
-                            var label_factual = [ 'No', 'Prioridad 1', 'Prioridad 2'];
-                            var label_factual_porcentaje =  [
-                                        'No ({{(100 * data['items']['factual'][0] / data['items']['registradas'])|round(2)}} %)',
-                                        'Prioridad 1 ({{(100 * data['items']['factual'][1] / data['items']['registradas'])|round(2)}} %)', 
-                                        'Prioridad 2 ({{(100 * data['items']['factual'][2] / data['items']['registradas'])|round(2)}} %)']; 
-                            var pie_cognitive = new Chart(ctx8, {
-                                type: 'pie',
-                                options: options,
-                                data: {
-                                    labels:label_factual_porcentaje,
-                                    datasets: datasets_factual
-                                }
-                            })
-                        </script>    
-                    </div>
-                <div class="col-sm-2">
-                        <canvas id="pie_conceptual" width="100" height="100"></canvas>
-                        <script>
-                            var ctx9 = document.getElementById('pie_conceptual').getContext('2d');
-                            var datasets_conceptual =  [ {
-                                        label: 'conceptual', 
-                                        data: [
-                                        {{data['items']['conceptual'][0]}},
-                                        {{data['items']['conceptual'][1]}},
-                                        {{data['items']['conceptual'][2]}}
-                                        ],
-                                        backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
-                                    }];
-                            var label_conceptual = [ 'No', 'Prioridad 1', 'Prioridad 2'];
-                            var label_conceptual_porcentaje =  [
-                                        'No ({{(100 * data['items']['conceptual'][0] / data['items']['registradas'])|round(2)}} %)',
-                                        'Prioridad 1 ({{(100 * data['items']['conceptual'][1] / data['items']['registradas'])|round(2)}} %)', 
-                                        'Prioridad 2 ({{(100 * data['items']['conceptual'][2] / data['items']['registradas'])|round(2)}} %)']; 
-                            var pie_cognitive = new Chart(ctx9, {
-                                type: 'pie',
-                                options: options,
-                                data: {
-                                    labels:label_conceptual_porcentaje,
-                                    datasets: datasets_conceptual
-                                }
-                            })
-                        </script>    
-                    </div>
-                <div class="col-sm-2">
-                        <canvas id="pie_procedimental" width="100" height="100"></canvas>
-                        <script>
-                            var ctx10 = document.getElementById('pie_procedimental').getContext('2d');
-                            var datasets_procedimental =  [ {
-                                        label: 'procedimental', 
-                                        data: [
-                                        {{data['items']['procedimental'][0]}},
-                                        {{data['items']['procedimental'][1]}},
-                                        {{data['items']['procedimental'][2]}}
-                                        ],
-                                        backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
-                                    }];
-                            var label_procedimental = [ 'No', 'Prioridad 1', 'Prioridad 2'];
-                            var label_procedimental_porcentaje =  [
-                                        'No ({{(100 * data['items']['procedimental'][0] / data['items']['registradas'])|round(2)}} %)',
-                                        'Prioridad 1 ({{(100 * data['items']['procedimental'][1] / data['items']['registradas'])|round(2)}} %)', 
-                                        'Prioridad 2 ({{(100 * data['items']['procedimental'][2] / data['items']['registradas'])|round(2)}} %)']; 
-                            var pie_cognitive = new Chart(ctx10, {
-                                type: 'pie',
-                                options: options,
-                                data: {
-                                    labels:label_procedimental_porcentaje,
-                                    datasets: datasets_procedimental
-                                }
-                            })
-                        </script>    
-                    </div>
-                    <div class="col-sm-2">
-                            <canvas id="pie_metacognitivo" width="100" height="100"></canvas>
+        </div>  
+            {% if  data['items']['registradas'] > 0 %}    
+                <div class="form-row">
+                    {% if selected.componente=='resultados' %}
+                        <div class="col-sm-2">
+                            <canvas id="pie_autenticidad" width="100" height="100"></canvas>
                             <script>
-                                var ctx11 = document.getElementById('pie_metacognitivo').getContext('2d');
-                                var datasets_metacognitivo =  [ {
-                                            label: 'metacognitivo', 
+                                var ctx7 = document.getElementById('pie_autenticidad').getContext('2d');
+                                var datasets_autenticidad =  [ {
+                                            label: 'Autenticidad', 
                                             data: [
-                                            {{data['items']['metacognitivo'][0]}},
-                                            {{data['items']['metacognitivo'][1]}},
-                                            {{data['items']['metacognitivo'][2]}}
+                                            {{data['items']['autenticidad'][1]}},
+                                            {{data['items']['autenticidad'][2]}},
+                                            {{data['items']['autenticidad'][3]}},
+                                            {{data['items']['autenticidad'][4]}},
+                                            {{data['items']['autenticidad'][5]}}
                                             ],
-                                            backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
+                                            backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
                                         }];
-                                var label_metacognitivo = [ 'No', 'Prioridad 1', 'Prioridad 2'];
-                                var label_metacognitivo_porcentaje =  [
-                                            'No ({{(100 * data['items']['metacognitivo'][0] / data['items']['registradas'])|round(2)}} %)',
-                                            'Prioridad 1 ({{(100 * data['items']['metacognitivo'][1] / data['items']['registradas'])|round(2)}} %)', 
-                                            'Prioridad 2 ({{(100 * data['items']['metacognitivo'][2] / data['items']['registradas'])|round(2)}} %)']; 
-                                var pie_cognitive = new Chart(ctx11, {
+                                var label_autenticidad = [ 'Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'];
+                                var label_autenticidad_porcentaje =  [
+                                            'Nivel 1 ({{(100 * data['items']['autenticidad'][1] / data['items']['registradas'])|round(2)}} %)',
+                                            'Nivel 2 ({{(100 * data['items']['autenticidad'][2] / data['items']['registradas'])|round(2)}} %)', 
+                                            'Nivel 3 ({{(100 * data['items']['autenticidad'][3] / data['items']['registradas'])|round(2)}} %)', 
+                                            'Nivel 4 ({{(100 * data['items']['autenticidad'][4] / data['items']['registradas'])|round(2)}} %)',
+                                            'Nivel 5 ({{(100 * data['items']['autenticidad'][5] / data['items']['registradas'])|round(2)}} %)']; 
+                                var pie_cognitive = new Chart(ctx7, {
                                     type: 'pie',
                                     options: options,
                                     data: {
-                                        labels:label_metacognitivo_porcentaje,
-                                        datasets: datasets_metacognitivo
+                                        labels:label_autenticidad_porcentaje,
+                                        datasets: datasets_autenticidad
+                                    }
+                                })
+                            </script>    
+                        </div>
+                    {% endif %}
+                    {% if selected.componente!='instrumentos' %}
+                    <div class="col-sm-2">
+                            <canvas id="pie_factual" width="100" height="100"></canvas>
+                            <script>
+                                var ctx8 = document.getElementById('pie_factual').getContext('2d');
+                                var datasets_factual =  [ {
+                                            label: 'factual', 
+                                            data: [
+                                            {{data['items']['factual'][0]}},
+                                            {{data['items']['factual'][1]}},
+                                            {{data['items']['factual'][2]}}
+                                            ],
+                                            backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
+                                        }];
+                                var label_factual = [ 'No', 'Prioridad 1', 'Prioridad 2'];
+                                var label_factual_porcentaje =  [
+                                            'No ({{(100 * data['items']['factual'][0] / data['items']['registradas'])|round(2)}} %)',
+                                            'Prioridad 1 ({{(100 * data['items']['factual'][1] / data['items']['registradas'])|round(2)}} %)', 
+                                            'Prioridad 2 ({{(100 * data['items']['factual'][2] / data['items']['registradas'])|round(2)}} %)']; 
+                                var pie_cognitive = new Chart(ctx8, {
+                                    type: 'pie',
+                                    options: options,
+                                    data: {
+                                        labels:label_factual_porcentaje,
+                                        datasets: datasets_factual
+                                    }
+                                })
+                            </script>    
+                        </div>
+                    <div class="col-sm-2">
+                            <canvas id="pie_conceptual" width="100" height="100"></canvas>
+                            <script>
+                                var ctx9 = document.getElementById('pie_conceptual').getContext('2d');
+                                var datasets_conceptual =  [ {
+                                            label: 'conceptual', 
+                                            data: [
+                                            {{data['items']['conceptual'][0]}},
+                                            {{data['items']['conceptual'][1]}},
+                                            {{data['items']['conceptual'][2]}}
+                                            ],
+                                            backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
+                                        }];
+                                var label_conceptual = [ 'No', 'Prioridad 1', 'Prioridad 2'];
+                                var label_conceptual_porcentaje =  [
+                                            'No ({{(100 * data['items']['conceptual'][0] / data['items']['registradas'])|round(2)}} %)',
+                                            'Prioridad 1 ({{(100 * data['items']['conceptual'][1] / data['items']['registradas'])|round(2)}} %)', 
+                                            'Prioridad 2 ({{(100 * data['items']['conceptual'][2] / data['items']['registradas'])|round(2)}} %)']; 
+                                var pie_cognitive = new Chart(ctx9, {
+                                    type: 'pie',
+                                    options: options,
+                                    data: {
+                                        labels:label_conceptual_porcentaje,
+                                        datasets: datasets_conceptual
+                                    }
+                                })
+                            </script>    
+                        </div>
+                    <div class="col-sm-2">
+                            <canvas id="pie_procedimental" width="100" height="100"></canvas>
+                            <script>
+                                var ctx10 = document.getElementById('pie_procedimental').getContext('2d');
+                                var datasets_procedimental =  [ {
+                                            label: 'procedimental', 
+                                            data: [
+                                            {{data['items']['procedimental'][0]}},
+                                            {{data['items']['procedimental'][1]}},
+                                            {{data['items']['procedimental'][2]}}
+                                            ],
+                                            backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
+                                        }];
+                                var label_procedimental = [ 'No', 'Prioridad 1', 'Prioridad 2'];
+                                var label_procedimental_porcentaje =  [
+                                            'No ({{(100 * data['items']['procedimental'][0] / data['items']['registradas'])|round(2)}} %)',
+                                            'Prioridad 1 ({{(100 * data['items']['procedimental'][1] / data['items']['registradas'])|round(2)}} %)', 
+                                            'Prioridad 2 ({{(100 * data['items']['procedimental'][2] / data['items']['registradas'])|round(2)}} %)']; 
+                                var pie_cognitive = new Chart(ctx10, {
+                                    type: 'pie',
+                                    options: options,
+                                    data: {
+                                        labels:label_procedimental_porcentaje,
+                                        datasets: datasets_procedimental
                                     }
                                 })
                             </script>    
                         </div>
                         <div class="col-sm-2">
-                            <canvas id="pie_prioridad1" width="100" height="100"></canvas>
-                            <script>
-                                var ctx12 = document.getElementById('pie_prioridad1').getContext('2d');
-                                {% set total_prioridad1 = data['items']['registradas'] - (data['items']['factual'][1] + data['items']['conceptual'][1]
-                                    + data['items']['procedimental'][1] + data['items']['metacognitivo'][1])%}
-                                var datasets_prioridad1 =  [ {
-                                            label: 'prioridad1', 
-                                            data: [
-                                            {{data['items']['factual'][1]}},
-                                            {{data['items']['conceptual'][1]}},
-                                            {{data['items']['procedimental'][1]}},
-                                            {{data['items']['metacognitivo'][1]}},
-                                            {{total_prioridad1}}
-                                            ],
-                                            backgroundColor: ['#FFE0B2', '#F57C00', '#339999', '#A9CCE3', '#000000']
-                                        }];
-                                var label_prioridad1 = [ 'Factual', 'Conceptual', 'Procedimental', 'Metacognitivo', 'Sin definir'];
-                                var label_prioridad1_porcentaje =  [
-                                    'Factual ({{(100 * data['items']['factual'][1] / data['items']['registradas'])|round(2)}} %)',
-                                    'Conceptual ({{(100 * data['items']['conceptual'][1] / data['items']['registradas'])|round(2)}} %)',
-                                    'Procedimental ({{(100 * data['items']['procedimental'][1] / data['items']['registradas'])|round(2)}} %)',
-                                    'Metacognitivo ({{(100 * data['items']['metacognitivo'][1] / data['items']['registradas'])|round(2)}} %)',
-                                    'Sin definir ({{(100 * total_prioridad1 / data['items']['registradas'])|round(2) }})'];
-                                var pie_cognitive = new Chart(ctx12, {
-                                    type: 'pie',
-                                    options: options,
-                                    data: {
-                                        labels:label_prioridad1_porcentaje,
-                                        datasets: datasets_prioridad1
-                                    }
-                                })
-                            </script>    
-                        </div>
-                {% endif %}
-            </div>
+                                <canvas id="pie_metacognitivo" width="100" height="100"></canvas>
+                                <script>
+                                    var ctx11 = document.getElementById('pie_metacognitivo').getContext('2d');
+                                    var datasets_metacognitivo =  [ {
+                                                label: 'metacognitivo', 
+                                                data: [
+                                                {{data['items']['metacognitivo'][0]}},
+                                                {{data['items']['metacognitivo'][1]}},
+                                                {{data['items']['metacognitivo'][2]}}
+                                                ],
+                                                backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
+                                            }];
+                                    var label_metacognitivo = [ 'No', 'Prioridad 1', 'Prioridad 2'];
+                                    var label_metacognitivo_porcentaje =  [
+                                                'No ({{(100 * data['items']['metacognitivo'][0] / data['items']['registradas'])|round(2)}} %)',
+                                                'Prioridad 1 ({{(100 * data['items']['metacognitivo'][1] / data['items']['registradas'])|round(2)}} %)', 
+                                                'Prioridad 2 ({{(100 * data['items']['metacognitivo'][2] / data['items']['registradas'])|round(2)}} %)']; 
+                                    var pie_cognitive = new Chart(ctx11, {
+                                        type: 'pie',
+                                        options: options,
+                                        data: {
+                                            labels:label_metacognitivo_porcentaje,
+                                            datasets: datasets_metacognitivo
+                                        }
+                                    })
+                                </script>    
+                            </div>
+                            <div class="col-sm-2">
+                                <canvas id="pie_prioridad1" width="100" height="100"></canvas>
+                                <script>
+                                    var ctx12 = document.getElementById('pie_prioridad1').getContext('2d');
+                                    {% set total_prioridad1 = data['items']['registradas'] - (data['items']['factual'][1] + data['items']['conceptual'][1]
+                                        + data['items']['procedimental'][1] + data['items']['metacognitivo'][1])%}
+                                    var datasets_prioridad1 =  [ {
+                                                label: 'prioridad1', 
+                                                data: [
+                                                {{data['items']['factual'][1]}},
+                                                {{data['items']['conceptual'][1]}},
+                                                {{data['items']['procedimental'][1]}},
+                                                {{data['items']['metacognitivo'][1]}},
+                                                {{total_prioridad1}}
+                                                ],
+                                                backgroundColor: ['#FFE0B2', '#F57C00', '#339999', '#A9CCE3', '#000000']
+                                            }];
+                                    var label_prioridad1 = [ 'Factual', 'Conceptual', 'Procedimental', 'Metacognitivo', 'Sin definir'];
+                                    var label_prioridad1_porcentaje =  [
+                                        'Factual ({{(100 * data['items']['factual'][1] / data['items']['registradas'])|round(2)}} %)',
+                                        'Concep. ({{(100 * data['items']['conceptual'][1] / data['items']['registradas'])|round(2)}} %)',
+                                        'Proced. ({{(100 * data['items']['procedimental'][1] / data['items']['registradas'])|round(2)}} %)',
+                                        'Metacog. ({{(100 * data['items']['metacognitivo'][1] / data['items']['registradas'])|round(2)}} %)',
+                                        'Sin def. ({{(100 * total_prioridad1 / data['items']['registradas'])|round(2) }})'];
+                                    var pie_cognitive = new Chart(ctx12, {
+                                        type: 'pie',
+                                        options: options,
+                                        data: {
+                                            labels:label_prioridad1_porcentaje,
+                                            datasets: datasets_prioridad1
+                                        }
+                                    })
+                                </script>    
+                            </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="col-sm-12">Sin datos registrados</div>            
+            {% endif %}
     </div>
 </div>
 {% endif %}
@@ -1249,13 +1253,13 @@
                                             ],
                                             backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
                                         }];
-                                var label_autenticidad_compara = [ 'Nivel 1-ninguna', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5 - real y útil'];
+                                var label_autenticidad_compara = [ 'Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'];
                                 var label_autenticidad_porcentaje_compara =  [
-                                            'Nivel 1-ninguna ({{(100 * data['items_compara']['autenticidad'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                            'Nivel 1 ({{(100 * data['items_compara']['autenticidad'][1] / data['items_compara']['registradas'])|round(2)}} %)',
                                             'Nivel 2 ({{(100 * data['items_compara']['autenticidad'][2] / data['items_compara']['registradas'])|round(2)}} %)', 
                                             'Nivel 3 ({{(100 * data['items_compara']['autenticidad'][3] / data['items_compara']['registradas'])|round(2)}} %)', 
                                             'Nivel 4 ({{(100 * data['items_compara']['autenticidad'][4] / data['items_compara']['registradas'])|round(2)}} %)',
-                                            'Nivel 5 - real y útil ({{(100 * data['items_compara']['autenticidad'][5] / data['items_compara']['registradas'])|round(2)}} %)']; 
+                                            'Nivel 5 ({{(100 * data['items_compara']['autenticidad'][5] / data['items_compara']['registradas'])|round(2)}} %)']; 
                                 var pie_cognitive_compara = new Chart(ctx7_compara, {
                                     type: 'pie',
                                     options: options,
@@ -1400,10 +1404,10 @@
                                     var label_prioridad1_compara = [ 'Factual', 'Conceptual', 'Procedimental', 'Metacognitivo', 'Sin definir'];
                                     var label_prioridad1_porcentaje_compara =  [
                                         'Factual ({{(100 * data['items_compara']['factual'][1] / data['items_compara']['registradas'])|round(2)}} %)',
-                                        'Conceptual ({{(100 * data['items_compara']['conceptual'][1] / data['items_compara']['registradas'])|round(2)}} %)',
-                                        'Procedimental ({{(100 * data['items_compara']['procedimental'][1] / data['items_compara']['registradas'])|round(2)}} %)',
-                                        'Metacognitivo ({{(100 * data['items_compara']['metacognitivo'][1] / data['items_compara']['registradas'])|round(2)}} %)',
-                                        'Sin definir ({{(100 * total_prioridad1_compara / data['items_compara']['registradas'])|round(2) }})'];
+                                        'Concep. ({{(100 * data['items_compara']['conceptual'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                        'Proc. ({{(100 * data['items_compara']['procedimental'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                        'Metacog. ({{(100 * data['items_compara']['metacognitivo'][1] / data['items_compara']['registradas'])|round(2)}} %)',
+                                        'Sin def. ({{(100 * total_prioridad1_compara / data['items_compara']['registradas'])|round(2) }})'];
                                     var pie_cognitive_compara = new Chart(ctx12_compara, {
                                         type: 'pie',
                                         options: options,
