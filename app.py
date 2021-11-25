@@ -752,7 +752,7 @@ def informes_combinados():
 
         query_compara = { '$and': buscar2 }
 
-        if data_selected['componente'] != 'instrumentos':        
+        if data_selected['componente'] == 'competencias':        
             data = {
                 'items': {
                     'registradas': mongo.db[data_selected['componente']].count_documents(query),
@@ -761,7 +761,11 @@ def informes_combinados():
                     'estructura': report_estructura(data_selected['componente'], buscar1),
                     'afectivo': report_afectivo(data_selected['componente'], buscar1),
                     'tecnologico': report_tecnologico(data_selected['componente'], buscar1),
-                    'colaborativo': report_colaborativo(data_selected['componente'], buscar1)
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar1),
+                    'factual': report_factual(data_selected['componente'], buscar1),
+                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar1),
+                    'procedimental': report_procedimental(data_selected['componente'], buscar1),
+                    'conceptual': report_conceptual(data_selected['componente'], buscar1)
                 },
                 'items_compara': {
                     'registradas': mongo.db[data_selected['componente']].count_documents(query_compara),
@@ -770,9 +774,46 @@ def informes_combinados():
                     'estructura': report_estructura(data_selected['componente'], buscar2),
                     'afectivo': report_afectivo(data_selected['componente'], buscar2),
                     'tecnologico': report_tecnologico(data_selected['componente'], buscar2),
-                    'colaborativo': report_colaborativo(data_selected['componente'], buscar2)
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar2),
+                    'factual': report_factual(data_selected['componente'], buscar2),
+                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar2),
+                    'procedimental': report_procedimental(data_selected['componente'], buscar2),
+                    'conceptual': report_conceptual(data_selected['componente'], buscar2)
                 }
             }
+         
+        elif data_selected['componente'] == 'resultados':        
+            data = {
+                'items': {
+                    'registradas': mongo.db[data_selected['componente']].count_documents(query),
+                    'correccion': report_correccion(data_selected['componente'],buscar1),
+                    'cognitivo': report_cognitivo(data_selected['componente'], buscar1),
+                    'estructura': report_estructura(data_selected['componente'], buscar1),
+                    'afectivo': report_afectivo(data_selected['componente'], buscar1),
+                    'tecnologico': report_tecnologico(data_selected['componente'], buscar1),
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar1),
+                    'factual': report_factual(data_selected['componente'], buscar1),
+                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar1),
+                    'procedimental': report_procedimental(data_selected['componente'], buscar1),
+                    'conceptual': report_conceptual(data_selected['componente'], buscar1),
+                    'autenticidad': report_autenticidad(data_selected['componente'],buscar1)
+                },
+                'items_compara': {
+                    'registradas': mongo.db[data_selected['componente']].count_documents(query_compara),
+                    'correccion': report_correccion(data_selected['componente'],buscar2),
+                    'cognitivo': report_cognitivo(data_selected['componente'], buscar2),
+                    'estructura': report_estructura(data_selected['componente'], buscar2),
+                    'afectivo': report_afectivo(data_selected['componente'], buscar2),
+                    'tecnologico': report_tecnologico(data_selected['componente'], buscar2),
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar2),
+                    'factual': report_factual(data_selected['componente'], buscar2),
+                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar2),
+                    'procedimental': report_procedimental(data_selected['componente'], buscar2),
+                    'conceptual': report_conceptual(data_selected['componente'], buscar2),
+                    'autenticidad': report_autenticidad(data_selected['componente'],buscar2)
+                }
+            }
+
         else:
                 
             data = {
@@ -786,7 +827,8 @@ def informes_combinados():
                     'correccion': report_correccion(data_selected['componente'],buscar2),
                     'autenticidad': report_autenticidad(data_selected['componente'],buscar2)
                 }
-            }            
+            } 
+
     else:
         data_selected = { 'componente': 'competencias' }
         documents_unis = mongo.db.asignaturas.distinct("universidad")
