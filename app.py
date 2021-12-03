@@ -724,21 +724,29 @@ def informes_combinados():
         documents_area_compara = mongo.db.asignaturas.distinct("area", {"universidad": data_selected["universidadCompara"]}) 
         documents_titu_compara = mongo.db.asignaturas.distinct("titulo", {"universidad": data_selected["universidadCompara"], "area": data_selected["areaCompara"]}) 
 
-        buscar =   [{'correccion':{'$exists': True}}, 
+        buscar_registrados =   [{'correccion':{'$exists': True}}, 
                                 {'correccion': {'$ne': '-1'}}]
+        buscar_correctos =   [{'correccion':{'$exists': True}}, 
+                                {'correccion': {'$ne': '-1'}}, 
+                                {'correccion': {'$ne': '0'}}]
         if 'tipoCompetencia' in data_selected:
             if data_selected['tipoCompetencia'] != '4': # Si no es TODAS
-                buscar.append({'tipo': data_selected["tipoCompetencia"]})
+                buscar_registrados.append({'tipo': data_selected["tipoCompetencia"]})
+                buscar_correctos.append({'tipo': data_selected["tipoCompetencia"]})
 
-        buscar1 = buscar.copy()
+        buscar1_registrados = buscar_registrados.copy()
+        buscar1_correctos = buscar_correctos.copy()
         
         asignaturas = asignaturas_universidad(data_selected["universidad"],data_selected["area"],data_selected["titulo"]) 
         lista_asignaturas = []       
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
 
-        buscar1.append({"course_id": { "$in": lista_asignaturas}})
-        query = { '$and': buscar1 }  
+        buscar1_registrados.append({"course_id": { "$in": lista_asignaturas}})
+        query_registrados = { '$and': buscar1_registrados }  
+        
+        buscar1_correctos.append({"course_id": { "$in": lista_asignaturas}})
+        query_correctos = { '$and': buscar1_correctos }  
         
         lista_asignaturas_compara = []
 
@@ -747,70 +755,78 @@ def informes_combinados():
             lista_asignaturas_compara.append(asignatura.get('_id', ''))
         
 
-        buscar2 =  buscar.copy()
-        buscar2.append({"course_id": { "$in": lista_asignaturas_compara}})
+        buscar2_registrados =  buscar_registrados.copy()
+        buscar2_registrados.append({"course_id": { "$in": lista_asignaturas_compara}})
+        
+        buscar2_correctos =  buscar_correctos.copy()
+        buscar2_correctos.append({"course_id": { "$in": lista_asignaturas_compara}})
 
-        query_compara = { '$and': buscar2 }
+        query_compara_registrados = { '$and': buscar2_registrados }
+        query_compara_correctos = { '$and': buscar2_correctos }
 
         if data_selected['componente'] == 'competencias':        
             data = {
                 'items': {
-                    'registradas': mongo.db[data_selected['componente']].count_documents(query),
-                    'correccion': report_correccion(data_selected['componente'],buscar1),
-                    'cognitivo': report_cognitivo(data_selected['componente'], buscar1),
-                    'estructura': report_estructura(data_selected['componente'], buscar1),
-                    'afectivo': report_afectivo(data_selected['componente'], buscar1),
-                    'tecnologico': report_tecnologico(data_selected['componente'], buscar1),
-                    'colaborativo': report_colaborativo(data_selected['componente'], buscar1),
-                    'factual': report_factual(data_selected['componente'], buscar1),
-                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar1),
-                    'procedimental': report_procedimental(data_selected['componente'], buscar1),
-                    'conceptual': report_conceptual(data_selected['componente'], buscar1)
+                    'registradas': mongo.db[data_selected['componente']].count_documents(query_registrados),
+                    'correctos': mongo.db[data_selected['componente']].count_documents(query_correctos),
+                    'correccion': report_correccion(data_selected['componente'],buscar1_registrados),
+                    'cognitivo': report_cognitivo(data_selected['componente'], buscar1_correctos),
+                    'estructura': report_estructura(data_selected['componente'], buscar1_correctos),
+                    'afectivo': report_afectivo(data_selected['componente'], buscar1_correctos),
+                    'tecnologico': report_tecnologico(data_selected['componente'], buscar1_correctos),
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar1_correctos),
+                    'factual': report_factual(data_selected['componente'], buscar1_correctos),
+                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar1_correctos),
+                    'procedimental': report_procedimental(data_selected['componente'], buscar1_correctos),
+                    'conceptual': report_conceptual(data_selected['componente'], buscar1_correctos)
                 },
                 'items_compara': {
-                    'registradas': mongo.db[data_selected['componente']].count_documents(query_compara),
-                    'correccion': report_correccion(data_selected['componente'],buscar2),
-                    'cognitivo': report_cognitivo(data_selected['componente'], buscar2),
-                    'estructura': report_estructura(data_selected['componente'], buscar2),
-                    'afectivo': report_afectivo(data_selected['componente'], buscar2),
-                    'tecnologico': report_tecnologico(data_selected['componente'], buscar2),
-                    'colaborativo': report_colaborativo(data_selected['componente'], buscar2),
-                    'factual': report_factual(data_selected['componente'], buscar2),
-                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar2),
-                    'procedimental': report_procedimental(data_selected['componente'], buscar2),
-                    'conceptual': report_conceptual(data_selected['componente'], buscar2)
+                    'registradas': mongo.db[data_selected['componente']].count_documents(query_compara_registrados),
+                    'correctos': mongo.db[data_selected['componente']].count_documents(query_compara_correctos),
+                    'correccion': report_correccion(data_selected['componente'],buscar2_registrados),
+                    'cognitivo': report_cognitivo(data_selected['componente'], buscar2_correctos),
+                    'estructura': report_estructura(data_selected['componente'], buscar2_correctos),
+                    'afectivo': report_afectivo(data_selected['componente'], buscar2_correctos),
+                    'tecnologico': report_tecnologico(data_selected['componente'], buscar2_correctos),
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar2_correctos),
+                    'factual': report_factual(data_selected['componente'], buscar2_correctos),
+                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar2_correctos),
+                    'procedimental': report_procedimental(data_selected['componente'], buscar2_correctos),
+                    'conceptual': report_conceptual(data_selected['componente'], buscar2_correctos)
                 }
             }
          
         elif data_selected['componente'] == 'resultados':        
             data = {
                 'items': {
-                    'registradas': mongo.db[data_selected['componente']].count_documents(query),
-                    'correccion': report_correccion(data_selected['componente'],buscar1),
-                    'cognitivo': report_cognitivo(data_selected['componente'], buscar1),
-                    'estructura': report_estructura(data_selected['componente'], buscar1),
-                    'afectivo': report_afectivo(data_selected['componente'], buscar1),
-                    'tecnologico': report_tecnologico(data_selected['componente'], buscar1),
-                    'colaborativo': report_colaborativo(data_selected['componente'], buscar1),
-                    'factual': report_factual(data_selected['componente'], buscar1),
-                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar1),
-                    'procedimental': report_procedimental(data_selected['componente'], buscar1),
-                    'conceptual': report_conceptual(data_selected['componente'], buscar1),
-                    'autenticidad': report_autenticidad(data_selected['componente'],buscar1)
+                    'registradas': mongo.db[data_selected['componente']].count_documents(query_registrados),
+                    'correctos': mongo.db[data_selected['componente']].count_documents(query_correctos),
+                    'correccion': report_correccion(data_selected['componente'],buscar1_registrados),
+                    'cognitivo': report_cognitivo(data_selected['componente'], buscar1_correctos),
+                    'estructura': report_estructura(data_selected['componente'], buscar1_correctos),
+                    'afectivo': report_afectivo(data_selected['componente'], buscar1_correctos),
+                    'tecnologico': report_tecnologico(data_selected['componente'], buscar1_correctos),
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar1_correctos),
+                    'factual': report_factual(data_selected['componente'], buscar1_correctos),
+                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar1_correctos),
+                    'procedimental': report_procedimental(data_selected['componente'], buscar1_correctos),
+                    'conceptual': report_conceptual(data_selected['componente'], buscar1_correctos),
+                    'autenticidad': report_autenticidad(data_selected['componente'],buscar1_correctos)
                 },
                 'items_compara': {
-                    'registradas': mongo.db[data_selected['componente']].count_documents(query_compara),
-                    'correccion': report_correccion(data_selected['componente'],buscar2),
-                    'cognitivo': report_cognitivo(data_selected['componente'], buscar2),
-                    'estructura': report_estructura(data_selected['componente'], buscar2),
-                    'afectivo': report_afectivo(data_selected['componente'], buscar2),
-                    'tecnologico': report_tecnologico(data_selected['componente'], buscar2),
-                    'colaborativo': report_colaborativo(data_selected['componente'], buscar2),
-                    'factual': report_factual(data_selected['componente'], buscar2),
-                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar2),
-                    'procedimental': report_procedimental(data_selected['componente'], buscar2),
-                    'conceptual': report_conceptual(data_selected['componente'], buscar2),
-                    'autenticidad': report_autenticidad(data_selected['componente'],buscar2)
+                    'registradas': mongo.db[data_selected['componente']].count_documents(query_compara_registrados),
+                    'correctos': mongo.db[data_selected['componente']].count_documents(query_compara_correctos),
+                    'correccion': report_correccion(data_selected['componente'],buscar2_registrados),
+                    'cognitivo': report_cognitivo(data_selected['componente'], buscar2_correctos),
+                    'estructura': report_estructura(data_selected['componente'], buscar2_correctos),
+                    'afectivo': report_afectivo(data_selected['componente'], buscar2_correctos),
+                    'tecnologico': report_tecnologico(data_selected['componente'], buscar2_correctos),
+                    'colaborativo': report_colaborativo(data_selected['componente'], buscar2_correctos),
+                    'factual': report_factual(data_selected['componente'], buscar2_correctos),
+                    'metacognitivo': report_metacognitivo(data_selected['componente'], buscar2_correctos),
+                    'procedimental': report_procedimental(data_selected['componente'], buscar2_correctos),
+                    'conceptual': report_conceptual(data_selected['componente'], buscar2_correctos),
+                    'autenticidad': report_autenticidad(data_selected['componente'],buscar2_correctos)
                 }
             }
 
@@ -818,14 +834,16 @@ def informes_combinados():
                 
             data = {
                 'items': {
-                    'registradas': mongo.db[data_selected['componente']].count_documents(query),
-                    'correccion': report_correccion(data_selected['componente'],buscar1),
-                    'autenticidad': report_autenticidad(data_selected['componente'],buscar1)
+                    'registradas': mongo.db[data_selected['componente']].count_documents(query_registrados),
+                    'correctos': mongo.db[data_selected['componente']].count_documents(query_correctos),
+                    'correccion': report_correccion(data_selected['componente'],buscar1_registrados),
+                    'autenticidad': report_autenticidad(data_selected['componente'],buscar1_correctos)
                 },
                 'items_compara': {
-                    'registradas': mongo.db[data_selected['componente']].count_documents(query_compara),
-                    'correccion': report_correccion(data_selected['componente'],buscar2),
-                    'autenticidad': report_autenticidad(data_selected['componente'],buscar2)
+                    'registradas': mongo.db[data_selected['componente']].count_documents(query_compara_registrados),
+                    'correctos': mongo.db[data_selected['componente']].count_documents(query_compara_correctos),
+                    'correccion': report_correccion(data_selected['componente'],buscar2_registrados),
+                    'autenticidad': report_autenticidad(data_selected['componente'],buscar2_correctos)
                 }
             } 
 
@@ -855,9 +873,12 @@ def informes_competencias():
     # Consultas comprobacion datos insertados
     # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
     # por tanto, se consideran no valoradas aunque existan otros campos
-    buscar =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
-    query_competencias = { '$and': buscar }
+    buscar_registradas =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
+    query_competencias_registradas = { '$and': buscar_registradas }
     query = {}
+    
+    buscar_correctas =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}, {'correccion': {'$ne': '0'}}]
+    query_competencias_correctas = { '$and': buscar_correctas }
 
     if 'universidad' in session:
         universidad = session['universidad']
@@ -876,25 +897,28 @@ def informes_competencias():
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
         query = {'course_id':{'$in': lista_asignaturas}}
-        buscar.append({"course_id": { "$in": lista_asignaturas}})
+        buscar_registradas.append({"course_id": { "$in": lista_asignaturas}})
+        buscar_correctas.append({"course_id": { "$in": lista_asignaturas}})
         
-        query_competencias['course_id'] = query['course_id']
+        query_competencias_registradas['course_id'] = query['course_id']
+        query_competencias_correctas['course_id'] = query['course_id']
     
 
     data = {
         'competencias': {
-            'registradas': mongo.db.competencias.count_documents(query_competencias),
+            'registradas': mongo.db.competencias.count_documents(query_competencias_registradas),
             'total': mongo.db.competencias.count_documents(query),
-            'correccion': report_correccion("competencias", buscar),
-            'cognitivo': report_cognitivo("competencias", buscar),
-            'estructura': report_estructura("competencias", buscar),
-            'afectivo': report_afectivo("competencias", buscar),
-            'tecnologico': report_tecnologico("competencias", buscar),
-            'colaborativo': report_colaborativo("competencias", buscar),
-            'factual': report_factual("competencias", buscar),
-            'metacognitivo': report_metacognitivo("competencias", buscar),
-            'procedimental': report_procedimental("competencias", buscar),
-            'conceptual': report_conceptual("competencias", buscar)
+            'correctas': mongo.db.competencias.count_documents(query_competencias_correctas),
+            'correccion': report_correccion("competencias", buscar_registradas),
+            'cognitivo': report_cognitivo("competencias", buscar_correctas),
+            'estructura': report_estructura("competencias", buscar_correctas),
+            'afectivo': report_afectivo("competencias", buscar_correctas),
+            'tecnologico': report_tecnologico("competencias", buscar_correctas),
+            'colaborativo': report_colaborativo("competencias", buscar_correctas),
+            'factual': report_factual("competencias", buscar_correctas),
+            'metacognitivo': report_metacognitivo("competencias", buscar_correctas),
+            'procedimental': report_procedimental("competencias", buscar_correctas),
+            'conceptual': report_conceptual("competencias", buscar_correctas)
         }
     } 
 
@@ -916,9 +940,12 @@ def informes_resultados():
     # Consultas comprobacion datos insertados
     # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
     # por tanto, se consideran no valoradas aunque existan otros campos
-    buscar =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
-    query_resultados = { '$and': buscar }
+    buscar_registradas =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
+    query_resultados_registradas= { '$and': buscar_registradas }
     query = {}
+    
+    buscar_correctos =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}, {'correccion': {'$ne': '0'}}]
+    query_resultados_correctos = { '$and': buscar_correctos }
 
     if 'universidad' in session:
         universidad = session['universidad']
@@ -936,27 +963,30 @@ def informes_resultados():
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
         query = {'course_id':{'$in': lista_asignaturas}}
-        buscar.append({"course_id": { "$in": lista_asignaturas}})
+        buscar_registradas.append({"course_id": { "$in": lista_asignaturas}})
+        buscar_correctos.append({"course_id": { "$in": lista_asignaturas}})
         
-        query_resultados['course_id'] = query['course_id']
+        query_resultados_registradas['course_id'] = query['course_id']
+        query_resultados_correctos['course_id'] = query['course_id']
     
 
     data = {
         'resultados': {
-            'registrados': mongo.db.resultados.count_documents(query_resultados),
+            'registrados': mongo.db.resultados.count_documents(query_resultados_registradas),
             'total': mongo.db.resultados.count_documents(query),
-            'correccion': report_correccion("resultados", buscar),
-            'cognitivo': report_cognitivo("resultados", buscar),
-            'estructura': report_estructura("resultados", buscar),
-            'afectivo': report_afectivo("resultados", buscar),
-            'tecnologico': report_tecnologico("resultados", buscar),
-            'colaborativo': report_colaborativo("resultados", buscar),
-            'verificabilidad': report_verificabilidad("resultados", buscar),
-            'autenticidad': report_autenticidad("resultados", buscar),
-            'factual': report_factual("resultados", buscar),
-            'metacognitivo': report_metacognitivo("resultados", buscar),
-            'procedimental': report_procedimental("resultados", buscar),
-            'conceptual': report_conceptual("resultados", buscar)
+            'correctos': mongo.db.resultados.count_documents(query_resultados_correctos),
+            'correccion': report_correccion("resultados", buscar_registradas),
+            'cognitivo': report_cognitivo("resultados", buscar_correctos),
+            'estructura': report_estructura("resultados", buscar_correctos),
+            'afectivo': report_afectivo("resultados", buscar_correctos),
+            'tecnologico': report_tecnologico("resultados", buscar_correctos),
+            'colaborativo': report_colaborativo("resultados", buscar_correctos),
+            'verificabilidad': report_verificabilidad("resultados", buscar_correctos),
+            'autenticidad': report_autenticidad("resultados", buscar_correctos),
+            'factual': report_factual("resultados", buscar_correctos),
+            'metacognitivo': report_metacognitivo("resultados", buscar_correctos),
+            'procedimental': report_procedimental("resultados", buscar_correctos),
+            'conceptual': report_conceptual("resultados", buscar_correctos)
         }
     } 
 
@@ -979,9 +1009,11 @@ def informes_medios():
     # Consultas comprobacion datos insertados
     # correccion -1 son aquellos entes cuya correccion no se ha definido entre los valores esperados
     # por tanto, se consideran no valoradas aunque existan otros campos
-    buscar =   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
-    query_medios = { '$and': buscar }
+    buscar_registrados=   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}]
+    query_medios_registrados= { '$and': buscar_registrados}
     query = {}
+    buscar_correctos=   [{'correccion':{'$exists': True}}, {'correccion': {'$ne': '-1'}}, {'correccion': {'$ne': '0'}}]
+    query_medios_correctos= { '$and': buscar_correctos}
 
     if 'universidad' in session:
         universidad = session['universidad']
@@ -999,17 +1031,19 @@ def informes_medios():
         for asignatura in asignaturas:
             lista_asignaturas.append(asignatura.get('_id', ''))
         query = {'course_id':{'$in': lista_asignaturas}}
-        buscar.append({"course_id": { "$in": lista_asignaturas}})
+        buscar_registrados.append({"course_id": { "$in": lista_asignaturas}})
+        buscar_correctos.append({"course_id": { "$in": lista_asignaturas}})
         
-        query_medios['course_id'] = query['course_id']
-    
+        query_medios_registrados['course_id'] = query['course_id']
+        query_medios_correctos['course_id'] = query['course_id']
 
     data = {
         'medios': {
-            'registrados': mongo.db.instrumentos.count_documents(query_medios),
+            'registrados': mongo.db.instrumentos.count_documents(query_medios_registrados),
             'total': mongo.db.instrumentos.count_documents(query),
-            'correccion': report_correccion("instrumentos", buscar),
-            'autenticidad': report_autenticidad("instrumentos", buscar)
+            'correctos': mongo.db.instrumentos.count_documents(query_medios_correctos),
+            'correccion': report_correccion("instrumentos", buscar_registrados),
+            'autenticidad': report_autenticidad("instrumentos", buscar_correctos)
         }
     } 
 
