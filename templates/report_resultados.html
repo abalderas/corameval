@@ -100,13 +100,13 @@
                             type: 'pie',
                             data: {
                                 labels: [                                    
-                                    {% if data['resultados']['registrados'] > 0 %}
-                                    '1 Recordar ({{(100 * data['resultados']['cognitivo'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    '2 Comprender ({{(100 * data['resultados']['cognitivo'][2] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    '3 Aplicar ({{(100 * data['resultados']['cognitivo'][3] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    '4 Analizar ({{(100 * data['resultados']['cognitivo'][4] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    '5 Evaluar ({{(100 * data['resultados']['cognitivo'][5] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    '6 Crear ({{(100 * data['resultados']['cognitivo'][6] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    {% if data['resultados']['correctos'] > 0 %}
+                                    '1 Recordar ({{(100 * data['resultados']['cognitivo'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    '2 Comprender ({{(100 * data['resultados']['cognitivo'][2] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '3 Aplicar ({{(100 * data['resultados']['cognitivo'][3] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '4 Analizar ({{(100 * data['resultados']['cognitivo'][4] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '5 Evaluar ({{(100 * data['resultados']['cognitivo'][5] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '6 Crear ({{(100 * data['resultados']['cognitivo'][6] / data['resultados']['correctos'])|round(2)}} %)'],
                                     {% endif %}
                                 datasets: [ {
                                     label: 'Cognitivo', 
@@ -141,12 +141,12 @@
                             type: 'pie',
                             data: {
                                 labels: [                                    
-                                    {% if data['resultados']['registrados'] > 0 %}
-                                    '1 Preestructural ({{(100 * data['resultados']['estructura'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    '2 Uniestructural ({{(100 * data['resultados']['estructura'][2] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    '3 Multiestructural ({{(100 * data['resultados']['estructura'][3] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    '4 Relacional ({{(100 * data['resultados']['estructura'][4] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    '5 Abstracto ampliado ({{(100 * data['resultados']['estructura'][5] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    {% if data['resultados']['correctos'] > 0 %}
+                                    '1 Preestructural ({{(100 * data['resultados']['estructura'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    '2 Uniestructural ({{(100 * data['resultados']['estructura'][2] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '3 Multiestructural ({{(100 * data['resultados']['estructura'][3] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '4 Relacional ({{(100 * data['resultados']['estructura'][4] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '5 Abstracto ampliado ({{(100 * data['resultados']['estructura'][5] / data['resultados']['correctos'])|round(2)}} %)'],
                                     {% endif %}
                                 datasets: [ {
                                     label: 'Estructura del conocimiento', 
@@ -173,8 +173,8 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['resultados']['afectivo'][0] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Sí ({{(100 * data['resultados']['afectivo'][1] / data['resultados']['registrados'])|round(2)}} %)'], 
+                                    'No ({{(100 * data['resultados']['afectivo'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['afectivo'][1] / data['resultados']['correctos'])|round(2)}} %)'], 
                                 datasets: [ {
                                     label: 'Afectivo', 
                                     data: [
@@ -207,8 +207,8 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['resultados']['tecnologico'][0] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Sí ({{(100 * data['resultados']['tecnologico'][1] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['tecnologico'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['tecnologico'][1] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Transversalidad', 
                                     data: [
@@ -233,8 +233,8 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['resultados']['colaborativo'][0] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Sí ({{(100 * data['resultados']['colaborativo'][1] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['colaborativo'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['colaborativo'][1] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Transversalidad', 
                                     data: [
@@ -267,12 +267,12 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    {% if data['resultados']['registrados'] > 0 %}
-                                    'Nivel 1 - ninguna ({{(100 * data['resultados']['verificabilidad'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Nivel 2 ({{(100 * data['resultados']['verificabilidad'][2] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    'Nivel 3 ({{(100 * data['resultados']['verificabilidad'][3] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    'Nivel 4 ({{(100 * data['resultados']['verificabilidad'][4] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Nivel 5 - evaluable, medible ({{(100 * data['resultados']['verificabilidad'][5] / data['resultados']['registrados'])|round(2)}} %)'], 
+                                    {% if data['resultados']['correctos'] > 0 %}
+                                    'Nivel 1 - ninguna ({{(100 * data['resultados']['verificabilidad'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['resultados']['verificabilidad'][2] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['resultados']['verificabilidad'][3] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['resultados']['verificabilidad'][4] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Nivel 5 - evaluable, medible ({{(100 * data['resultados']['verificabilidad'][5] / data['resultados']['correctos'])|round(2)}} %)'], 
                                     {% endif %}
                                 datasets: [ {
                                     label: 'Autenticidad', 
@@ -302,12 +302,12 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    {% if data['resultados']['registrados'] > 0 %}
-                                    'Nivel 1 - ninguna ({{(100 * data['resultados']['autenticidad'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Nivel 2 ({{(100 * data['resultados']['autenticidad'][2] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    'Nivel 3 ({{(100 * data['resultados']['autenticidad'][3] / data['resultados']['registrados'])|round(2)}} %)', 
-                                    'Nivel 4 ({{(100 * data['resultados']['autenticidad'][4] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Nivel 5 - real y útil ({{(100 * data['resultados']['autenticidad'][5] / data['resultados']['registrados'])|round(2)}} %)'], 
+                                    {% if data['resultados']['correctos'] > 0 %}
+                                    'Nivel 1 - ninguna ({{(100 * data['resultados']['autenticidad'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['resultados']['autenticidad'][2] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['resultados']['autenticidad'][3] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['resultados']['autenticidad'][4] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Nivel 5 - real y útil ({{(100 * data['resultados']['autenticidad'][5] / data['resultados']['correctos'])|round(2)}} %)'], 
                                     {% endif %}
                                 datasets: [ {
                                     label: 'Autenticidad', 
@@ -345,9 +345,9 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['resultados']['factual'][0] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Prioridad 1 ({{(100 * data['resultados']['factual'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Prioridad 2 ({{(100 * data['resultados']['factual'][2] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['factual'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['resultados']['factual'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['resultados']['factual'][2] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Factual', 
                                     data: [
@@ -373,9 +373,9 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['resultados']['conceptual'][0] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Prioridad 1 ({{(100 * data['resultados']['conceptual'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Prioridad 2 ({{(100 * data['resultados']['conceptual'][2] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['conceptual'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['resultados']['conceptual'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['resultados']['conceptual'][2] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Conceptual', 
                                     data: [
@@ -410,9 +410,9 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['resultados']['procedimental'][0] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Prioridad 1 ({{(100 * data['resultados']['procedimental'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Prioridad 2 ({{(100 * data['resultados']['procedimental'][2] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['procedimental'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['resultados']['procedimental'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['resultados']['procedimental'][2] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Procedimental', 
                                     data: [
@@ -438,9 +438,9 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['resultados']['metacognitivo'][0] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Prioridad 1 ({{(100 * data['resultados']['metacognitivo'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Prioridad 2 ({{(100 * data['resultados']['metacognitivo'][2] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['metacognitivo'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['resultados']['metacognitivo'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['resultados']['metacognitivo'][2] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Metacognitivo', 
                                     data: [
@@ -471,17 +471,17 @@
                     <canvas id="pie_prioridad1" width="100" height="100"></canvas>
                     <script>
                         var ctx11 = document.getElementById('pie_prioridad1').getContext('2d');
-                        {% set total_prioridad1 = data['resultados']['registrados'] - (data['resultados']['factual'][1] + data['resultados']['conceptual'][1]
+                        {% set total_prioridad1 = data['resultados']['correctos'] - (data['resultados']['factual'][1] + data['resultados']['conceptual'][1]
                             + data['resultados']['procedimental'][1] + data['resultados']['metacognitivo'][1])%};
                         var pie_cognitive = new Chart(ctx11, {
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'Factual ({{(100 * data['resultados']['factual'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Conceptual ({{(100 * data['resultados']['conceptual'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Procedimental ({{(100 * data['resultados']['procedimental'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Metacognitivo ({{(100 * data['resultados']['metacognitivo'][1] / data['resultados']['registrados'])|round(2)}} %)',
-                                    'Sin definir ({{(100 * total_prioridad1 / data['resultados']['registrados'])|round(2) }})'],
+                                    'Factual ({{(100 * data['resultados']['factual'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Conceptual ({{(100 * data['resultados']['conceptual'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Procedimental ({{(100 * data['resultados']['procedimental'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Metacognitivo ({{(100 * data['resultados']['metacognitivo'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Sin definir ({{(100 * total_prioridad1 / data['resultados']['correctos'])|round(2) }})'],
                                 datasets: [ {
                                     label: 'Prioridad1', 
                                     data: [

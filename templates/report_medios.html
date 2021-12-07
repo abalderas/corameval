@@ -100,12 +100,12 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    {% if data['medios']['registrados'] > 0 %}
-                                    'Nivel 1 - ninguna ({{(100 * data['medios']['autenticidad'][1] / data['medios']['registrados'])|round(2)}} %)',
-                                    'Nivel 2 ({{(100 * data['medios']['autenticidad'][2] / data['medios']['registrados'])|round(2)}} %)', 
-                                    'Nivel 3 ({{(100 * data['medios']['autenticidad'][3] / data['medios']['registrados'])|round(2)}} %)', 
-                                    'Nivel 4 ({{(100 * data['medios']['autenticidad'][4] / data['medios']['registrados'])|round(2)}} %)',
-                                    'Nivel 5 - real y útil ({{(100 * data['medios']['autenticidad'][5] / data['medios']['registrados'])|round(2)}} %)'], 
+                                    {% if data['medios']['correctos'] > 0 %}
+                                    'Nivel 1 - ninguna ({{(100 * data['medios']['autenticidad'][1] / data['medios']['correctos'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['medios']['autenticidad'][2] / data['medios']['correctos'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['medios']['autenticidad'][3] / data['medios']['correctos'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['medios']['autenticidad'][4] / data['medios']['correctos'])|round(2)}} %)',
+                                    'Nivel 5 - real y útil ({{(100 * data['medios']['autenticidad'][5] / data['medios']['correctos'])|round(2)}} %)'], 
                                     {% endif %}
                                 datasets: [ {
                                     label: 'Autenticidad', 
