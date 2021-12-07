@@ -473,7 +473,7 @@ def asignaturas_universidad(universidad, area, titulo):
         documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad}, {"_id":1}) 
     elif (titulo == '0'):
         documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad, "area": area}, {"_id":1}) 
-    else: 
+    else:
         documents_asignaturas = mongo.db.asignaturas.find({"universidad": universidad, "area": area, "titulo": titulo}, {"_id":1})    
     
     return documents_asignaturas
@@ -1304,6 +1304,36 @@ def pendientes(universidad):
         documents_instruments = mongo.db.instrumentos.find({'$and':[{'$or':[{'correccion':{'$exists': False}}, {'correccion': {'$eq': '-1'}}]}, {"course_id": {'$in':lista_asignaturas}}]}).sort("name",1)
 
     return render_template('pendientes.html', skills = documents_skills, results = documents_results, instruments = documents_instruments)
+
+# -----------------------
+# Es necesario eliminar un título de Oviedo. 
+# Creamos rutina para ello
+# -----------------------
+
+@app.route('/eliminar_titulo')
+def eliminar_titulo():
+    universidad = "Universidad de Oviedo"
+    area = "Economía y Empresa"
+    titulo = "Máster Universitario en Estudios de Economía Sectorial"
+
+    universidad_enc = universidad.encode('latin1')
+    area_enc = area.encode('latin1')
+    titulo_enc = titulo.encode('latin1')
+
+    asignaturas = asignaturas_universidad(universidad_enc.decode('utf-8'), area_enc.decode('utf-8'), titulo_enc.decode('utf-8')) 
+    lista_asignaturas = []       
+    for asignatura in asignaturas:
+        print("Asignatura: ")
+        print(asignatura['_id'])
+        query = {'course_id': ObjectId(asignatura['_id'])}
+        mongo.db.competencias.delete_many(query)
+        print("Competencias borradas")
+        mongo.db.resultados.delete_many(query)
+        print("Resultados borrados")
+        mongo.db.instrumentos.delete_many(query)
+        print("Instrumentos borrados")
+
+    return "Borrado de titulo indicado realizado."
 
 import os
 	
