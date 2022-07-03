@@ -1341,11 +1341,13 @@ def eliminar_titulo():
 @app.route('/recomendador/', methods=['POST'])
 def recomendador():
     document_rec = {
-        'name': 'Sugerencia de detalles para la competencia descrita'
+        'name': 'Sugerencia de detalles para la competencia descrita',
+        'prob': 0.0
     }
 
     if request.method == 'POST':
         document_rec = sugerir_competencia(request.form['descripcion'])
+        document_rec['descripcion_proporcionada'] = request.form['descripcion']
         
 
     
