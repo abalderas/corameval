@@ -5,6 +5,7 @@ from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId
 from flask_bcrypt import bcrypt
 from datetime import datetime
+from difflib import SequenceMatcher
 
 # librerías para la figura
 #import matplotlib
@@ -1334,6 +1335,45 @@ def eliminar_titulo():
         print("Instrumentos borrados")
 
     return "Borrado de titulo indicado realizado."
+
+
+@app.route('/recomendador/')
+@app.route('/recomendador/', methods=['POST'])
+def recomendador():
+    document_rec = {
+        'name': 'Sugerencia de detalles para la competencia descrita'
+    }
+
+    if request.method == 'POST':
+        document_rec = sugerir_competencia(request.form['descripcion'])
+        
+
+    
+    return render_template('recommender.html', document = document_rec)
+
+def sugerir_competencia(skill):
+
+    competencias = mongo.db.competencias.find()
+    sugerencia_prob = 0.0
+
+    for competencia in competencias:
+        prob = similar(competencia['name'],skill)
+        if prob > sugerencia_prob:
+            sugerencia_id = competencia['_id']
+            sugerencia_prob = prob
+    
+    document = mongo.db.competencias.find_one({"_id": ObjectId(sugerencia_id)})
+
+    document['prob'] = sugerencia_prob
+
+    print(skill)
+    print(sugerencia_prob)
+    print(document)
+
+    return document
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 
 import os
 	
