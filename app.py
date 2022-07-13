@@ -5,6 +5,7 @@ from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId
 from flask_bcrypt import bcrypt
 from datetime import datetime
+from difflib import SequenceMatcher
 
 # librerías para la figura
 #import matplotlib
@@ -1334,6 +1335,50 @@ def eliminar_titulo():
         print("Instrumentos borrados")
 
     return "Borrado de titulo indicado realizado."
+
+
+@app.route('/recomendador/')
+@app.route('/recomendador/', methods=['POST'])
+def recomendador():
+    document_rec = {
+        'name': 'Sugerencia de detalles para la competencia descrita',
+        'prob': 0.0
+    }
+
+    if request.method == 'POST':
+        sugerencias_rec = sugerir_competencia(request.form['descripcion'])
+        descripcion_proporcionada_rec = request.form['descripcion']
+        document_rec = mongo.db.competencias.find_one({"_id": ObjectId(sugerencias_rec[0][0])})
+        
+    else:        
+        descripcion_proporcionada_rec = "--- Describa en este espacio la competencia ---"
+        sugerencias_rec = {}
+    
+    return render_template('recommender.html', document = document_rec, sugerencias = sugerencias_rec, descripcion_proporcionada = descripcion_proporcionada_rec)
+
+def sugerir_competencia(skill):
+
+    elements = 10
+    competencias = mongo.db.competencias.find()
+    sugerencia = [(0, 0.0, "vacio")]*elements
+
+    for competencia in competencias:
+        prob = similar(competencia['name'],skill)
+        if prob > sugerencia[elements-1][1]:
+            sugerencia[elements-1] = (competencia['_id'], prob, competencia['name'])            
+
+            i = elements-1
+            while i > 0 and prob > sugerencia[i-1][1]:
+                sugerencia[i] = sugerencia[i-1]
+                i = i-1
+            
+            sugerencia[i] = (competencia['_id'], prob, competencia['name']) 
+    
+    
+    return sugerencia
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 
 import os
 	
