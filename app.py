@@ -1346,33 +1346,36 @@ def recomendador():
     }
 
     if request.method == 'POST':
-        document_rec = sugerir_competencia(request.form['descripcion'])
-        document_rec['descripcion_proporcionada'] = request.form['descripcion']
+        sugerencias_rec = sugerir_competencia(request.form['descripcion'])
+        descripcion_proporcionada_rec = request.form['descripcion']
+        document_rec = mongo.db.competencias.find_one({"_id": ObjectId(sugerencias_rec[0][0])})
         
-
+    else:        
+        descripcion_proporcionada_rec = "--- Describa en este espacio la competencia ---"
+        sugerencias_rec = {}
     
-    return render_template('recommender.html', document = document_rec)
+    return render_template('recommender.html', document = document_rec, sugerencias = sugerencias_rec, descripcion_proporcionada = descripcion_proporcionada_rec)
 
 def sugerir_competencia(skill):
 
+    elements = 10
     competencias = mongo.db.competencias.find()
-    sugerencia_prob = 0.0
+    sugerencia = [(0, 0.0, "vacio")]*elements
 
     for competencia in competencias:
         prob = similar(competencia['name'],skill)
-        if prob > sugerencia_prob:
-            sugerencia_id = competencia['_id']
-            sugerencia_prob = prob
+        if prob > sugerencia[elements-1][1]:
+            sugerencia[elements-1] = (competencia['_id'], prob, competencia['name'])            
+
+            i = elements-1
+            while i > 0 and prob > sugerencia[i-1][1]:
+                sugerencia[i] = sugerencia[i-1]
+                i = i-1
+            
+            sugerencia[i] = (competencia['_id'], prob, competencia['name']) 
     
-    document = mongo.db.competencias.find_one({"_id": ObjectId(sugerencia_id)})
-
-    document['prob'] = sugerencia_prob
-
-    print(skill)
-    print(sugerencia_prob)
-    print(document)
-
-    return document
+    
+    return sugerencia
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()

@@ -9,7 +9,7 @@
                     <div class="form-row">
                         <label for="descripcion" class="col-sm-2 col-form-label">Competencia</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control-plaintext" id="descripcion"  name="descripcion"  value="---Describa aquí la competencia---"> 
+                            <input type="text" class="form-control-plaintext" id="descripcion"  name="descripcion"  value="{{ descripcion_proporcionada }}"> 
                         </div>                       
                         <div class="col-sm-1">     
                             <input type="submit" value="Sugerir" class="btn btn-primary" />
@@ -30,10 +30,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><a href="/skill/{{document['_id']}}">{{document['name']}}</a>
-                        <strong>({{(document['prob']*100)|round(2) }} %)</strong></td>
+                {% set vars = {'similar': True} %}
+                {% for item in sugerencias %}
+                <tr 
+                    {% if vars.similar %} style="background-color:#F8D25A;"  {% endif %}
+                    {% if vars.update({'similar': False}) %} {% endif %}                             
+                >
+                    <td><a href="/skill/{{item[0]}}">{{item[2]}}</a>
+                        <strong>({{ 100*item[1]|round(1)}} %)</strong></td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -41,7 +47,7 @@
         <form action="/recommender/search/" method="POST" name="form-fields">
             <div class="card border-primary mb-3 ">                 
                 <div class="card-header">
-                        <strong>{{document['descripcion_proporcionada']}}</strong>
+                        <strong>{{descripcion_proporcionada}}</strong>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
@@ -233,6 +239,7 @@
                         </div>
                     </div>
                 </div>
+                <!--
                 <div class="card border-primary mb-3">
                     <div class="card-body">                         
                         <div class="form-row">
@@ -259,13 +266,16 @@
                                     </label>
                                 </div>
                             </div>
+                            
                             <div class="col-sm-3">  
                                 <input type="hidden" name="id" value="{{document['_id']}}" />    
                                 <input type="submit" value="Guardar" class="btn btn-primary" />
                             </div>
+                            
                         </div> 
                     </div>
                 </div>
+                -->
         </form>
     </div>
 </div>
