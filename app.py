@@ -1337,6 +1337,7 @@ def eliminar_titulo():
     return "Borrado de titulo indicado realizado."
 
 
+# Nueva funcion para recomendar
 @app.route('/recomendador/')
 @app.route('/recomendador/', methods=['POST'])
 def recomendador():
