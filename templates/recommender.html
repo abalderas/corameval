@@ -1,0 +1,284 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <form action="/recomendador/" method="POST" name="form-fields">
+            <div class="card border-primary mb-3 ">     
+                <div class="card-body">
+                    <div class="form-row">
+                        <label for="descripcion" class="col-sm-2 col-form-label">Competencia</label>
+                        <button type="button" class="btn btn-outline-primary btn-sm" title="" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Introduzca la descripción de una competencia. El ayudante le recomendará la definición de características más parecida en base a la similitud de la descripción proporcionada con la de otras competencias." data-original-title="Competencia">+ayuda</button>&nbsp;&nbsp;
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control-plaintext" id="descripcion"  name="descripcion"  value="{{ descripcion_proporcionada }}"> 
+                        </div>                       
+                        <div class="col-sm-1">     
+                            <input type="submit" value="Sugerir" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-striped table-bordered bg-white table-sm">
+            <thead>
+                <tr>
+            <th>Competencias&nbsp;&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" title="" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Este listado muestra las 10 competencias cuya descripción más se asemeja a la proporcionada. La más parecida, se resalta en color amarillo, y sus características son las que aparecen en el formulario principal." data-original-title="Competencia">+info</button></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set vars = {'similar': True} %}
+                {% for item in sugerencias %}
+                <tr 
+                    {% if vars.similar %} style="background-color:#F8D25A;"  {% endif %}
+                    {% if vars.update({'similar': False}) %} {% endif %}                             
+                >
+                    <td><a href="/skill/{{item[0]}}">{{item[2]}}</a>
+                        <strong>({{ (100*item[1])|round(1)}} %)</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-8">
+        <form action="/recommender/search/" method="POST" name="form-fields">
+            <div class="card border-primary mb-3 ">                 
+                <div class="card-header">
+                        <strong>{{descripcion_proporcionada}}</strong>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="col-sm-3">
+                            <label for="tipo" class="form-control"><strong>Carácter</strong></label>
+                            <input type="hidden" name="tipo" id="tipo" value="{{document['tipo']}}" />
+                        </div>
+                        <div class="col-sm">
+                            <select name="tipo-text" id="tipo-text" class="form-control" disabled="" >
+                                <option value="0"{% if document['tipo']=='0' %} selected="selected" {% endif %}>Básicas</option>
+                                <option value="1"{% if document['tipo']=='1' %} selected="selected" {% endif %}>Específicas</option>
+                                <option value="2"{% if document['tipo']=='2' %} selected="selected" {% endif %}>Generales</option>
+                                <option value="3"{% if document['tipo']=='3' %} selected="selected" {% endif %}>Transversales</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">                        
+                        <div class="col-sm-3">
+                                <label for="correccion" class="form-control"><strong>Corrección</strong></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" 
+                            data-placement="bottom" data-img="{{ url_for('static', filename='/images/popups/COMP_Correccion.png') }}" data-original-title="Corrección (info)">+ info</button>
+                        </div>
+                    </div> 
+                    <div class="form-row">  
+                        <div class="col-sm">                        
+                            <select name="correccion" id="correccion" class="form-control">
+                                <option value="-1">(seleccione una opción)</option>
+                                <option value="0"{% if document['correccion']=='0' %} selected="selected" {% endif %}>Nivel 0, no se valora más. No está definida en términos de competencia (punto de vista del profesor)</option>
+                                <option value="1"{% if document['correccion']=='1' %} selected="selected" {% endif %}>Nivel 1, incluye un proceso cognitivo pero no está bien redactada</option>
+                                <option value="2"{% if document['correccion']=='2' %} selected="selected" {% endif %}>Nivel 2, explicita verbo en infinitivo que informa de la acción del proceso cognitivo: recordar, conocer, aplicar, analizar, evaluar, crear, ...</option>
+                            </select>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+
+            <div class="card border-primary mb-3">
+                    <div class="card-body">
+                        <div class="form-row">                       
+                            <div class="col-sm-3">
+                                    <label for="cognitivo" class="form-control"><strong>Proceso cognitivo</strong></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="bottom" 
+                                data-img="{{ url_for('static', filename='/images/popups/COMP_ProcesoCognitivo.png') }}"  data-original-title="Proceso cognitivo (info)">+ info</button>
+                            </div>
+                            <div class="col-sm-3">                        
+                                <select name="cognitivo" id="cognitivo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                    <option value="1"{% if document['cognitivo']=='1' %} selected="selected" {% endif %}>1 Recordar</option>
+                                    <option value="2"{% if document['cognitivo']=='2' %} selected="selected" {% endif %}>2 Comprender</option>
+                                    <option value="3"{% if document['cognitivo']=='3' %} selected="selected" {% endif %}>3 Aplicar</option>
+                                    <option value="4"{% if document['cognitivo']=='4' %} selected="selected" {% endif %}>4 Analizar</option>
+                                    <option value="5"{% if document['cognitivo']=='5' %} selected="selected" {% endif %}>5 Evaluar</option>
+                                    <option value="6"{% if document['cognitivo']=='6' %} selected="selected" {% endif %}>6 Crear</option>
+                                </select>
+                            </div>
+                        </div> 
+                    </div>
+            </div>
+
+            <div class="card border-primary mb-3 "> 
+                <div class="card-body">
+                    <div class="form-row">                                                            
+                        <div class="col-sm-4">
+                                <label for="" class="form-control"><strong>Tipo de conocimiento</strong></label>
+                        </div>                                                       
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="bottom" 
+                            data-img="{{ url_for('static', filename='/images/popups/COMP_TipoConocimiento.png') }}"  data-original-title="Proceso cognitivo (info)">+ info</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-3">
+                            <label for="factual" class="form-control"><strong>Factual</strong></label>
+                        </div>
+                        <div class="col-sm-3">                        
+                            <select name="factual" id="factual" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                <option value="0"{% if document['factual']=='0' %} selected="selected" {% endif %}>No</option>
+                                <option value="1"{% if document['factual']=='1' %} selected="selected" {% endif %}>Prioridad 1</option>
+                                <option value="2"{% if document['factual']=='2' %} selected="selected" {% endif %}>Prioridad 2</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="conceptual" class="form-control"><strong>Conceptual</strong></label>
+                        </div>
+                        <div class="col-sm-3">                        
+                            <select name="conceptual" id="conceptual" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                    <option value="0"{% if document['conceptual']=='0' %} selected="selected" {% endif %}>No</option>
+                                    <option value="1"{% if document['conceptual']=='1' %} selected="selected" {% endif %}>Prioridad 1</option>
+                                    <option value="2"{% if document['conceptual']=='2' %} selected="selected" {% endif %}>Prioridad 2</option>
+                            </select>
+                        </div>
+                    </div> 
+                    <div class="form-row">
+                        <div class="col-sm-3">
+                            <label for="procedimental" class="form-control"><strong>Procedimental</strong></label>
+                        </div>
+                        <div class="col-sm-3">                        
+                            <select name="procedimental" id="procedimental" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                    <option value="0"{% if document['procedimental']=='0' %} selected="selected" {% endif %}>No</option>
+                                    <option value="1"{% if document['procedimental']=='1' %} selected="selected" {% endif %}>Prioridad 1</option>
+                                    <option value="2"{% if document['procedimental']=='2' %} selected="selected" {% endif %}>Prioridad 2</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="metacognitivo" class="form-control"><strong>Metacognitivo</strong></label>
+                        </div>
+                        <div class="col-sm-3">                        
+                            <select name="metacognitivo" id="metacognitivo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                    <option value="0"{% if document['metacognitivo']=='0' %} selected="selected" {% endif %}>No</option>
+                                    <option value="1"{% if document['metacognitivo']=='1' %} selected="selected" {% endif %}>Prioridad 1</option>
+                                    <option value="2"{% if document['metacognitivo']=='2' %} selected="selected" {% endif %}>Prioridad 2</option>
+                            </select>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div class="card border-primary mb-3 "> 
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="col-sm-4">
+                            <label for="estructura" class="form-control"><strong>Estructura del conocimiento</strong></label>
+                        </div>                        
+                        <div class="col-sm-3">
+                                <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" 
+                                data-placement="bottom"
+                                data-img="{{ url_for('static', filename='/images/popups/COMP_EstructuraConocimiento.png') }}" 
+                                data-original-title="Estructura del conocimiento (info)">+ info</button>
+                            </div>
+                        <div class="col">                        
+                            <select name="estructura" id="estructura" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                <option value="1"{% if document['estructura']=='1' %} selected="selected" {% endif %}>1 Preestructural</option>
+                                <option value="2"{% if document['estructura']=='2' %} selected="selected" {% endif %}>2 Uniestructural</option>
+                                <option value="3"{% if document['estructura']=='3' %} selected="selected" {% endif %}>3 Multiestructural</option>
+                                <option value="4"{% if document['estructura']=='4' %} selected="selected" {% endif %}>4 Relacional</option>
+                                <option value="5"{% if document['estructura']=='5' %} selected="selected" {% endif %}>5 Abstracto ampliado</option>
+                            </select>
+                        </div>
+                    </div>                          
+                </div>
+            </div>
+            <div class="card border-primary mb-3 "> 
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-sm-4">
+                                <label for="solo" class="form-control"><strong>Transversalidad</strong></label>
+                            </div>                        
+                            <div class="col-sm-3">
+                                    <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" 
+                                    data-placement="bottom"
+                                    data-img="{{ url_for('static', filename='/images/popups/COMP_Transversalidad.png') }}" 
+                                    data-original-title="Tramsversalidad (info)">+ info</button>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-3">
+                                <label for="afectivo" class="form-control"><strong>Afectivo/Actitudinal</strong></label>
+                            </div>
+                            <div class="col-sm-3">                        
+                                <select name="afectivo" id="afectivo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                    <option value="0"{% if document['afectivo']=='0' %} selected="selected" {% endif %}>No</option>
+                                    <option value="1"{% if document['afectivo']=='1' %} selected="selected" {% endif %}>Sí</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="tecnologico" class="form-control"><strong>Tecnológico</strong></label>
+                            </div>
+                            <div class="col-sm-3">                        
+                                <select name="tecnologico" id="tecnologico" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                        <option value="0"{% if document['tecnologico']=='0' %} selected="selected" {% endif %}>No</option>
+                                        <option value="1"{% if document['tecnologico']=='1' %} selected="selected" {% endif %}>Sí</option>
+                                </select>
+                            </div>
+                        </div> 
+                        <div class="form-row">
+                            <div class="col-sm-3">
+                                <label for="colaborativo" class="form-control"><strong>Colaborativo</strong></label>
+                            </div>
+                            <div class="col-sm-3">                        
+                                <select name="colaborativo" id="colaborativo" class="form-control" {% if document['correccion']=='0' %} disabled {% endif %}>
+                                        <option value="0"{% if document['colaborativo']=='0' %} selected="selected" {% endif %}>No</option>
+                                        <option value="1"{% if document['colaborativo']=='1' %} selected="selected" {% endif %}>Sí</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6"> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-primary mb-3">
+                    <div class="card-body">                         
+                        <div class="form-row">
+                            <div class="col-sm-6">
+                                <label for="observaciones" class="form-control"><strong>Observaciones</strong></label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm">
+                                <textarea class="form-control" name="observaciones" id="observaciones" rows="3" {% if document['correccion']=='0' %} disabled {% endif %}>{{document['observaciones']}}</textarea>
+                            </div>
+                        </div>
+                        <!--
+                        <div class="form-row mt-3">  
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-secondary" title="" data-container="body" data-toggle="popover" data-placement="right" 
+                                data-content="Si marca esta casilla, los cambios se aplicarán a todas las apariciones de esta competencia a nivel de título 
+                                (excepto si es transversal, en cuyo caso se aplicará a todas las apariciones a nivel de universidad)">+ info</button>
+                            </div>
+                            <div class="col-sm-6"> 
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" name="aplicar" id="aplicar">
+                                        Aplicar los cambios a nivel de título (de toda la BD si se trata de una competencia básica)
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-3">  
+                                <input type="hidden" name="id" value="{{document['_id']}}" />    
+                                <input type="submit" value="Guardar" class="btn btn-primary" />
+                            </div>
+                            
+                        </div> -->
+                    </div>
+                </div>
+                
+        </form>
+    </div>
+</div>
+<div id="loader"></div>
+{% endblock %}

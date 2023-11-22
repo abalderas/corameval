@@ -1,2 +1,12 @@
 config/alluris.json
 config/config.json
+venv
+*.pyc
+controller.py
+corameval.wsgi
+data
+logs
+config/config.json
+config/alluris.json
+corameval.code-workspace
+static/json/*

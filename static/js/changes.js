@@ -74,6 +74,20 @@ $("#correccion").change(function(){ //correccion medios
     }
 });
 
+// Tipos de competencias en comparativos
+
+$("#componente").change(function() {
+    if($(this).val() == "competencias")
+    {
+        $('#tipoCompetencia').prop('disabled', false);
+        $('#tipoCompetencia').val('4');
+    }
+    else{
+        $('#tipoCompetencia').prop('disabled', true);
+        $('#tipoCompetencia').val('4');
+    }
+});
+
 function unloadPage(){ 
     if(unsaved){
         return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";

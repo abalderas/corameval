@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="card border-secondary mb-3 "> 
             <div class="card-header">
-                <form action="/informes_competencias" method="post">
+                <form action="/informes_resultados" method="post">
                     <div class="form-row">
                         <div class="col-sm-2">
                             <label for="universidad" class="form-control"><strong>Universidad</strong></label>
@@ -28,21 +28,21 @@
                         <tr>
                             <th>{{data['universidad']}}</th>
                             <th class="text-md-right">Total</th>
-                            <th class="text-md-right">Registradas</th>
+                            <th class="text-md-right">Registrados</th>
                             <th class="text-md-right">Pendientes</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Competencias</td>
-                            <td class="text-md-right">{{data['competencias']['total']}} </td>
+                            <td>Resultados</td>
+                            <td class="text-md-right">{{data['resultados']['total']}} </td>
                             <td class="text-md-right">
-                                {{data['competencias']['registradas']}} 
-                                <span class="badge badge-success">{{(100*data['competencias']['registradas']/data['competencias']['total'])|round(1)}} %</span> 
+                                {{data['resultados']['registrados']}} 
+                                <span class="badge badge-success">{{(100*data['resultados']['registrados']/data['resultados']['total'])|round(1)}} %</span> 
                             </td>
                             <td class="text-md-right">
-                                {{data['competencias']['pendientes']}}  
-                                <span class="badge badge-danger">{{(100*data['competencias']['pendientes']/data['competencias']['total'])|round(1)}} %</span> 
+                                {{data['resultados']['pendientes']}}  
+                                <span class="badge badge-danger">{{(100*data['resultados']['pendientes']/data['resultados']['total'])|round(1)}} %</span> 
                             </td>
                         </tr>
                     </tbody>
@@ -56,7 +56,7 @@
     <div class="col-md-12">
         <div class="card border-secondary mb-3 "> 
             <div class="card-header">
-                <b>Informes de Competencias</b>
+                <b>Informes de resultados</b>
             </div>
             <div class="form-row">
                 <div class="col-sm-5">   
@@ -70,15 +70,17 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'Nivel 0 ({{(100 * data['competencias']['correccion'][0] / data['competencias']['registradas'])|round(2)}} %)',
-                                    'Nivel 1 ({{(100 * data['competencias']['correccion'][1] / data['competencias']['registradas'])|round(2)}} %)', 
-                                    'Nivel 2 ({{(100 * data['competencias']['correccion'][2] / data['competencias']['registradas'])|round(2)}} %)'], 
+                                    {% if data['resultados']['registrados'] > 0 %}
+                                    'Nivel 0 ({{(100 * data['resultados']['correccion'][0] / data['resultados']['registrados'])|round(2)}} %)',
+                                    'Nivel 1 ({{(100 * data['resultados']['correccion'][1] / data['resultados']['registrados'])|round(2)}} %)', 
+                                    'Nivel 2 ({{(100 * data['resultados']['correccion'][2] / data['resultados']['registrados'])|round(2)}} %)'],
+                                    {% endif %} 
                                 datasets: [ {
                                     label: 'Correccion', 
                                     data: [
-                                    {{data['competencias']['correccion'][0]}},
-                                    {{data['competencias']['correccion'][1]}},
-                                    {{data['competencias']['correccion'][2]}}
+                                    {{data['resultados']['correccion'][0]}},
+                                    {{data['resultados']['correccion'][1]}},
+                                    {{data['resultados']['correccion'][2]}}
                                     ],
                                     backgroundColor: ['#02126d', '#8877bf', '#c0b0ea']
                                 }]
@@ -97,18 +99,20 @@
                         var pie_cognitive = new Chart(ctx2, {
                             type: 'pie',
                             data: {
-                                labels: [
-                                    '1 Recordar ({{(100 * data['competencias']['cognitivo'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    '2 Comprender ({{(100 * data['competencias']['cognitivo'][2] / data['competencias']['correctas'])|round(2)}} %)', 
-                                    '3 Aplicar ({{(100 * data['competencias']['cognitivo'][3] / data['competencias']['correctas'])|round(2)}} %)', 
-                                    '4 Analizar ({{(100 * data['competencias']['cognitivo'][4] / data['competencias']['correctas'])|round(2)}} %)', 
-                                    '5 Evaluar ({{(100 * data['competencias']['cognitivo'][5] / data['competencias']['correctas'])|round(2)}} %)', 
-                                    '6 Crear ({{(100 * data['competencias']['cognitivo'][6] / data['competencias']['correctas'])|round(2)}} %)'],
+                                labels: [                                    
+                                    {% if data['resultados']['correctos'] > 0 %}
+                                    '1 Recordar ({{(100 * data['resultados']['cognitivo'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    '2 Comprender ({{(100 * data['resultados']['cognitivo'][2] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '3 Aplicar ({{(100 * data['resultados']['cognitivo'][3] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '4 Analizar ({{(100 * data['resultados']['cognitivo'][4] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '5 Evaluar ({{(100 * data['resultados']['cognitivo'][5] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '6 Crear ({{(100 * data['resultados']['cognitivo'][6] / data['resultados']['correctos'])|round(2)}} %)'],
+                                    {% endif %}
                                 datasets: [ {
                                     label: 'Cognitivo', 
                                     data: [
-                                    {% for cogval in data['competencias']['cognitivo'] %}
-                                    {{data['competencias']['cognitivo'][cogval]}},
+                                    {% for cogval in data['resultados']['cognitivo'] %}
+                                    {{data['resultados']['cognitivo'][cogval]}},
                                     {% endfor %}
                                     ],
                                     backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200', '#ffa600']
@@ -136,17 +140,19 @@
                         var pie_cognitive = new Chart(ctx3, {
                             type: 'pie',
                             data: {
-                                labels: [
-                                    '1 Preestructural ({{(100 * data['competencias']['estructura'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    '2 Uniestructural ({{(100 * data['competencias']['estructura'][2] / data['competencias']['correctas'])|round(2)}} %)', 
-                                    '3 Multiestructural ({{(100 * data['competencias']['estructura'][3] / data['competencias']['correctas'])|round(2)}} %)', 
-                                    '4 Relacional ({{(100 * data['competencias']['estructura'][4] / data['competencias']['correctas'])|round(2)}} %)', 
-                                    '5 Abstracto ampliado ({{(100 * data['competencias']['estructura'][5] / data['competencias']['correctas'])|round(2)}} %)'],
+                                labels: [                                    
+                                    {% if data['resultados']['correctos'] > 0 %}
+                                    '1 Preestructural ({{(100 * data['resultados']['estructura'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    '2 Uniestructural ({{(100 * data['resultados']['estructura'][2] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '3 Multiestructural ({{(100 * data['resultados']['estructura'][3] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '4 Relacional ({{(100 * data['resultados']['estructura'][4] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    '5 Abstracto ampliado ({{(100 * data['resultados']['estructura'][5] / data['resultados']['correctos'])|round(2)}} %)'],
+                                    {% endif %}
                                 datasets: [ {
                                     label: 'Estructura del conocimiento', 
                                     data: [
-                                    {% for estval in data['competencias']['estructura'] %}
-                                    {{data['competencias']['estructura'][estval]}},
+                                    {% for estval in data['resultados']['estructura'] %}
+                                    {{data['resultados']['estructura'][estval]}},
                                     {% endfor %}
                                     ],
                                     backgroundColor: ['#2c055c', '#860061', '#ca1152', '#f45e35', '#ffa600']
@@ -167,13 +173,13 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['competencias']['afectivo'][0] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Sí ({{(100 * data['competencias']['afectivo'][1] / data['competencias']['correctas'])|round(2)}} %)'], 
+                                    'No ({{(100 * data['resultados']['afectivo'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['afectivo'][1] / data['resultados']['correctos'])|round(2)}} %)'], 
                                 datasets: [ {
                                     label: 'Afectivo', 
                                     data: [
-                                    {{data['competencias']['afectivo'][0]}},
-                                    {{data['competencias']['afectivo'][1]}}
+                                    {{data['resultados']['afectivo'][0]}},
+                                    {{data['resultados']['afectivo'][1]}}
                                     ],
                                     backgroundColor: ['#BFC9CA', '#138D75']
                                 }]
@@ -201,13 +207,13 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['competencias']['tecnologico'][0] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Sí ({{(100 * data['competencias']['tecnologico'][1] / data['competencias']['correctas'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['tecnologico'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['tecnologico'][1] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Transversalidad', 
                                     data: [
-                                    {{data['competencias']['tecnologico'][0]}},
-                                    {{data['competencias']['tecnologico'][1]}}
+                                    {{data['resultados']['tecnologico'][0]}},
+                                    {{data['resultados']['tecnologico'][1]}}
                                     ],
                                     backgroundColor: ['#AEB6BF', '#D4AC0D']
                                 }]
@@ -227,13 +233,13 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['competencias']['colaborativo'][0] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Sí ({{(100 * data['competencias']['colaborativo'][1] / data['competencias']['correctas'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['colaborativo'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Sí ({{(100 * data['resultados']['colaborativo'][1] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Transversalidad', 
                                     data: [
-                                    {{data['competencias']['colaborativo'][0]}},
-                                    {{data['competencias']['colaborativo'][1]}}
+                                    {{data['resultados']['colaborativo'][0]}},
+                                    {{data['resultados']['colaborativo'][1]}}
                                     ],
                                     backgroundColor: ['#AEB6BF', '#E74C3C']
                                 }]
@@ -241,6 +247,83 @@
                         })
                     </script>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-secondary mb-3 ">             
+            <div class="form-row">
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Verificabilidad</b>
+                    </div>                 
+                    <canvas id="pie_verificabilidad" width="100" height="100"></canvas>
+                    <script>
+                        var ctx12 = document.getElementById('pie_verificabilidad').getContext('2d');
+                        var pie_autenticidad = new Chart(ctx12, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    {% if data['resultados']['correctos'] > 0 %}
+                                    'Nivel 1 - ninguna ({{(100 * data['resultados']['verificabilidad'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['resultados']['verificabilidad'][2] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['resultados']['verificabilidad'][3] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['resultados']['verificabilidad'][4] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Nivel 5 - evaluable, medible ({{(100 * data['resultados']['verificabilidad'][5] / data['resultados']['correctos'])|round(2)}} %)'], 
+                                    {% endif %}
+                                datasets: [ {
+                                    label: 'Autenticidad', 
+                                    data: [
+                                    {{data['resultados']['verificabilidad'][1]}},
+                                    {{data['resultados']['verificabilidad'][2]}},
+                                    {{data['resultados']['verificabilidad'][3]}},
+                                    {{data['resultados']['verificabilidad'][4]}},
+                                    {{data['resultados']['verificabilidad'][5]}}
+                                    ],
+                                    backgroundColor: ['#2E4053', '#AAB7B8', '#5C6BC0', '#DAF7A6', '#FFC300']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>                    
+                
+                <div class="col-sm-2"></div> 
+                <div class="col-sm-5">   
+                    <div class="card-header">
+                        <b>Autenticidad</b>
+                    </div>                 
+                    <canvas id="pie_autenticidad" width="100" height="100"></canvas>
+                    <script>
+                        var ctx13 = document.getElementById('pie_autenticidad').getContext('2d');
+                        var pie_autenticidad = new Chart(ctx13, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    {% if data['resultados']['correctos'] > 0 %}
+                                    'Nivel 1 - ninguna ({{(100 * data['resultados']['autenticidad'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Nivel 2 ({{(100 * data['resultados']['autenticidad'][2] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    'Nivel 3 ({{(100 * data['resultados']['autenticidad'][3] / data['resultados']['correctos'])|round(2)}} %)', 
+                                    'Nivel 4 ({{(100 * data['resultados']['autenticidad'][4] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Nivel 5 - real y útil ({{(100 * data['resultados']['autenticidad'][5] / data['resultados']['correctos'])|round(2)}} %)'], 
+                                    {% endif %}
+                                datasets: [ {
+                                    label: 'Autenticidad', 
+                                    data: [
+                                    {{data['resultados']['autenticidad'][1]}},
+                                    {{data['resultados']['autenticidad'][2]}},
+                                    {{data['resultados']['autenticidad'][3]}},
+                                    {{data['resultados']['autenticidad'][4]}},
+                                    {{data['resultados']['autenticidad'][5]}}
+                                    ],
+                                    backgroundColor: ['#095c47', '#287242', '#528633', '#83961b', '#bda200']
+                                }]
+                            }
+                        })
+                    </script>
+                </div>  
             </div>
         </div>
     </div>
@@ -262,15 +345,15 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['competencias']['factual'][0] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Prioridad 1 ({{(100 * data['competencias']['factual'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Prioridad 2 ({{(100 * data['competencias']['factual'][2] / data['competencias']['correctas'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['factual'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['resultados']['factual'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['resultados']['factual'][2] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Factual', 
                                     data: [
-                                    {{data['competencias']['factual'][0]}},
-                                    {{data['competencias']['factual'][1]}},
-                                    {{data['competencias']['factual'][2]}}
+                                    {{data['resultados']['factual'][0]}},
+                                    {{data['resultados']['factual'][1]}},
+                                    {{data['resultados']['factual'][2]}}
                                     ],
                                     backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
                                 }]
@@ -290,15 +373,15 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['competencias']['conceptual'][0] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Prioridad 1 ({{(100 * data['competencias']['conceptual'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Prioridad 2 ({{(100 * data['competencias']['conceptual'][2] / data['competencias']['correctas'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['conceptual'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['resultados']['conceptual'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['resultados']['conceptual'][2] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Conceptual', 
                                     data: [
-                                    {{data['competencias']['conceptual'][0]}},
-                                    {{data['competencias']['conceptual'][1]}},
-                                    {{data['competencias']['conceptual'][2]}}
+                                    {{data['resultados']['conceptual'][0]}},
+                                    {{data['resultados']['conceptual'][1]}},
+                                    {{data['resultados']['conceptual'][2]}}
                                     ],
                                     backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
                                 }]
@@ -327,15 +410,15 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['competencias']['procedimental'][0] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Prioridad 1 ({{(100 * data['competencias']['procedimental'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Prioridad 2 ({{(100 * data['competencias']['procedimental'][2] / data['competencias']['correctas'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['procedimental'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['resultados']['procedimental'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['resultados']['procedimental'][2] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Procedimental', 
                                     data: [
-                                    {{data['competencias']['procedimental'][0]}},
-                                    {{data['competencias']['procedimental'][1]}},
-                                    {{data['competencias']['procedimental'][2]}}
+                                    {{data['resultados']['procedimental'][0]}},
+                                    {{data['resultados']['procedimental'][1]}},
+                                    {{data['resultados']['procedimental'][2]}}
                                     ],
                                     backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
                                 }]
@@ -355,15 +438,15 @@
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'No ({{(100 * data['competencias']['metacognitivo'][0] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Prioridad 1 ({{(100 * data['competencias']['metacognitivo'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Prioridad 2 ({{(100 * data['competencias']['metacognitivo'][2] / data['competencias']['correctas'])|round(2)}} %)'],
+                                    'No ({{(100 * data['resultados']['metacognitivo'][0] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 1 ({{(100 * data['resultados']['metacognitivo'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Prioridad 2 ({{(100 * data['resultados']['metacognitivo'][2] / data['resultados']['correctos'])|round(2)}} %)'],
                                 datasets: [ {
                                     label: 'Metacognitivo', 
                                     data: [
-                                    {{data['competencias']['metacognitivo'][0]}},
-                                    {{data['competencias']['metacognitivo'][1]}},
-                                    {{data['competencias']['metacognitivo'][2]}}
+                                    {{data['resultados']['metacognitivo'][0]}},
+                                    {{data['resultados']['metacognitivo'][1]}},
+                                    {{data['resultados']['metacognitivo'][2]}}
                                     ],
                                     backgroundColor: ['#AEB6BF', '#138D75', '#D4AC0D']
                                 }]
@@ -388,24 +471,24 @@
                     <canvas id="pie_prioridad1" width="100" height="100"></canvas>
                     <script>
                         var ctx11 = document.getElementById('pie_prioridad1').getContext('2d');
-                        {% set total_prioridad1 = data['competencias']['correctas'] - (data['competencias']['factual'][1] + data['competencias']['conceptual'][1]
-                            + data['competencias']['procedimental'][1] + data['competencias']['metacognitivo'][1])%};
+                        {% set total_prioridad1 = data['resultados']['correctos'] - (data['resultados']['factual'][1] + data['resultados']['conceptual'][1]
+                            + data['resultados']['procedimental'][1] + data['resultados']['metacognitivo'][1])%};
                         var pie_cognitive = new Chart(ctx11, {
                             type: 'pie',
                             data: {
                                 labels: [
-                                    'Factual ({{(100 * data['competencias']['factual'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Conceptual ({{(100 * data['competencias']['conceptual'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Procedimental ({{(100 * data['competencias']['procedimental'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Metacognitivo ({{(100 * data['competencias']['metacognitivo'][1] / data['competencias']['correctas'])|round(2)}} %)',
-                                    'Sin definir ({{(100 * total_prioridad1 / data['competencias']['correctas'])|round(2) }})'],
+                                    'Factual ({{(100 * data['resultados']['factual'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Conceptual ({{(100 * data['resultados']['conceptual'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Procedimental ({{(100 * data['resultados']['procedimental'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Metacognitivo ({{(100 * data['resultados']['metacognitivo'][1] / data['resultados']['correctos'])|round(2)}} %)',
+                                    'Sin definir ({{(100 * total_prioridad1 / data['resultados']['correctos'])|round(2) }})'],
                                 datasets: [ {
-                                    label: 'Procedimental', 
+                                    label: 'Prioridad1', 
                                     data: [
-                                    {{data['competencias']['factual'][1]}},
-                                    {{data['competencias']['conceptual'][1]}},
-                                    {{data['competencias']['procedimental'][1]}},
-                                    {{data['competencias']['metacognitivo'][1]}},
+                                    {{data['resultados']['factual'][1]}},
+                                    {{data['resultados']['conceptual'][1]}},
+                                    {{data['resultados']['procedimental'][1]}},
+                                    {{data['resultados']['metacognitivo'][1]}},
                                     {{total_prioridad1}}
                                     ],
                                     backgroundColor: ['#FFE0B2', '#F57C00', '#339999', '#A9CCE3', '#000000']
@@ -420,5 +503,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
