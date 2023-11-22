@@ -16,7 +16,14 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Database connection
-app.config.from_json('config/config.json')
+
+# Cargar la configuración desde un archivo JSON
+with open('config/config.json', 'r') as config_file:
+    config_data = json.load(config_file)
+
+app.config.from_mapping(config_data)
+
+#app.config.from_json('config/config.json')
 mongo = PyMongo(app)
 
 # Session
