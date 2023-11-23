@@ -10,3 +10,4 @@ config/config.json
 config/alluris.json
 corameval.code-workspace
 static/json/*
+.DS_Store
