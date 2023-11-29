@@ -18,9 +18,15 @@ app = Flask(__name__)
 
 # Database connection
 
-# Cargar la configuración desde un archivo JSON
-with open('config/config.json', 'r') as config_file:
-    config_data = json.load(config_file)
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, 'config/config.json')
+
+if os.path.exists(file_path):
+    # Cargar la configuración desde un archivo JSON
+    with open(file_path, 'r') as config_file:
+        config_data = json.load(config_file)
 
 app.config.from_mapping(config_data)
 
@@ -1344,10 +1350,52 @@ def eliminar_titulo():
     return "Borrado de titulo indicado realizado."
 
 
-# Nueva funcion para recomendar
-@app.route('/recomendador/')
-@app.route('/recomendador/', methods=['POST'])
-def recomendador():
+
+# Función para recomendar resultados 
+@app.route('/recomendador_resultados/')
+@app.route('/recomendador_resultados/', methods=['POST'])
+def recomendador_resultados():
+    document_rec = {
+        'name': 'Sugerencia de detalles para el resultado descrito',
+        'prob': 0.0
+    }
+
+    if request.method == 'POST':
+        sugerencias_rec = sugerir_resultado(request.form['descripcion'])
+        descripcion_proporcionada_rec = request.form['descripcion']
+        document_rec = mongo.db.resultados.find_one({"_id": ObjectId(sugerencias_rec[0][0])})
+        
+    else:        
+        descripcion_proporcionada_rec = "--- Describa en este espacio el resultado ---"
+        sugerencias_rec = {}
+    
+    return render_template('recommender_results.html', document = document_rec, sugerencias = sugerencias_rec, descripcion_proporcionada = descripcion_proporcionada_rec)
+
+def sugerir_resultado(result):
+
+    elements = 10
+    resultados = mongo.db.resultados.find()
+    sugerencia = [(0, 0.0, "vacio")]*elements
+# por aqui
+    for resultado in resultados:
+        prob = similar(resultado['name'],result)
+        if prob > sugerencia[elements-1][1]:
+            sugerencia[elements-1] = (resultado['_id'], prob, resultado['name'])            
+
+            i = elements-1
+            while i > 0 and prob > sugerencia[i-1][1]:
+                sugerencia[i] = sugerencia[i-1]
+                i = i-1
+            
+            sugerencia[i] = (resultado['_id'], prob, resultado['name']) 
+    
+    
+    return sugerencia
+
+# Función para recomendar competencias
+@app.route('/recomendador_competencias/')
+@app.route('/recomendador_competencias/', methods=['POST'])
+def recomendador_competencias():
     document_rec = {
         'name': 'Sugerencia de detalles para la competencia descrita',
         'prob': 0.0
@@ -1362,7 +1410,7 @@ def recomendador():
         descripcion_proporcionada_rec = "--- Describa en este espacio la competencia ---"
         sugerencias_rec = {}
     
-    return render_template('recommender.html', document = document_rec, sugerencias = sugerencias_rec, descripcion_proporcionada = descripcion_proporcionada_rec)
+    return render_template('recommender_skills.html', document = document_rec, sugerencias = sugerencias_rec, descripcion_proporcionada = descripcion_proporcionada_rec)
 
 def sugerir_competencia(skill):
 
@@ -1384,6 +1432,89 @@ def sugerir_competencia(skill):
     
     
     return sugerencia
+
+@app.route('/copiar_resultados_similares')
+def copiar_resultados_similares():
+    resultados_test = list(mongo.db.resultados_test1.find())
+    resultados_training = list(mongo.db.resultados_training.find())
+    contador = 0
+
+    for doc_test in resultados_test:
+        max_similitud = 0.0
+        documento_similar = None
+
+        for doc_training in resultados_training:
+            similitud = similar(doc_test['name'], doc_training['name'])
+            if similitud > max_similitud:
+                max_similitud = similitud
+                documento_similar = doc_training
+
+        if documento_similar:
+            # Copiar valores del documento similar a resultados-test
+            if documento_similar['correccion'] == "0":
+                doc_test['correccion'] = documento_similar['correccion']
+            else:
+                # Si la corrección es diferente de "0", copiar todos los campos relevantes
+                campos_a_copiar = ['afectivo', 'autenticidad', 'cognitivo', 'colaborativo', 'conceptual',
+                                   'estructura', 'factual', 'metacognitivo', 'procedimental', 'tecnologico',
+                                   'verificabilidad', 'correccion']
+                for campo in campos_a_copiar:
+                    doc_test[campo] = documento_similar[campo]
+
+            # Actualizar el documento en la colección resultados-test
+            mongo.db.resultados_test1.update_one({'_id': doc_test['_id']}, {'$set': doc_test})
+            contador += 1
+            print("Procesando documento ", contador)
+
+    return "the end"
+
+
+@app.route('/sugerir_similares/<coleccion_principal>')
+def sugerir_similares(coleccion_principal):
+    if coleccion_principal not in ['resultados', 'competencias']:
+        return "Error: La colección principal no es válida"
+
+    # Construir los nombres de las colecciones
+    coleccion_test_name = f"{coleccion_principal}_test1"
+    coleccion_training_name = f"{coleccion_principal}_training"
+
+    # Obtener documentos de las colecciones
+    documentos_test = list(mongo.db[coleccion_test_name].find())
+    documentos_training = list(mongo.db[coleccion_training_name].find())
+
+    contador = 0
+
+    for doc_test in documentos_test:
+        max_similitud = 0.0
+        documento_similar = None
+
+        for doc_training in documentos_training:
+            similitud = similar(doc_test['name'], doc_training['name'])
+            if similitud > max_similitud:
+                max_similitud = similitud
+                documento_similar = doc_training
+
+        if documento_similar:
+            # Copiar valores del documento similar a resultados-test
+            if documento_similar['correccion'] == "0":
+                doc_test['correccion'] = documento_similar['correccion']
+            else:
+                # Si la corrección es diferente de "0", copiar todos los campos relevantes
+                campos_a_copiar = ['afectivo', 'cognitivo', 'colaborativo', 'conceptual',
+                               'estructura', 'factual', 'metacognitivo', 'procedimental',
+                               'tecnologico', 'correccion']
+
+                # Copiar campos relevantes
+                for campo in campos_a_copiar:
+                    doc_test[campo] = documento_similar[campo]
+
+            # Actualizar el documento en la colección de test
+            mongo.db[coleccion_test_name].update_one({'_id': doc_test['_id']}, {'$set': doc_test})
+            contador += 1
+            print(f"Procesando documento {contador} en la colección {coleccion_test_name}")
+
+    return "the end"
+
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
